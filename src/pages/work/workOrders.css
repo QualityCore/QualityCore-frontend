@@ -1,0 +1,200 @@
+/* 서치바 구조 */
+.searchbar {
+    border: none;
+    width: 1450px;
+    height: 200px;
+    margin-left: 55px;
+    margin-top: 30px;
+    border-radius: 20px;
+    background-color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* 서치바 label, input */
+.searchbar label {
+    display: inline-block;
+    margin-bottom: 15px;
+    margin-top: 21px;
+    margin-left: 110px;
+
+}
+
+.searchbar input {
+    margin-bottom: 10px;
+    padding: 3px;
+    width: 190px;
+}
+
+.searchbar select {
+    margin-bottom: 10px;
+    padding: 3px;
+    width: 200px;
+}
+
+.searchbar br {
+    margin-bottom: 20px;
+}
+
+/* 검색버튼 */
+.searchButton {
+    margin-left: 60px;
+    padding: 5px 15px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.searchButton:hover {
+    background-color: #45a049;
+    box-shadow: 0 6px 12px rgba(0, 0, 0)
+}
+
+
+.mainbar {
+    background-color: white;
+    width: 1450px;
+    height: 581px;
+    margin-left: 55px;
+    margin-top: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 98%;
+    margin-top: 5px;
+    border-collapse: collapse;
+    margin-left: 15px;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: center;
+    border: none;
+}
+
+thead {
+    background-color: white;
+    font-weight: bold;
+}
+
+/* 테이블 각 열의  */
+th:nth-child(1),
+td:nth-child(1) {
+    width: 100px;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    width: 100px;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    width: 180px;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 150px;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    width: 150px;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+    width: 120px;
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+    width: 100px;
+}
+
+th:nth-child(8),
+td:nth-child(8) {
+    width: 100px;
+}
+
+th:nth-child(9),
+td:nth-child(9) {
+    width: 110px;
+}
+
+th:nth-child(10),
+td:nth-child(10) {
+    width: 180px;
+}
+
+/* 진행률 */
+.progress-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 20px;
+    /* 높이 설정 */
+}
+
+/* 진행률 바 */
+.progress-bar {
+    height: 100%;
+    background-color: rgb(145, 100, 148);
+    /* 기본 색상 */
+    text-align: center;
+    line-height: 20px;
+    /* 텍스트 세로 정렬 */
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    transition: width 0.3s ease-in-out;
+    /* 부드러운 애니메이션 */
+}
+
+/* 진행률 값에 따라 너비를 동적으로 설정 */
+.progress-bar[data-progress="100"] {
+    width: 100%;
+}
+
+.progress-bar[data-progress="87.5"] {
+    width: 87.5%;
+}
+
+.progress-bar[data-progress="75"] {
+    width: 75%;
+}
+
+.progress-bar[data-progress="62.5"] {
+    width: 62.5%;
+}
+
+.progress-bar[data-progress="30"] {
+    width: 50%;
+}
+
+.progress-bar[data-progress="15"] {
+    width: 37.5%;
+}
+
+.progress-bar[data-progress="15"] {
+    width: 25%;
+}
+
+.progress-bar[data-progress="12.5"] {
+    width: 12.5%;
+}
+
+.progress-bar[data-progress="0"] {
+    width: 0%;
+}
+
+/* 필요 시 다른 진행률 값도 추가 */
