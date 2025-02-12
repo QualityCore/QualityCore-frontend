@@ -1,24 +1,19 @@
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #F4F7FE;
-    padding: 1rem 2rem;
-    box-shadow: none; 
-    border: none;
-    border-bottom: 3px solid #E2E8F0; /* 하단에만 얇은 선 추가 */
-    position: fixed;
-    top: 0;
-    left: 280px;  /* 사이드바 너비와 정확히 일치 */
-    right: 0;
-    height: 64px;
-    z-index: 10;
-    margin-left: 49px;  /* 왼쪽 여백 추가 */
-    margin-right: 20px; /* 오른쪽 여백 추가 */
-    width: calc(100% - 400px);
-   
-   
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #F4F7FE;
+  padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  left: 320px;
+  right: 0;
+  height: 64px;
+  z-index: 1000;
+  width: calc(100% - 390px);
+  border-bottom: 3px solid #E2E8F0; 
 }
+
   
 .page-title {
     font-size: 18px;           
