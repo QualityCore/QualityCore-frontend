@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import ProductionPlan from "./pages/ProductionPlan";
 import Attendance from "./pages/Attendance";
 import './App.css';  
+import WorkOrder from "./pages/work/WorkOrder"
 
 const App = () => {
   return (
