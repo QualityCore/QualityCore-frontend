@@ -1,0 +1,96 @@
+.productionPlan-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1rem;
+  }
+  
+  .search-bar .date-filter,
+  .search-bar .product-filter,
+  .search-bar .status-filter {
+    flex: 1;
+    position: relative;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    background-color: #F4F7FE;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .search-bar .search-btn {
+    background-color: #2B6CB0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .search-bar .search-btn:hover {
+    background-color: #2C5282;
+  }
+  
+  .create-plan-btn {
+    background-color: #48BB78;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .create-plan-btn:hover {
+    background-color: #38A169;
+  }
+  
+  .plan-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .plan-table th {
+    background-color: #F4F7FE;
+    color: #2D3748;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #E2E8F0;
+    font-weight: 600;
+  }
+  
+  .plan-table td {
+    padding: 12px;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 0.9rem;
+  }
+  
+  .status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .status.계획 {
+    background-color: #FEB240;
+    color: white;
+  }
+  
+  .status.확정 {
+    background-color: #48BB78;
+    color: white;
+  }

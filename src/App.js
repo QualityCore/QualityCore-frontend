@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import ProductionPlan from "./pages/ProductionPlan";
+import ProductionPlan from "./pages/productionPlan/ProductionPlan";
 import Attendance from "./pages/Attendance";
 import './App.css';  
 
