@@ -5,55 +5,61 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   }
   
+  .page-title {
+    font-size: 1.5rem;
+    color: #2B3674;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
+  
   .search-bar {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 1rem;
-  }
-  
-  .search-bar .date-filter,
-  .search-bar .product-filter,
-  .search-bar .status-filter {
-    flex: 1;
-    position: relative;
-  }
-  
-  .search-bar input {
-    width: 100%;
+    margin-bottom: 1.5rem;
     background-color: #F4F7FE;
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+  
+  .search-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+  }
+  
+  .search-filter label {
+    font-size: 0.8rem;
+    color: #2D3748;
+    font-weight: 600;
+  }
+  
+  .search-filter input {
+    background-color: white;
     border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 20px;
+    padding: 10px 15px;
     font-size: 0.9rem;
   }
   
-  .search-bar .search-btn {
+  .search-filter input::placeholder {
+    color: #A0AEC0;
+  }
+  
+  .search-bar button {
     background-color: #2B6CB0;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 20px;
     padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease;
   }
   
-  .search-bar .search-btn:hover {
+  .search-bar button:hover {
     background-color: #2C5282;
-  }
-  
-  .create-plan-btn {
-    background-color: #48BB78;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .create-plan-btn:hover {
-    background-color: #38A169;
+    transform: translateY(-2px);
   }
   
   .plan-table table {
@@ -93,4 +99,20 @@
   .status.확정 {
     background-color: #48BB78;
     color: white;
+  }
+  
+  .action-btn {
+    background-color: #2B6CB0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+  }
+  
+  .action-btn:hover {
+    background-color: #2C5282;
+    transform: translateY(-2px);
   }

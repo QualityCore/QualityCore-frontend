@@ -29,23 +29,35 @@ const ProductionPlan = () => {
 
         {/* ⭐검색입력필드!⭐ */}
         <div className="search-bar">
-            <input type="text"
-                   placeholder="계획년월(YYYY-MM)"
-                   value={searchParams}
-                   onChange={(e) => setSearchParams({...searchParams,planYm:e.target.value})}
-                    />
-            <input type="text"
-                   placeholder="제품명"
-                   value={searchParams}
-                   onChange={(e) => setSearchParams({...searchParams,productName:e.target.value})} 
-                   />
-            <input type="text"
-                   placeholder="상태 (계획/확정)"
-                   value={searchParams}
-                   onChange={(e) => setSearchParams({...searchParams,status:e.target.value})}
-                    />       
-            <button onClick={handleSearch}>조회</button>
-        </div>      
+  <div className="search-filter">
+    <label>계획년월</label>
+    <input 
+      type="text"
+      placeholder="YYYY-MM"
+      value={searchParams.planYm}
+      onChange={(e) => setSearchParams({...searchParams, planYm: e.target.value})}
+    />
+  </div>
+  <div className="search-filter">
+    <label>제품명</label>
+    <input 
+      type="text"
+      placeholder="제품명 입력"
+      value={searchParams.productName}
+      onChange={(e) => setSearchParams({...searchParams, productName: e.target.value})}
+    />
+  </div>
+  <div className="search-filter">
+    <label>상태</label>
+    <input 
+      type="text"
+      placeholder="계획/확정"
+      value={searchParams.status}
+      onChange={(e) => setSearchParams({...searchParams, status: e.target.value})}
+    />
+  </div>
+  <button onClick={handleSearch}>조회</button>
+</div> 
 
         {/* ⭐테이블!⭐ */}
         <div className="plan-table">
