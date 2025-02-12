@@ -1,0 +1,16 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 280px;  /* sidebar 너비만큼 */
+  background-color: #F4F7FE;
+}
+
+.content-area {
+  padding: 1.5rem;    /* p-6과 동일 */
+  background-color: #F4F7FE;  /* 연한 하늘색 */
+  margin-top: 64px; 
+}
