@@ -48,12 +48,11 @@ const Sidebar = () => {
           {openCategory === "기준정보관리" && (
             <ul className="submenu">
               <li><Link to="/workplace">작업장 등록</Link></li>
-              <li><Link to="/process">작업장 시간및 교대조 스케줄 설정</Link></li>
-              <li><Link to="/equipment">공정 정보 등록</Link></li>
+              <li><Link to="/process-stage">공정 정보 등록</Link></li>
               <li><Link to="/label-routing">공정 순서 관리</Link></li>
-              <li><Link to="/items">설비 정보 등록</Link></li>
-              <li><Link to="/downtime">LABEL 정보 등록</Link></li>
-              <li><Link to="/downtime">비가동 원인 코드 관리</Link></li>
+              <li><Link to="/equipment-info">설비 정보 등록</Link></li>
+              <li><Link to="/label-info">LABEL 정보 등록</Link></li>
+              <li><Link to="/downtime-cause">비가동 원인 코드 관리</Link></li>
             </ul>
           )}
         </li>
@@ -97,11 +96,16 @@ const Sidebar = () => {
           </button>
           {openCategory === "생산공정" && (
             <ul className="submenu">
-              <li><Link to="/mashing">담금공정 관리</Link></li>
-              <li><Link to="/wort">맥즙공정 관리</Link></li>
-              <li><Link to="/fermentation">발효공정 관리</Link></li>
-              <li><Link to="/filtration">여과공정 관리</Link></li>
-              <li><Link to="/packaging">패키징공정 관리</Link></li>
+              <li><Link to="/raw-material-preparation">원재료 분쇄공정정</Link></li>
+              <li><Link to="/mashing-process">당화공정정</Link></li>
+              <li><Link to="/filtration-process">여과공정</Link></li>
+              <li><Link to="/boiling-process">끓임공정</Link></li>
+              <li><Link to="/cooling-process">냉각공정</Link></li>
+              <li><Link to="/fermentation_details ">발효상세공정</Link></li>
+              <li><Link to="/maturation-details">숙성상세공정</Link></li>
+              <li><Link to="/post-maturation-filtration">숙성 후 여과공정</Link></li>
+              <li><Link to="/carbonation-process">탄산조정공정</Link></li>
+              <li><Link to="/packaging_and-shipment">패키징 및 출하 공정</Link></li>
             </ul>
           )}
         </li>
