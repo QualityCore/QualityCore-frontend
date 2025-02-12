@@ -13,13 +13,15 @@ const App = () => {
         {/* 사이드바 */}
         <Sidebar />
         
-        {/* 메인 컨텐츠 */}
-        <div className="main-content">
+        <div className="main-wrapper">
+        
           <Header />
-          <div className="content-area">
+          
+          {/* 메인 컨텐츠 */}
+          <div className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/production" element={<ProductionPlan />} />
+              <Route path="/plan-overview" element={<ProductionPlan />} />
               <Route path="/attendance" element={<Attendance />} />
             </Routes>
           </div>
