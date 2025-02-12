@@ -17,7 +17,7 @@
 ## 😎 상태 및 성능    
 - [ ] React 상태 관리 관련 변경 (`Redux`, `Context API`)  
 - [ ] React 훅 관련 수정 (`useEffect` 최적화, 의존성 배열 수정)  
-- [ ] React 성능 최적화 (`memo`, `useMemo`, `useCallback` 활용)
+- [ ] React 성능 최적화 (`useReducer`, `useMemo`, `useCallback` 활용)
 - [ ] API 연동 및 데이터 페칭 수정 (`Axios`, `Fetch`, `Async`)
 
 ## 😈 버그  
