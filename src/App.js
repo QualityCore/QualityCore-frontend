@@ -4,7 +4,11 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import ProductionPlan from "./pages/productionPlan/ProductionPlan";
 import Attendance from "./pages/Attendance";
+import WorkplacePage from "./standardinformation/workplace/WorkplacePage";
+
+
 import './App.css';  
+import WorkOrder from "./pages/work/WorkOrder"
 
 const App = () => {
   return (
@@ -23,6 +27,10 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/plan-overview" element={<ProductionPlan />} />
               <Route path="/attendance" element={<Attendance />} />
+              <Route path="/workorders" element={<WorkOrder />} />
+              <Route path="/workplace" element={<WorkplacePage />} />
+         
+
             </Routes>
           </div>
         </div>

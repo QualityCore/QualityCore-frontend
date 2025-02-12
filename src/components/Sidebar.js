@@ -18,10 +18,10 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar">
-  <div className="logo-container">
-    <img src="/images/11.png" alt="BräuHaus Logo" className="logo" />
-    <h2>BräuHaus ERP</h2>
-  </div>
+      <div className="logo-container">
+        <img src="/images/11.png" alt="BräuHaus Logo" className="logo" />
+        <h2>BräuHaus ERP</h2>
+      </div>
       <ul>
         {/* 시스템 관리 */}
         <li>
@@ -48,12 +48,11 @@ const Sidebar = () => {
           {openCategory === "기준정보관리" && (
             <ul className="submenu">
               <li><Link to="/workplace">작업장 등록</Link></li>
-              <li><Link to="/process">작업장 시간및 교대조 스케줄 설정</Link></li>
-              <li><Link to="/equipment">공정 정보 등록</Link></li>
+              <li><Link to="/process-stage">공정 정보 등록</Link></li>
               <li><Link to="/label-routing">공정 순서 관리</Link></li>
-              <li><Link to="/items">설비 정보 등록</Link></li>
-              <li><Link to="/downtime">LABEL 정보 등록</Link></li>
-              <li><Link to="/downtime">비가동 원인 코드 관리</Link></li>
+              <li><Link to="/equipment-info">설비 정보 등록</Link></li>
+              <li><Link to="/label-info">LABEL 정보 등록</Link></li>
+              <li><Link to="/downtime-cause">비가동 원인 코드 관리</Link></li>
             </ul>
           )}
         </li>
@@ -81,10 +80,10 @@ const Sidebar = () => {
           </button>
           {openCategory === "작업지시" && (
             <ul className="submenu">
-              <li><Link to="/work-orders">작업지시서 관리</Link></li>
-              <li><Link to="/work-execution">작업지시 실행 관리</Link></li>
-              <li><Link to="/work-personnel">작업지시 대비 인원 관리</Link></li>
-              <li><Link to="/work-progress">공정별 작업지시 현황</Link></li>
+              <li><Link to="/workorders">작업지시서 관리</Link></li>
+              <li><Link to="/workcreate">작업지시서 등록</Link></li>
+              <li><Link to="/workpersonnel">작업지시 대비 인원 관리</Link></li>
+              <li><Link to="/workprogress">공정별 작업지시 현황</Link></li>
             </ul>
           )}
         </li>
@@ -92,16 +91,21 @@ const Sidebar = () => {
         {/* 생산공정 관리 */}
         <li>
           <button onClick={() => toggleCategory("생산공정")}>
-          <GiFactory className="mr-2" />
+            <GiFactory className="mr-2" />
             생산공정 관리
           </button>
           {openCategory === "생산공정" && (
             <ul className="submenu">
-              <li><Link to="/mashing">담금공정 관리</Link></li>
-              <li><Link to="/wort">맥즙공정 관리</Link></li>
-              <li><Link to="/fermentation">발효공정 관리</Link></li>
-              <li><Link to="/filtration">여과공정 관리</Link></li>
-              <li><Link to="/packaging">패키징공정 관리</Link></li>
+              <li><Link to="/raw-material-preparation">원재료 분쇄공정정</Link></li>
+              <li><Link to="/mashing-process">당화공정정</Link></li>
+              <li><Link to="/filtration-process">여과공정</Link></li>
+              <li><Link to="/boiling-process">끓임공정</Link></li>
+              <li><Link to="/cooling-process">냉각공정</Link></li>
+              <li><Link to="/fermentation_details ">발효상세공정</Link></li>
+              <li><Link to="/maturation-details">숙성상세공정</Link></li>
+              <li><Link to="/post-maturation-filtration">숙성 후 여과공정</Link></li>
+              <li><Link to="/carbonation-process">탄산조정공정</Link></li>
+              <li><Link to="/packaging_and-shipment">패키징 및 출하 공정</Link></li>
             </ul>
           )}
         </li>
@@ -137,8 +141,8 @@ const Sidebar = () => {
 
         {/* 근태관리 */}
         <li>
-        <Link to="/attendance">
-    <HiOutlineUserGroup className="mr-4" />
+          <Link to="/attendance">
+            <HiOutlineUserGroup className="mr-4" />
             근태관리
           </Link>
         </li>
@@ -146,20 +150,20 @@ const Sidebar = () => {
 
 
       <div className="sidebar-profile">
-  <div className="profile-content">
-    <div className="profile-image">
-      <img src="/images/iublack.jpg" alt="Profile" />
-    </div>
-    <div className="profile-details">
-      <div className="profile-name">아이유</div>
-      <div className="profile-role">작업자</div>
-      <div className="profile-actions">
-        <button className="profile-btn">로그아웃</button>
-        <button className="profile-btn">근태 관리</button>
+        <div className="profile-content">
+          <div className="profile-image">
+            <img src="/images/iublack.jpg" alt="Profile" />
+          </div>
+          <div className="profile-details">
+            <div className="profile-name">아이유</div>
+            <div className="profile-role">작업자</div>
+            <div className="profile-actions">
+              <button className="profile-btn">로그아웃</button>
+              <button className="profile-btn">근태 관리</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
     </div>
   );
 };
