@@ -4,8 +4,7 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import ProductionPlan from "./pages/ProductionPlan";
 import Attendance from "./pages/Attendance";
-import WorkOrder from "./pages/work/WorkOrder";
-import './App.css';
+import './App.css';  
 
 const App = () => {
   return (
@@ -13,14 +12,16 @@ const App = () => {
       <div className="app-container">
         {/* 사이드바 */}
         <Sidebar />
-
-        {/* 메인 컨텐츠 */}
-        <div className="main-content">
+        
+        <div className="main-wrapper">
+        
           <Header />
-          <div className="content-area">
+          
+          {/* 메인 컨텐츠 */}
+          <div className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/production" element={<ProductionPlan />} />
+              <Route path="/plan-overview" element={<ProductionPlan />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/workorders" element={<WorkOrder />} />
             </Routes>
