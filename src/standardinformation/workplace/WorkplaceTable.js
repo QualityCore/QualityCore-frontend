@@ -1,4 +1,4 @@
-import "../styles/workplace-table.css";
+import "../../styles/workplace-table.css";
 
 const WorkplaceTable = () => {
   const data = [

@@ -1,4 +1,4 @@
-import "../styles/workplace-filter.css";
+import "../../styles/workplace-filter.css";
 
 const WorkplaceFilter = () => {
   return (

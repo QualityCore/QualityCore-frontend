@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../styles/workplace-form.css";
+import "../../styles/workplace-form.css";
 
 
 const WorkplaceForm = () => {

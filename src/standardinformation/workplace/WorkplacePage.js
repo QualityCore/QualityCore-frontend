@@ -1,9 +1,9 @@
 import WorkplaceForm from "./WorkplaceForm";
 import WorkplaceTable  from "./WorkplaceTable";
 import WorkplaceFilter from "./WorkplaceFilter";
-import "../styles/workplace-form.css";
-import "../styler/workplace-table.css";
-import "../styler/workplace-filter.css";
+import "../../styles/workplace-form.css";
+import "../../styles/workplace-table.css";
+import "../../styles/workplace-filter.css";
 
 
 const WorkplacePage = () => {
