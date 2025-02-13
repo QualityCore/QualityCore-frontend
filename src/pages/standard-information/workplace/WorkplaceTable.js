@@ -1,10 +1,8 @@
-import "../../styles/workplace-table.css";
+import "../../../styles/workplace-table.css";
 
-const WorkplaceTable = () => {
-  const data = [
-    { name: "냉각실", code: "Co001", location: "제1동 2층", type: "냉각", status: "가동중", manager: "소연희", capacity: "5000L/day" }
-  ];
 
+const WorkplaceTable = ({workplaces}) => {
+  
   return (
     <table className="workplace-table">
       <thead>
@@ -20,7 +18,7 @@ const WorkplaceTable = () => {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => (
+        {workplaces.map((item, index) => (
           <tr key={index}>
             <td>{item.name}</td>
             <td>{item.code}</td>

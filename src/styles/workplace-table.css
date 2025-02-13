@@ -1,54 +1,31 @@
-/* 테이블 컨테이너 */
+.workplace-table-container {
+  width: 80%;
+  margin: auto;
+  margin-top: 20px;
+}
+
 .workplace-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* 테이블 헤더 */
-  .workplace-table th {
-    background-color: #f5f5f5;
-    padding: 12px;
-    text-align: left;
-    font-weight: bold;
-    border-bottom: 2px solid #ddd;
-  }
-  
-  /* 테이블 바디 */
-  .workplace-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  /* 수정 및 삭제 버튼 */
-  .workplace-edit-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    margin-right: 5px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .workplace-delete-btn {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .workplace-edit-btn:hover {
-    background-color: #45a049;
-  }
-  
-  .workplace-delete-btn:hover {
-    background-color: #c0392b;
-  }
-  
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.workplace-table th, .workplace-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.workplace-edit-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.workplace-delete-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
