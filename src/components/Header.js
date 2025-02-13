@@ -13,38 +13,38 @@ const Header = () => {
       '/users': { main: '시스템 관리', sub: '사용자 관리' },
       '/menu': { main: '시스템 관리', sub: '메뉴 관리' },
 
-     // 기준정보 관리
-     '/workplace': { main: '기준정보 관리', sub: '작업장 등록' },
-     '/process-stage': { main: '기준정보 관리', sub: '공정 정보 등록' },
-     '/label-routing': { main: '기준정보 관리', sub: '공정 순서 관리' },
-     '/equipment-info': { main: '기준정보 관리', sub: '설비 정보 등록' },
-     '/label-info': { main: '기준정보 관리', sub: 'LABEL 정보 등록' },
-     '/downtime-cause': { main: '기준정보 관리', sub: '비가동 원인 코드 관리' },
+      // 기준정보 관리
+      '/workplace': { main: '기준정보 관리', sub: '작업장 등록' },
+      '/process-stage': { main: '기준정보 관리', sub: '공정 정보 등록' },
+      '/label-routing': { main: '기준정보 관리', sub: '공정 순서 관리' },
+      '/equipment-info': { main: '기준정보 관리', sub: '설비 정보 등록' },
+      '/label-info': { main: '기준정보 관리', sub: 'LABEL 정보 등록' },
+      '/downtime-cause': { main: '기준정보 관리', sub: '비가동 원인 코드 관리' },
 
 
       // 생산계획
       '/plan-overview': { main: '생산계획', sub: '월별 생산계획' },
-      '/plan-line': { main: '생산계획', sub: '생산라인별 계획' },
+      '/plan-generate': { main: '생산계획', sub: '생산라인별 계획' },
       '/plan-material': { main: '생산계획', sub: '자재 구매신청' },
 
       // 작업지시
-      '/workorders': { main: '작업지시', sub: '작업지시서 관리' },
-      '/workexecution': { main: '작업지시', sub: '작업지시 실행 관리' },
+      '/work/orders': { main: '작업지시', sub: '작업지시서 관리' },
+      '/work/create': { main: '작업지시', sub: '작업지시서 등록' },
       '/workpersonnel': { main: '작업지시', sub: '작업지시 대비 인원 관리' },
       '/workprogress': { main: '작업지시', sub: '공정별 작업지시 현황' },
 
 
-     // 생산공정 관리
-     '/raw-material-preparation': { main: '생산공정 관리', sub: '원재료 분쇄공정' },
-     '/mashing-process': { main: '생산공정 관리', sub: '당화공정' },
-     '/filtration-process': { main: '생산공정 관리', sub: '여과공정' },
-     '/boiling-process': { main: '생산공정 관리', sub: '끓임공정' },
-     '/cooling-process': { main: '생산공정 관리', sub: '냉각공정' },
-     '/fermentation_details': { main: '생산공정 관리', sub: '발효상세공정' },
-     '/maturation-details': { main: '생산공정 관리', sub: '숙성상세공정' },
-     '/post-maturation-filtration': { main: '생산공정 관리', sub: '숙성 후 여과공정' },
-     '/carbonation-process': { main: '생산공정 관리', sub: '탄산조정공정' },
-     '/packaging_and-shipment': { main: '생산공정 관리', sub: '패키징 및 출하 공정' },
+      // 생산공정 관리
+      '/raw-material-preparation': { main: '생산공정 관리', sub: '원재료 분쇄공정' },
+      '/mashing-process': { main: '생산공정 관리', sub: '당화공정' },
+      '/filtration-process': { main: '생산공정 관리', sub: '여과공정' },
+      '/boiling-process': { main: '생산공정 관리', sub: '끓임공정' },
+      '/cooling-process': { main: '생산공정 관리', sub: '냉각공정' },
+      '/fermentation_details': { main: '생산공정 관리', sub: '발효상세공정' },
+      '/maturation-details': { main: '생산공정 관리', sub: '숙성상세공정' },
+      '/post-maturation-filtration': { main: '생산공정 관리', sub: '숙성 후 여과공정' },
+      '/carbonation-process': { main: '생산공정 관리', sub: '탄산조정공정' },
+      '/packaging_and-shipment': { main: '생산공정 관리', sub: '패키징 및 출하 공정' },
 
 
       // Routing 관리
