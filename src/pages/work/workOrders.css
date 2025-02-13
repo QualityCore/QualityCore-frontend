@@ -46,12 +46,18 @@
     font-size: 15px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
 }
 
 .searchButton:hover {
     background-color: #45a049;
-    box-shadow: 0 6px 12px rgba(0, 0, 0)
+    transform: scale(1.05);
+}
+
+/* 클릭 시 효과 */
+.searchButton:active {
+    background-color: #3e8e41;
+    transform: scale(0.95);
 }
 
 
@@ -66,7 +72,7 @@
 }
 
 table {
-    width: 98%;
+    width: 97%;
     margin-top: 5px;
     border-collapse: collapse;
     margin-left: 15px;
