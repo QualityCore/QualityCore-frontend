@@ -66,7 +66,7 @@ const Sidebar = () => {
           {openCategory === "생산계획" && (
             <ul className="submenu">
               <li><Link to="/plan-overview">생산계획 관리</Link></li>
-              <li><Link to="/plan-line">생산라인별 계획</Link></li>
+              <li><Link to="/plan-generate">생산계획 생성</Link></li>
               <li><Link to="/plan-material">자재 구매신청</Link></li>
             </ul>
           )}

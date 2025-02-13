@@ -7,7 +7,7 @@ import Attendance from "./pages/Attendance";
 import WorkplacePage from "./standardinformation/workplace/WorkplacePage";
 
 
-import './App.css';  
+import './styles/App.css';  
 import WorkOrder from "./pages/work/WorkOrder"
 
 const App = () => {
