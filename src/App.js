@@ -2,11 +2,10 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import ProductionPlan from "./pages/ProductionPlan";
-import Attendance from "./pages/attendance/Attendance";
+import ProductionPlan from "./pages/productionPlan/ProductionPlan";
 import WorkplacePage from "./standardinformation/workplace/WorkplacePage";
-import './App.css';
-// 작업지시서 import
+import './styles/App.css';  
+import Attendance from "./pages/attendance/Attendance";
 import WorkOrder from "./pages/work/WorkOrder"
 import WorkCreate from "./pages/work/WorkCreate";
 
