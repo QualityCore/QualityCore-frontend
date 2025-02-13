@@ -1,10 +1,8 @@
+import "../../../styles/workplace-table.css";
 
 
-const WorkplaceList = () => {
-  const data = [
-    { name: "냉각실", code: "Co001", location: "제1동 2층", type: "냉각", status: "가동중", manager: "소연희", capacity: "5000L/day" }
-  ];
-
+const WorkplaceTable = ({workplaces}) => {
+  
   return (
     <table className="workplace-table">
       <thead>
@@ -15,12 +13,12 @@ const WorkplaceList = () => {
           <th>작업장 타입</th>
           <th>작업장 상태</th>
           <th>작업 담당자</th>
-          <th>작업장 용량</th>
-          <th>수정</th>
+          <th>작업장 용량/생산가능량량</th>
+        
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => (
+        {workplaces.map((item, index) => (
           <tr key={index}>
             <td>{item.name}</td>
             <td>{item.code}</td>
@@ -30,8 +28,8 @@ const WorkplaceList = () => {
             <td>{item.manager}</td>
             <td>{item.capacity}</td>
             <td>
-              <button className="edit-btn">수정</button>
-              <button className="delete-btn">삭제</button>
+              <button className="workplace-edit-btn">수정</button>
+              <button className="workplace-delete-btn">삭제</button>
             </td>
           </tr>
         ))}
@@ -40,4 +38,4 @@ const WorkplaceList = () => {
   );
 };
 
-export default WorkplaceList;
+export default WorkplaceTable;
