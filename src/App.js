@@ -3,7 +3,7 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import ProductionPlan from "./pages/productionPlan/ProductionPlan";
-import WorkplacePage from "./standardinformation/workplace/WorkplacePage";
+import WorkplacePage from "./pages/standard-information/WorkplacePage";
 import './styles/App.css';  
 import Attendance from "./pages/attendance/Attendance";
 import WorkOrder from "./pages/work/WorkOrder"

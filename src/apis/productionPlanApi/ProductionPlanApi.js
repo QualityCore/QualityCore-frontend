@@ -2,7 +2,7 @@
 export const fetchProductionPlans = async (planYm, productName, status) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/production-plans?planYm=${planYm}&productName=${productName}&status=${status}`
+        `http://localhost:8080/api/v1/plan-overview?planYm=${planYm}&status=${status}`
       );
       if (!response.ok) throw new Error("데이터 불러오기 실패!");
       return await response.json();
