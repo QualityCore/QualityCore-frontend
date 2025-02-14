@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../../styles/workplace-form.css";
+import "../../styles/standard-information/workplace-form.css";
 
 const WorkplaceForm = ({ onAddWorkplace }) => {
   const [formData, setFormData] = useState({
@@ -27,8 +27,7 @@ const WorkplaceForm = ({ onAddWorkplace }) => {
       type: "재료분해",
       status: "가동",
       manager: "",
-      capacity: "",
-      volume: "L",
+      capacity: ""   
     });
   };
 
@@ -68,6 +67,15 @@ const WorkplaceForm = ({ onAddWorkplace }) => {
             <option value="c">고장</option>
             <option value="d">수리</option>
           </select>
+
+        <label>LINE 정보</label>
+        <select className="workplace-select" name="line" onChange={handleChange}>
+            <option value="1">LINE001</option>
+            <option value="2">LINE002</option>
+            <option value="3">LINE003</option>
+            <option value="4">LINE004</option>
+            <option value="5">LINE005</option>
+        </select>
 
         </div>
 
