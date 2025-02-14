@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { RiSettings4Line, RiDatabase2Line } from "react-icons/ri";
 import { MdOutlineProductionQuantityLimits, MdOutlineWork } from "react-icons/md";
@@ -10,17 +10,31 @@ import { GiFactory } from "react-icons/gi";
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
+
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Castoro+Titling&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
+
   const [openCategory, setOpenCategory] = useState(null);
 
   const toggleCategory = (category) => {
     setOpenCategory(openCategory === category ? null : category);
   };
 
+
+
+
   return (
     <div className="sidebar">
       <div className="logo-container">
-        <img src="/images/11.png" alt="BräuHaus Logo" className="logo" />
-        <h2>BräuHaus ERP</h2>
+        <img src="/images/lastLogo.png" alt="BräuHaus Logo" className="logo" />
+        <h2 className="castoro-titling-regular">BräuHaus</h2>
       </div>
       <ul>
         {/* 시스템 관리 */}
@@ -65,7 +79,7 @@ const Sidebar = () => {
           </button>
           {openCategory === "생산계획" && (
             <ul className="submenu">
-              <li><Link to="/plan-overview">생산계획 관리</Link></li>
+              <li><Link to="/plan-overview">생산계획 조회</Link></li>
               <li><Link to="/plan-generate">생산계획 생성</Link></li>
               <li><Link to="/plan-material">자재 구매신청</Link></li>
             </ul>
