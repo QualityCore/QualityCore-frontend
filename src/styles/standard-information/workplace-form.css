@@ -1,0 +1,48 @@
+.workplace-form-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;  /* 요소들을 세로로 정렬 */
+  align-items: flex-start; /* 기본적으로 왼쪽 정렬 */
+  position: relative;
+    width: 100%; /* 부모 요소 크기 지정 */
+    min-height: 100px; /* 부모 요소의 높이를 최소한으로 확보 */
+}
+
+.workplace-form {
+  position: relative;
+}
+
+.workplace-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.workplace-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.workplace-input {
+  flex: 0 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.workplace-button {
+  width: 10%;
+  background-color: #007bff;
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-left: auto;
+  display: block;
+  top: 47px;
+  right: -227px;
+  position: absolute;
+}
+
