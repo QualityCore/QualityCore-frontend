@@ -46,3 +46,20 @@
   position: absolute;
 }
 
+.workplace-input-group {
+  display: flex;
+  align-items: center; /* 요소 수직 정렬 */
+  gap: 15px; /* 요소 간 간격 */
+}
+
+
+.line-info {
+  margin-left: 30px; /* 드롭다운을 오른쪽으로 이동 */
+}
+
+.workplace-select-line-info {
+  margin-left: -5px;  /* 왼쪽 정렬 */
+}
+
+
+
