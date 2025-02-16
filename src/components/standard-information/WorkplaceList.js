@@ -24,7 +24,7 @@ const WorkplaceList = () => {
       <ul>
         {workplaces.map((workplace) => (
           <li key={workplace.workplaceId}>
-            {workplace.name} - {workplace.location}
+              
           </li>
         ))}
       </ul>

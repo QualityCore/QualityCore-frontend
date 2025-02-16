@@ -14,9 +14,11 @@ export const fetchWorkplaces = async () => {
 };
 
 // 작업장 추가
-export const createWorkplace = async () => {
+export const createWorkplace = async (formData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/regist`);
+    const response = await axios.post(`${API_BASE_URL}/regist`,formData,{
+      headers: { "Content-Type": "application/json" }
+    });
     return response.data;
   }catch(error){
     console.error("작업장 등록 연결 실패",error);
