@@ -1,0 +1,31 @@
+.workplace-table-container {
+  width: 80%;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.workplace-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.workplace-table th, .workplace-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.workplace-edit-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.workplace-delete-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}

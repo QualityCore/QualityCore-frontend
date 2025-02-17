@@ -33,20 +33,12 @@ const ProductionPlan = () => {
     <label>계획년월</label>
     <input 
       type="text"
-      placeholder="YYYY-MM"
+      placeholder="YYYY-MM-DD"
       value={searchParams.planYm}
       onChange={(e) => setSearchParams({...searchParams, planYm: e.target.value})}
     />
   </div>
-  <div className="search-filter">
-    <label>제품명</label>
-    <input 
-      type="text"
-      placeholder="제품명 입력"
-      value={searchParams.productName}
-      onChange={(e) => setSearchParams({...searchParams, productName: e.target.value})}
-    />
-  </div>
+  
   <div className="search-filter">
     <label>상태</label>
     <input 
