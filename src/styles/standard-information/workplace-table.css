@@ -35,7 +35,7 @@ table {
   margin-left: 0px;
 }
 
-th:nth-child(3), td:nth-child(3) {
+/* th:nth-child(3), td:nth-child(3) {
   width: 100px;
 }
 
@@ -49,4 +49,4 @@ th:nth-child(5), td:nth-child(5) {
 
 th:nth-child(8), td:nth-child(8) {
   width: 140px;
-}
+} */

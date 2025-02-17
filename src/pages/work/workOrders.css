@@ -91,7 +91,7 @@ thead {
 }
 
 /* 테이블 각 열의  */
-th:nth-child(1),
+/* th:nth-child(1),
 td:nth-child(1) {
     width: 100px;
 }
@@ -139,7 +139,7 @@ td:nth-child(9) {
 th:nth-child(10),
 td:nth-child(10) {
     width: 180px;
-}
+} */
 
 /* 진행률 */
 .progress-container {

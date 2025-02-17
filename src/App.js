@@ -29,8 +29,6 @@ const App = () => {
               <Route path="/work/orders" element={<WorkOrder />} />
               <Route path="/work/create" element={<WorkCreate />} />
               <Route path="/workplace" element={<WorkplacePage />} />
-
-
             </Routes>
           </div>
         </div>
