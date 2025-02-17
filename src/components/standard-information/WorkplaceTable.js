@@ -14,8 +14,8 @@ const WorkplaceTable = ({workplaces}) => {
           <th>LINE 정보</th>
           <th>작업장 상태</th>
           <th>작업 담당자</th>
-          <th>작업장 용량/생산가능량량</th>
-        
+          <th>생산가능 용량</th>
+          <th>용량단위</th>
         </tr>
       </thead>
       <tbody>
@@ -29,6 +29,7 @@ const WorkplaceTable = ({workplaces}) => {
             <td>{item.workplaceStatus}</td>
             <td>{item.managerName}</td>
             <td>{item.workplaceCapacity}</td>
+            <td>{item.workplaceCapacityUnit}</td>
             <td>
               <button className="workplace-edit-btn">수정</button>
               <button className="workplace-delete-btn">삭제</button>
