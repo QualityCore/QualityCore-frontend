@@ -10,6 +10,11 @@ import "../../styles/standard-information/workplace-table.css";
 const WorkplacePage =() => {
   const [workplaces,setWorkplaces] = useState([]);
 
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8080/standardinformation";
+
+
+  console.log("WorkplacePage 에서 API URL 확인!" , apiUrl);
+
   //백엔드 에서 데이터 보내기
   useEffect(()=> {
     const getData = async () =>{
@@ -23,19 +28,21 @@ const WorkplacePage =() => {
     getData();
   },[]);
 
+
   //작업장 추가
   const addWorkplace = async (newWorkplace) =>{
     try{
       const savedWorkplace = await createWorkplace(newWorkplace);
       setWorkplaces([...workplaces,savedWorkplace]); // 상태 업데이트
     }catch(error){
-      console.error("작업장 정보 추가 실패 ㅜㅜ",error);
+      console.error("작업장 정보 등록 실패 ",error);
     }
     };
       return(
         <div className="workplace-page">
-          <WorkplaceForm onAddWorkplace={addWorkplace}/>
-          <WorkplaceTable workplaces={workplaces}/>
+          {/* ✅ apiUrl을 WorkplaceForm에 전달 */}
+          <WorkplaceForm onAddWorkplace={addWorkplace} apiUrl={apiUrl} />
+          <WorkplaceTable workplaces={workplaces} />
 
         </div>
       );
