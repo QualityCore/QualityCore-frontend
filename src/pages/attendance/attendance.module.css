@@ -95,3 +95,81 @@
 .fc-scrollgrid {
     margin: 0;
 }
+
+.fc .fc-scrollgrid-liquid {
+    height: 100%;
+    margin: 0;
+}
+
+.profile {
+    width: 100px;
+    border: solid 1px;
+    border-radius: 50px;
+    height: 100px;
+    margin-left: 50px;
+    margin-top: 15px;
+}
+
+.profileName {
+    margin-left: 70px;
+    margin-top: 5px;
+
+}
+
+.profileName1 {
+    margin-left: 62px;
+}
+
+.profileBar .leftContent,
+.profileBar .rightContent {
+    flex: 1;
+    /* 양쪽 영역 동일한 비율로 나눔 */
+}
+
+.profileBar .divider {
+    width: 1px;
+    height: 80%;
+    background-color: #ddd;
+    margin-left: 195px;
+    margin-top: -190px;
+}
+
+.rightContent {
+    margin-left: 255px;
+    margin-top: -145px;
+}
+
+.styledTb {
+    width: 96%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.styledTb th,
+.styledTb td {
+    padding: 12px 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.styledTb tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.styledTb tr:hover {
+    background-color: #f1f1f1;
+}
+
+.styledTb th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.styledTb td {
+    vertical-align: middle;
+}
+
+.tableName {
+    margin-left: 20px;
+}
