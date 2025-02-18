@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-import Modal from "../../components/common/Modal"; // 공통 모달 컴포넌트 가져오기기
+import AlertModal from "../common/AlertModal";
+import ConfirmModal from "../../components/common/Modal";
 import "../../styles/standard-information/workplace-form.css";
 
 
@@ -21,38 +22,42 @@ const WorkplaceForm = ({  apiUrl }) => {
   const[showConfirmModal,setShowConfirmModal] = useState(false);
   const[showSuccessModal, setShowSuccessModal] = useState(false);
   const[showErrorModal,setShowErrorModal] = useState(false);
-  const[errorMessge,setErrorMessge] = useState("");
-
-
+  const[errorMessage,setErrorMessage] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({...formData,[e.target.name]:e.target.value});
   };
-
+    
   const handleSubmit = (e) =>{
     e.preventDefault();
-    setShowConfirmModal(true)// 등록 모달 확인하기
+    
+    // 빈칸 검증
+  if(!formData.workplaceName.trim()||
+     !formData.workplaceCode.trim()||
+     !formData.workplaceLocation.trim()||
+     !formData.managerName.trim()||
+     !formData.workplaceCapacity.trim()){
+        setErrorMessage("입력이 누락되었습니다. 다시작성 후 저장바랍니다.");
+        setShowErrorModal(true);
+        return;
+       }
+
+       setShowConfirmModal(true);
   };
 
+
   const confirmRegistration  = async () => {
-    setShowConfirmModal(false); // 확인모달 닫기기 
-
-    console.log("🚀 실제 formData 요청 데이터:", formData); 
-
-    console.log("🚀 실제 Workplace API 요청 URL:", `${apiUrl}/workplaces/regist`);
-
+    setShowConfirmModal(false); // 확인모달 닫기 
     try{
-        const { workplaceId, ...formDataWithoutId } = formData; // ✅ workplaceId 제거
+        const { workplaceId, ...formDataWithoutId } = formData; 
         const response = await axios.post(`${apiUrl}/workplaces/regist`, {
-            ...formDataWithoutId, lineInformation: { lineId: formData.lineId }
+            ...formDataWithoutId, lineInformation: { lineId: formData.lineId },
         });
 
-        console.log("✅ 등록 성공:", response.data);
-
-      if(response.status === 200){
+      if(response.status === 201){
         setShowSuccessModal(true); //등록 성공 모달열기
         setFormData({
-          workplaceName: "제",
+          workplaceName: "",
           workplaceCode: "W0",
           workplaceLocation: "서울",
           workplaceType: "분쇄",
@@ -62,13 +67,20 @@ const WorkplaceForm = ({  apiUrl }) => {
           workplaceCapacity: "",
           workplaceCapacityUnit: "L",
         });
+        // 일정 시간 후 새로고침
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); // 3초 후 새로고침
       }
     }catch(error){
-      console.log("등록 실패 :" , error.response?.data || error.message);
-      setErrorMessge(error.response?.data?.message||"등록하는데 문제가 발생했어 확인해봐요");
+      setErrorMessage(error.response?.data?.message||"등록하는데 문제가 발생했어 확인해봐요");
       setShowErrorModal(true); // 오류 모달 열기
     }
   };
+
+    const handleSuccessModalClose = () => {
+      setShowSuccessModal(false);
+    };  // 성공 모달 닫기기
 
 
   return (
@@ -132,10 +144,11 @@ const WorkplaceForm = ({  apiUrl }) => {
           <input className="workplace-input" name="managerName" 
                   value={formData.managerName} placeholder="작업 담당자" onChange={handleChange} />
 
-          <label>작업장 용량/생산 가능량</label>
+          <label>생산가능용량</label>
           <input className="workplace-input" name="workplaceCapacity" value={formData.workplaceCapacity}
-                   placeholder="작업장 용량/ 생산 가능량" onChange={handleChange} />
-      
+                   placeholder="생산가능 용량" onChange={handleChange} />
+
+
           <select name="workplaceCapacityUnit" value={formData.workplaceCapacityUnit} onChange={handleChange}>
             <option value="L">L / day </option>
             <option value="kg">kg / day </option>
@@ -146,31 +159,26 @@ const WorkplaceForm = ({  apiUrl }) => {
       </form>
 
       {/* 확인 모달 */}
-      <Modal
+      <ConfirmModal
       isOpen={showConfirmModal}
       onClose={()=>setShowConfirmModal(false)}
       onConfirm={confirmRegistration}
       message="데이터를 등록 하시겠습니까?" 
-      isFinal={false} // 첫 번째 모달에서는 확인 & 취소 버튼 표시시
       />
 
 
       {/* 등록 완료 모달 */}
-      <Modal
+      <AlertModal
       isOpen={showSuccessModal}
-      onClose={()=>setShowSuccessModal(false)}
-      onConfirm={()=>setShowSuccessModal(false)}
+      onClose={handleSuccessModalClose}
       message="등록이 완료되었습니다"
-      isFinal={true} // 두 번째 모달에서는 확인 버튼만 표시
       />
 
       {/* 오류 모달 */}
-      <Modal
+      <AlertModal
       isOpen={showErrorModal}
       onClose={()=> setShowErrorModal(false)}
-      onConfirm={()=>setShowErrorModal(false)}
-      message={`등록 실패: ${errorMessge}`}
-      isFinal={true}
+      message={`등록 실패: ${errorMessage}`}
       />
 
     </div>
