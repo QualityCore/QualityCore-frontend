@@ -157,7 +157,7 @@ const Sidebar = () => {
         <li>
           <Link to="/attendance">
             <HiOutlineUserGroup className="mr-4" />
-            근태관리
+            스케줄관리
           </Link>
         </li>
       </ul>
