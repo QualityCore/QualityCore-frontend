@@ -13,10 +13,6 @@ const WorkplacePage =() => {
   const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8080/standardinformation";
 
 
-  console.log("✅ WorkplacePage 에서 API URL 확인!" , apiUrl);
-
-
-
   //백엔드 에서 데이터 보내기
   useEffect(()=> {
     const getData = async () =>{

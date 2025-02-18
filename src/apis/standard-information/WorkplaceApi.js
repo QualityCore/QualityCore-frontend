@@ -41,4 +41,18 @@ export const updateWorkplace = async (workplaceId, updatedData) => {
 };
 
 
+// 작업장 삭제
+export const deleteWorkplace = async (workplaceId) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/${workplaceId}`);
+    return response.data;
+  } catch (error) {
+    console.error("작업장 삭제 연결 실패:", error);
+    throw error;
+  }
+};
+
+
+
+
 

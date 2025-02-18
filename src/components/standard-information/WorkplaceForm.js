@@ -70,7 +70,7 @@ const WorkplaceForm = ({  apiUrl }) => {
         // 일정 시간 후 새로고침
         setTimeout(() => {
           window.location.reload();
-        }, 3000); // 3초 후 새로고침
+        }, 1000); // 1초 후 새로고침
       }
     }catch(error){
       setErrorMessage(error.response?.data?.message||"등록하는데 문제가 발생했어 확인해봐요");
