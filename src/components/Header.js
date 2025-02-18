@@ -57,7 +57,7 @@ const Header = () => {
       '/rework': { main: '생산실적 관리', sub: '재작업 관리' },
 
       // 근태관리
-      '/attendance': { main: '근태관리', sub: '근태관리' },
+      '/attendance': { main: '스케줄관리', sub: '스케줄표' },
 
       // 기본 페이지
       '/': { main: '', sub: '메인화면' }

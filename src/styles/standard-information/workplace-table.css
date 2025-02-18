@@ -43,7 +43,7 @@ table {
   margin-left: 0px;
 }
 
-th:nth-child(3), td:nth-child(3) {
+/* th:nth-child(3), td:nth-child(3) {
   width: 100px;
 }
 
@@ -57,7 +57,14 @@ th:nth-child(5), td:nth-child(5) {
 
 th:nth-child(8), td:nth-child(8) {
   width: 140px;
-}
+
+} 
+
+
+
+
+
+
 
 .edit-form-container {
   display: flex; /* 만약 'display: none;'이라면 수정 */
@@ -138,5 +145,9 @@ th:nth-child(8), td:nth-child(8) {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
+
+
+
 
 
