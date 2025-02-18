@@ -2,6 +2,7 @@ import { useState , useEffect } from "react";
 import axios from "axios";
 import ConfirmModal from "../common/Modal";
 import AlertModal from "../common/AlertModal";
+import DeleteConfirmModal from "../common/DeleteConfirmModal";
 import "../../styles/standard-information/workplace-table.css";
   /*
     -렌더링 : React가 화면을 다시 그리는과정
@@ -20,9 +21,7 @@ import "../../styles/standard-information/workplace-table.css";
 
 
   const WorkplaceTable = ({workplaces,apiUrl}) => {
-    console.log("🔍 WorkplaceTable에서 받은 API URL:", apiUrl);
-    console.log("🔍 WorkplaceTable에서 받은 작업장 데이터:", workplaces);
-
+    
     const[selectedWorkplace, setSelectedWorkplace] =useState(null);
     const[updatedData , setUpdatedData] = useState({}); // 수정!
     const[showEditForm , setShowEditForm] = useState(false);
@@ -43,9 +42,7 @@ import "../../styles/standard-information/workplace-table.css";
      */
 
 
-    useEffect(()=>{
-      console.log("📌 showEditForm 값 변경됨:", showEditForm);
-    },[showEditForm]);
+    useEffect(()=>{},[showEditForm]);
 
 
     // 수정 버튼 클릭 시 해당 장업장 정보 불러오기
@@ -57,9 +54,6 @@ import "../../styles/standard-information/workplace-table.css";
         console.error("❌ Error: 선택된 작업장의 ID가 없습니다!");
         return;
       }
-
-      console.log("🔍 [수정 버튼 클릭됨] workplace:", workplace);
-      console.log("🔍 [수정 버튼 클릭됨] workplaceId:", workplace.workplaceId);
       
       setSelectedWorkplace(workplace);
 
@@ -85,7 +79,29 @@ import "../../styles/standard-information/workplace-table.css";
       setShowConfirmModal(true);
     };
 
+    const handleRefresh = () => {
+      setShowSuccessModal(false); // 모달 닫기
+      window.location.reload(); // 새로고침 실행
+    };
+// ================================================================================================================================================
+    //삭제 확인 모달띄우는 함수 추가
+    const[showDeleteModal , setShowDeleteModal] = useState(false);
+    const[deleteTargetId , setDeleteTargetId] = useState(null);
+    const [deleteTargetName, setDeleteTargetName] = useState("");
 
+    const handleDeleteClick = (workplaceId, workplaceName) => {
+      setDeleteTargetId(workplaceId);
+      setDeleteTargetName(workplaceName);
+      setShowDeleteModal(true);
+    };
+
+    useEffect(() => {
+      console.log("📌 모달 상태 변경됨:", showDeleteModal);
+      if (!showDeleteModal) {
+        console.log("✅ 모달이 닫혀야 합니다!");
+      }
+    }, [showDeleteModal]);
+// ===================================================================================================================================================
     // API 호출하여 수정 요청 실행
     /*
       async / await 을 사용하는 이유
@@ -99,9 +115,9 @@ import "../../styles/standard-information/workplace-table.css";
 
       -- async 는 함수선언 앞에 위치!
       -- await 은 비동기 요청 앞에 위치!
-    */
+      */
 
-    const confirmUpdate  = async ()=>{
+      const confirmUpdate  = async ()=>{
       const workplaceId = (selectedWorkplace?.workplaceId|| updatedData?.workplaceId||"").trim();
 
       // workplaceId 가 undefined일 경우 API 요청 방지
@@ -116,28 +132,59 @@ import "../../styles/standard-information/workplace-table.css";
       }
 
       const putUrl = `${apiUrl}/workplaces/${workplaceId}`;
-      console.log("✅ [API 요청 URL]:", putUrl);
 
       try{
         const response = await axios.put(putUrl,updatedData)
-        console.log("✅ 작업장 수정 성공:", response);
 
         if(response.status === 200){
-          setShowConfirmModal(true);
+          console.log("✅ 수정 성공! showSuccessModal 활성화");
+          setShowSuccessModal(true);  // ✅ 성공 모달 표시
+          setShowConfirmModal(false); // 확인 모달 닫기
           setShowEditForm(false); // 수정 폼 닫기
-          
-          //일정 시간 후 새로고침
-          setTimeout(()=>{
-            window.location.reload();
-          },2000); //2초 딜레이이
         }
       }catch(error){
         setErrorMessage(error.response?.data?.massage||"수정하는데 문제가생겼어요!");
         setShowSuccessModal(false);
       }
     };
+
+
+    // =============================================================================================================================================
+    
+    // 삭제 API 요청보내는 함수 
+      const deleteWorkplace = async () => {
+        if (!deleteTargetId) return;
+    
+        try {
+          const deleteUrl = `${apiUrl}/workplaces/${deleteTargetId}`;
+          console.log("🗑️ 삭제 요청:", deleteUrl);
+    
+          const response = await axios.delete(deleteUrl);
+        
+          if (response.status === 200) {
+            console.log("✅ 삭제 성공!");
+            setShowDeleteModal(false);
+            window.location.reload(); // ✅ 삭제 후 새로고침
+          }
+        } catch (error) {
+          console.error("❌ 삭제 실패:", error);
+          }
+      };
+    
+      //confirmDelete에서 실제 삭제 API 요청
+      const confirmDelete = async () => {
+        if (!deleteTargetId) return;
       
-  
+        try {
+          await deleteWorkplace(deleteTargetId);
+          console.log("✅ 삭제 성공!");
+          setShowDeleteModal(false);
+          window.location.reload(); // ✅ 삭제 후 새로고침
+        } catch (error) {
+          console.error("❌ 삭제 실패:", error);
+        }
+      };
+      
   return (
     <div>
       <table className="workplace-table">
@@ -168,7 +215,7 @@ import "../../styles/standard-information/workplace-table.css";
                 <td>{item.workplaceCapacityUnit}</td>
               <td>
                 <button className="workplace-edit-btn" onClick={()=>handleEditClick(item)}>수정</button>
-                <button className="workplace-delete-btn">삭제</button>
+                <button className="workplace-delete-btn" onClick={() => handleDeleteClick(item.workplaceId, item.workplaceName)}>삭제</button>
               </td>
             </tr>
           ))}
@@ -275,8 +322,30 @@ import "../../styles/standard-information/workplace-table.css";
           {/*수정완료 모달*/}
           <AlertModal
             isOpen={showSuccessModal}
-            onClose={() =>setShowSuccessModal(false)}
-            message="작업장 정보가 성공적으로 수정되었습니다."/>
+            onClose={handleRefresh}  // ✅ "확인" 버튼 클릭 시 새로고침 실행
+            message="작업장 정보가 성공적으로 수정되었습니다."
+          />
+
+
+          {/*삭제 확인 모달 */}
+          <ConfirmModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={deleteWorkplace}
+          message="정말로 삭제하시겠습니까?"
+          />
+
+
+          <DeleteConfirmModal
+          isOpen={showDeleteModal}
+          onClose={() => {
+          console.log("🔄 [모달 닫기 실행됨]");
+          setShowDeleteModal(false);
+          }}
+          onConfirm={confirmDelete}
+          itemName={deleteTargetName}
+          />
+
       </div>  
     );
   }
