@@ -26,3 +26,19 @@ export const createWorkplace = async (formData) => {
   }
 };
 
+
+// 작업장 수정
+export const updateWorkplace = async (workplaceId, updatedData) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/${workplaceId}`,updatedData,{
+        headers: { "Content-Type": "application/json" }
+      });
+    return response.data;
+  } catch (error) {
+    console.error("작업장 수정 연결 실패:", error);
+    throw error;
+  }
+};
+
+
+
