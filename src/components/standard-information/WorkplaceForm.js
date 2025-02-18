@@ -124,7 +124,7 @@ const WorkplaceForm = ({  apiUrl }) => {
           </select>
 
         <label className="line-info">LINE 정보</label>
-        <select className="workplace-select-line-info" name="lineId" onChange={handleChange}>
+        <select className="workplace-select" name="lineId" onChange={handleChange}>
             <option value="LINE001">LINE001</option>
             <option value="LINE002">LINE002</option>
             <option value="LINE003">LINE003</option>
@@ -149,9 +149,9 @@ const WorkplaceForm = ({  apiUrl }) => {
                    placeholder="생산가능 용량" onChange={handleChange} />
 
 
-          <select name="workplaceCapacityUnit" value={formData.workplaceCapacityUnit} onChange={handleChange}>
-            <option value="L">L / day </option>
-            <option value="kg">kg / day </option>
+          <select className="workplace-select" id="CapacityUnit" name="workplaceCapacityUnit" value={formData.workplaceCapacityUnit} onChange={handleChange}>
+            <option value="L">L</option>
+            <option value="kg">kg </option>
           </select>
         </div>
 

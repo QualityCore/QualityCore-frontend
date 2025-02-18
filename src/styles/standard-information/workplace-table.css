@@ -103,7 +103,7 @@ table {
 
 .edit-field input,
 .edit-field select {
-    font-size: 17px; /* 입력 필드 안의 글자 크기 */
+    font-size: 16px; /* 입력 필드 안의 글자 크기 */
     height: 30px; /* 입력 필드 높이 증가 */
 }
 
@@ -129,6 +129,10 @@ table {
 
 
 
+#capacity-edit {
+  width: 80px; /* 원하는 크기로 조정 */
+}
 
-
-
+.capacity-input {
+  width: 80px !important;
+}
