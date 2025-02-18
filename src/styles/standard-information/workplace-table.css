@@ -57,7 +57,12 @@ th:nth-child(5), td:nth-child(5) {
 
 th:nth-child(8), td:nth-child(8) {
   width: 140px;
+
 } 
+
+
+
+
 
 
 
@@ -140,6 +145,9 @@ th:nth-child(8), td:nth-child(8) {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
+
+
 
 
 
