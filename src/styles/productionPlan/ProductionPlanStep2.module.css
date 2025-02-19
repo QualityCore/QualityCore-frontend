@@ -1,0 +1,149 @@
+.container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    min-height: calc(100vh - 190px);
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    color: #2B3674;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+/* 회차별 섹션 스타일 */
+.roundSection {
+    background-color: #F4F7FE;
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.roundTitle {
+    color: #5687F2;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* 테이블 스타일 */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+}
+
+.table thead th {
+    background-color: white;
+    color: #2D3748;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid #E2E8F0;
+    font-size: 0.9rem;
+}
+
+.table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid #E2E8F0;
+    background-color: white;
+    font-size: 0.9rem;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 입력 필드 스타일 */
+.input {
+    width: 100%;
+    max-width: 120px;
+    padding: 0.5rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #5687F2;
+    box-shadow: 0 0 0 2px rgba(86, 135, 242, 0.1);
+}
+
+/* 버튼 그룹 */
+.buttonGroup {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.prevButton, .nextButton {
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.prevButton {
+    background-color: white;
+    color: #5687F2;
+    border: 1px solid #5687F2;
+}
+
+.nextButton {
+    background-color: #5687F2;
+    color: white;
+    border: none;
+}
+
+.prevButton:hover, .nextButton:hover {
+    transform: translateY(-2px);
+}
+
+.prevButton:hover {
+    background-color: #f8faff;
+}
+
+.nextButton:hover {
+    background-color: #4776E0;
+}
+
+/* 데이터 없을 때 메시지 */
+.container p {
+    text-align: center;
+    color: #718096;
+    padding: 2rem;
+    background-color: #F4F7FE;
+    border-radius: 12px;
+    font-size: 0.95rem;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .buttonGroup {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .prevButton, .nextButton {
+        width: 100%;
+        justify-content: center;
+    }
+}

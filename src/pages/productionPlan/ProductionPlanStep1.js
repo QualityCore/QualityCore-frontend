@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/productionPlan/ProductionPlanStep1.css";
-import { fetchProductBOM, fetchProducts } from "../../apis/productionPlanApi/ProductionPlanStep1Api";
+import { productionPlanStep1Api, fetchProductBOM, fetchProducts } from "../../apis/productionPlanApi/ProductionPlanStep1Api";
 import { 
     Beer, 
     Ruler,          
@@ -99,6 +99,36 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
         }
  
     }
+
+    const handleNextStep = async () => {
+        try {
+            console.log("📌 Step1 데이터 확인 (전송 전):", formData);
+    
+            // ✅ Step1 API 호출 후 planProductId 받기
+            const response = await productionPlanStep1Api(formData);
+            console.log("✅ Step1 API 응답 (planProductId):", response);
+    
+            // ✅ formData에 planProductId 저장
+            const updatedProducts = formData.products.map((product, index) => ({
+                ...product,
+                planProductId: response // 백엔드에서 받은 planProductId 저장
+            }));
+    
+            setFormData({
+                ...formData,
+                products: updatedProducts,
+            });
+    
+            console.log("📌 Step1 데이터 확인 (planProductId 포함):", updatedProducts);
+    
+            goToStep(2); // Step2로 이동
+        } catch (error) {
+            console.error("❌ Step1 API 호출 실패:", error);
+        }
+    };
+    
+    
+    
     return (
         <div className="production-plan-container">
             <div className="steps-container">
@@ -178,7 +208,7 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
                     </button>
     
                     <div className="button-group">
-                        <button type="button" onClick={() => goToStep(2)}>
+                        <button type="button" onClick={handleNextStep}>
                             다음 단계 <span>→</span>
                         </button>
                     </div>
