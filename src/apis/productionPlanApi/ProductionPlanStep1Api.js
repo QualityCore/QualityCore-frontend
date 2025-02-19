@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const productionPlanStep1Api = async (planData) => {
     try{
-      const response = await axios.post(`http://localhost:8080/api/v1/plans`, planData);
+      const response = await axios.post(`http://localhost:8080/api/v1/plans/step1`, planData);
 
         return response.data;
     } catch (error) {

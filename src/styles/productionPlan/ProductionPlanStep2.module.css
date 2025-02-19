@@ -22,6 +22,12 @@
     border-radius: 20px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.roundSection:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
 }
 
 .roundTitle {
@@ -29,6 +35,13 @@
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.roundTitle::before {
+    content: '🏭';
+    margin-right: 0.5rem;
 }
 
 /* 테이블 스타일 */
@@ -37,10 +50,13 @@
     border-collapse: separate;
     border-spacing: 0;
     margin-top: 1rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .table thead th {
-    background-color: white;
+    background-color: #F8FAFF;
     color: #2D3748;
     font-weight: 600;
     padding: 1rem;
@@ -54,27 +70,53 @@
     border-bottom: 1px solid #E2E8F0;
     background-color: white;
     font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover td {
+    background-color: #F8FAFF;
 }
 
 .table tbody tr:last-child td {
     border-bottom: none;
 }
 
-/* 입력 필드 스타일 */
+/* 입력 필드 공통 스타일 */
 .input {
-    width: 100%;
-    max-width: 120px;
     padding: 0.5rem;
     border: 1px solid #E2E8F0;
     border-radius: 8px;
     font-size: 0.9rem;
     transition: all 0.2s;
+    background-color: white;
+}
+
+/* 수량 입력 필드 */
+input[type="number"].input {
+    width: 100px;
+    text-align: right;
+}
+
+/* 날짜 입력 필드 */
+input[type="date"].input {
+    width: 140px;
+    font-family: inherit;
+    color: #2D3748;
+    cursor: pointer;
+}
+
+/* 날짜 입력 필드 캘린더 아이콘 스타일링 */
+input[type="date"].input::-webkit-calendar-picker-indicator {
+    background-color: transparent;
+    cursor: pointer;
+    padding: 2px;
+    filter: invert(60%);
 }
 
 .input:focus {
     outline: none;
     border-color: #5687F2;
-    box-shadow: 0 0 0 2px rgba(86, 135, 242, 0.1);
+    box-shadow: 0 0 0 3px rgba(86, 135, 242, 0.1);
 }
 
 /* 버튼 그룹 */
@@ -82,6 +124,8 @@
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid #E2E8F0;
 }
 
 .prevButton, .nextButton {
@@ -94,6 +138,8 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 120px;
+    justify-content: center;
 }
 
 .prevButton {
@@ -110,6 +156,7 @@
 
 .prevButton:hover, .nextButton:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(86, 135, 242, 0.2);
 }
 
 .prevButton:hover {
@@ -128,13 +175,41 @@
     background-color: #F4F7FE;
     border-radius: 12px;
     font-size: 0.95rem;
+    margin: 2rem 0;
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.roundSection {
+    animation: fadeIn 0.3s ease-out;
 }
 
 /* 반응형 스타일 */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .table {
         display: block;
         overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .input {
+        min-width: unset;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
     }
     
     .buttonGroup {
@@ -144,6 +219,83 @@
     
     .prevButton, .nextButton {
         width: 100%;
-        justify-content: center;
     }
+    
+    .roundSection {
+        padding: 1rem;
+    }
+}
+
+/* 스크롤바 스타일링 */
+.table::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.table::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.summarySection {
+    margin-bottom: 2rem;
+}
+
+.summaryCard {
+    background: linear-gradient(135deg, #5687F2 0%, #4776E0 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: white;
+}
+
+.summaryCard h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.summaryGrid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.summaryGrid label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.summaryGrid span {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.roundHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.batchInfo {
+    font-size: 0.9rem;
+    background: rgba(86, 135, 242, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin-left: 1rem;
+    color: #5687F2;
+    font-weight: 500;
 }
