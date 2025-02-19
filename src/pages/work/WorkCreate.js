@@ -1,12 +1,12 @@
-import workCreate from "./workCreate.module.css"
+import "./workCreate.css"
 
 function WorkCreate() {
 
     return (
         <>
-            <div className={workCreate.mainBar}>
-                <h2 className={workCreate.tableName}>작업지시서</h2>
-                <table className={workCreate.table}>
+            <div className="mainBar">
+                <h2 className="tableName">작업지시서</h2>
+                <table className="workTable">
                     <tr>
                         <th>지시번호</th>
                         <td>16</td>
@@ -26,9 +26,9 @@ function WorkCreate() {
                         <td>캔(330mL)</td>
                     </tr>
                 </table>
-                <h2 className={workCreate.bomName}>원자재</h2>
-                <button className={workCreate.bomCreateButton}>🔎품목추가</button>
-                <table className={workCreate.bomTable}>
+                <h2 className="bomName">원자재</h2>
+                <button className="bomCreateButton">🔎품목추가</button>
+                <table className="bomTable">
                     <tr>
                         <th>NO</th>
                         <th>품목명</th>
@@ -51,11 +51,11 @@ function WorkCreate() {
                         <td id="totalAmount"></td>
                     </tr>
                 </table>
-                <h2 className={workCreate.footName}>특이사항</h2>
-                <textarea name="" id="" className={workCreate.etc}></textarea>
-                <button className={workCreate.createButton}>🔎등록</button>
+                <h2 className="footName">특이사항</h2>
+                <textarea name="" id="" className="etc"></textarea>
+                <button className="createButton">🔎등록</button>
             </div>
-            <div className={workCreate.dd}>
+            <div className="dd">
 
             </div>
         </>

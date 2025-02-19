@@ -71,75 +71,74 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-table {
+.workOrderTable {
     width: 97%;
     margin-top: 5px;
     border-collapse: collapse;
     margin-left: 15px;
 }
 
-th,
-td {
+.workOrderTable th,
+.workOrderTable td {
     padding: 10px;
     text-align: center;
     border: none;
 }
 
-thead {
+.workOrderTable thead {
     background-color: white;
     font-weight: bold;
 }
 
-/* 테이블 각 열의  */
-/* th:nth-child(1),
-td:nth-child(1) {
+.workOrderTable th:nth-child(1),
+.workOrderTable td:nth-child(1) {
     width: 100px;
 }
 
-th:nth-child(2),
-td:nth-child(2) {
+.workOrderTable th:nth-child(2),
+.workOrderTable td:nth-child(2) {
     width: 100px;
 }
 
-th:nth-child(3),
-td:nth-child(3) {
+.workOrderTable th:nth-child(3),
+.workOrderTable td:nth-child(3) {
     width: 180px;
 }
 
-th:nth-child(4),
-td:nth-child(4) {
+.workOrderTable th:nth-child(4),
+.workOrderTable td:nth-child(4) {
     width: 150px;
 }
 
-th:nth-child(5),
-td:nth-child(5) {
+.workOrderTable th:nth-child(5),
+.workOrderTable td:nth-child(5) {
     width: 150px;
 }
 
-th:nth-child(6),
-td:nth-child(6) {
+.workOrderTable th:nth-child(6),
+.workOrderTable td:nth-child(6) {
     width: 120px;
 }
 
-th:nth-child(7),
-td:nth-child(7) {
+.workOrderTable th:nth-child(7),
+.workOrderTable td:nth-child(7) {
     width: 100px;
 }
 
-th:nth-child(8),
-td:nth-child(8) {
+.workOrderTable th:nth-child(8),
+.workOrderTable td:nth-child(8) {
     width: 100px;
 }
 
-th:nth-child(9),
-td:nth-child(9) {
+.workOrderTable th:nth-child(9),
+.workOrderTable td:nth-child(9) {
     width: 110px;
 }
 
-th:nth-child(10),
-td:nth-child(10) {
+.workOrderTable th:nth-child(10),
+.workOrderTable td:nth-child(10) {
     width: 180px;
-} */
+}
 
 /* 진행률 */
 .progress_container {
@@ -202,5 +201,3 @@ td:nth-child(10) {
 .progress_bar[data-progress="0"] {
     width: 0%;
 }
-
-/* 필요 시 다른 진행률 값도 추가 */
