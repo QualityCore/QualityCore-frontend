@@ -157,68 +157,54 @@ import "../../styles/standard-information/workplace-table.css";
     //삭제 확인 모달(첫번째) (true = 열림 , false = 닫힘)
     const[showDeleteModal , setShowDeleteModal] = useState(false); 
 
-    // 최종삭제(찐 삭제)(true = 열림 , false = 닫힘)
-    const [showFinalDeleteModal, setShowFinalDeleteModal] = useState(false); 
+    const deleteWorkplace = async(workplaceId) => {
+      try{
+        const response = await axios.delete(`http://localhost:8080/standardinformation/workplaces/${workplaceId}`);
+        console.log("!!!! 작업장 삭제 성공!!!!!!");
+        return response.data;
+      
+      }catch(error){console.error("!!!작업장 삭제 실패!!!!" ,error);
+        throw error;
+      }
+    };
 
-
-
-
-    // 삭제 버튼 클릭 시 첫 번째  삭제 확인 모달 열기기
+    // 삭제 버튼 클릭시 모달 열기기
      const handleDeleteClick = (workplaceId, workplaceName) => {
-      console.log("🗑️ handleDeleteClick 실행됨!", { workplaceId, workplaceName });
       if (!workplaceId) return; // ✅ workplaceId가 없으면 실행 안 함
-      console.error("없어 시발 아이디 없다고")
       setDeleteTargetId(workplaceId);
       setDeleteTargetName(workplaceName);
       setShowDeleteModal(true);
     };
 
 
-     //첫 번째 삭제 확인 모달에서 확인을 누르면 최종 삭제 모달 열기
-     const confirmDelete = () => {
-      console.log("✅ confirmDelete 실행됨!");
-      setShowDeleteModal(false); // ✅ 기존 삭제 확인 모달 닫기 (수정)
-      setShowFinalDeleteModal(true); // ✅ 최종 삭제 모달 열기
+     //모달 닫기 및 상태 초기화화
+     const closeModal = () => {
+      setShowDeleteModal(false);
+      setDeleteTargetId(null);
+      setDeleteTargetName("");
     };
 
 
     // 최종 삭제 실행행
-
-      const deleteWorkplace = async () => {
-        if (!deleteTargetId) return;
+    const confirmDelete = async () => {
+      if (!deleteTargetId){console.error("❌ 삭제 대상 ID가 설정되지 않았습니다.");
+        return;
+      }
+         
     
-        try {
-          const deleteUrl = `${apiUrl}/workplaces/${deleteTargetId}`;
-          console.log("삭제를 요청해봅니다!!!!!" , deleteUrl);
-        
-          const response = await axios.delete(deleteUrl);
-        
-          if (response.status === 200) {
-            setShowDeleteModal(false);
-            window.location.reload(); // ✅ 삭제 후 새로고침
-          }
-        } catch (error) {
-          console.error("❌ 삭제 실패:", error);
-          }
-      };  
+      try {
+        console.log("삭제요청! ID :" , deleteTargetId); // 로그 추가
+        await deleteWorkplace(deleteTargetId); // API 호출
+        closeModal(); // 모달 닫기 및 상태 초기화
+        window.location.reload(); // 새로고침 (필요 시)
+      } catch (error) {
+        console.error("❌ 삭제 실패:", error);
+      }
+    };
   
-    useEffect(()=>{
-      console.log("🔍 showDeleteModal 상태 변경:", showDeleteModal);},[showDeleteModal]);
-      
-      useEffect(() => {
-        console.log("📢 showFinalDeleteModal 변경됨:", showFinalDeleteModal);
-      }, [showFinalDeleteModal]);
 
-    useEffect(() => {
-      setShowFinalDeleteModal(false);  // ✅ 페이지 로드시 `false`로 초기화
-    }, []);
-    
-//================================================================================================================================================
+//===============================================================================================================================================
 
-   
-    
-
- 
   return (
     <div>
       <table className="workplace-table">
@@ -264,12 +250,12 @@ import "../../styles/standard-information/workplace-table.css";
              
               <div className="place-edit-row">
                   <div className="place-edit-field">
-                    <label>작업장 이름</label>
-                      <input type="text" name="workplaceName" value={updatedData.workplaceName} onChange={handleChange}/>
+                    <label for="workplaceName">작업장 이름</label>
+                      <input id="workplaceName" type="text" name="workplaceName" value={updatedData.workplaceName} onChange={handleChange}/>
                   </div>
                   <div className="place-edit-field">
-                    <label>작업장 타입</label>
-                     <select className="place-edit-select" name="workplaceType" value={updatedData.workplaceType} onChange={handleChange}> {/*수정!*/}
+                    <label for="workplaceType">작업장 타입</label>
+                     <select id="workplaceType" name="workplaceType" value={updatedData.workplaceType} onChange={handleChange}> {/*수정!*/}
                         <option value="분쇄">분쇄</option>
                         <option value="당화">당화</option>
                         <option value="여과">여과</option>
@@ -286,12 +272,12 @@ import "../../styles/standard-information/workplace-table.css";
 
               <div className="place-edit-row">
                 <div className="place-edit-field">
-                  <label>작업장 코드</label>
-                    <input type="text" name="workplaceCode" value={updatedData.workplaceCode} onChange={handleChange} />
+                  <label for="workplaceCode">작업장 코드</label>
+                    <input id="workplaceCode" type="text" name="workplaceCode" value={updatedData.workplaceCode} onChange={handleChange} />
                 </div>    
                 <div className="place-edit-field">
-                  <label>작업장 상태</label>
-                    <select className="place-edit-select" name="workplaceStatus" value={updatedData.workplaceStatus} onChange={handleChange}>
+                  <label for="workplaceStatus">작업장 상태</label>
+                    <select id="workplaceStatus" name="workplaceStatus" value={updatedData.workplaceStatus} onChange={handleChange}>
                       <option value="가동">가동</option>
                       <option value="정지">정지</option>
                       <option value="고장">고장</option>
@@ -302,12 +288,12 @@ import "../../styles/standard-information/workplace-table.css";
         
               <div className="place-edit-row">
                 <div className="place-edit-field">
-                  <label>작업장위치</label>
-                    <input type="text" name="workplaceLocation" value={updatedData.workplaceLocation} onChange={handleChange}/>
+                  <label for="workplaceLocation" >작업장위치</label>
+                    <input id="workplaceLocation" type="text" name="workplaceLocation" value={updatedData.workplaceLocation} onChange={handleChange}/>
                 </div>
               <div className="place-edit-field">
-                <label>LINE 정보</label>
-                  <select className="place-edit-select" name="lineId" value={updatedData.lineId} onChange={handleChange}>
+                <label for="lineId">LINE 정보</label>
+                  <select id="lineId" name="lineId" value={updatedData.lineId} onChange={handleChange}>
                     <option value="LINE001">LINE001</option>
                     <option value="LINE002">LINE002</option>
                     <option value="LINE003">LINE003</option>
@@ -320,14 +306,14 @@ import "../../styles/standard-information/workplace-table.css";
 
             <div className="place-edit-row">
               <div className="place-edit-field">
-                <label>작업담당자</label>  
-                  <input type="text" name="managerName" value={updatedData.managerName} onChange={handleChange}/>
+                <label for="managerName">작업담당자</label>  
+                  <input id="managerName" type="text" name="managerName" value={updatedData.managerName} onChange={handleChange}/>
               </div>
               
               <div className="place-edit-field">
-                <label>생산가능용량</label>
-                  <input className="place-capacity-input" type="text" name="workplaceCapacity" value={updatedData.workplaceCapacity} onChange={handleChange}/>
-                  <select className="place-edit-select" id="place-capacity-edit" name="workplaceCapacityUnit" value={updatedData.workplaceCapacityUnit} onChange={handleChange}>
+                <label for="workplaceCapacity">생산가능용량</label>
+                  <input id="workplaceCapacity" type="text" name="workplaceCapacity" value={updatedData.workplaceCapacity} onChange={handleChange}/>
+                  <select id="workplaceCapacityUnit" name="workplaceCapacityUnit" value={updatedData.workplaceCapacityUnit} onChange={handleChange}>
                     <option value="L">L</option>  
                     <option value="kg">kg</option>  
                   </select>
@@ -363,24 +349,14 @@ import "../../styles/standard-information/workplace-table.css";
 
 
           {/*삭제 확인 모달 */}
-          <ConfirmModal
-            isOpen={showDeleteModal}
-            onClose={() => setShowDeleteModal(false)}
-            onConfirm={() => {
-              console.log("🛠️ [ConfirmModal]에서 confirmDelete 실행됨!");
-              confirmDelete();  // ✅ "확인" 버튼 클릭 시 실행됨
-              }}
-            message="정말로 삭제하시겠습니까?"
-          />
-
-         {/* 찐 삭제 확인 모달 */}
-          <DeleteConfirmModal
-          isOpen={showFinalDeleteModal} // 최종 삭제 모달 상태 확인
-          onClose={() => {setShowFinalDeleteModal(false)}} //닫기 버튼
-          onConfirm={deleteWorkplace} // 삭제 실행
-          itemName={deleteTargetName}
-          /> 
-
+          {showDeleteModal && (
+            <DeleteConfirmModal
+              isOpen={showDeleteModal}
+              onClose={closeModal}
+              onConfirm={confirmDelete}
+              itemName={deleteTargetName}
+              />
+          )}
       </div>  
     );
   }

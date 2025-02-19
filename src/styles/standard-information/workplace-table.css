@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 80%;
+  width: 60%;
   margin: auto;
   background: rgba(0, 0, 0, 0.5);
   margin-top: 20px;
@@ -53,20 +53,19 @@
 
 .place-edit-form {
   background: white;
-  padding: 30px;
+  padding: 10px;
   border-radius: 10px;
   width: 50%;
-  height: 47%;
+  height: 55%;
   text-align: left;
   line-height: 2.0;
 }
 
 .place-edit-row {
   display: flex;
-  justify-content: space-between; /* 양쪽 정렬 */
-  gap: 50px; /* 필드 사이 간격 */
-  margin-bottom: 35px; /* 행 사이 간격 */
-  justify-content: flex-start;
+  align-items: center; /* 레이블과 입력 필드를 수직으로 정렬 */
+  gap: 20px; /* 레이블과 입력 필드 사이의 간격 */
+  margin-bottom: 20px; /* 행 사이 간격 */
 }
 
 
@@ -93,37 +92,68 @@
   float: right;
 }
 
-.place-edit-field input,
-.place-edit-field select {
-    font-size: 16px; /* 입력 필드 안의 글자 크기 */
-    height: 30px; /* 입력 필드 높이 증가 */
+/*작업장이름*/
+#workplaceName{ 
+  border-radius: 10px;
+  margin: 10px;
+  width: 40%;
+  height: 35px;
+  
+}
+/*작업장코드*/
+#workplaceCode{
+  border-radius: 10px;
+  margin: 10px;
+  width: 30%;
+  height: 35px;
+}
+/*작업장*/
+#workplaceLocation{
+  border-radius: 10px;
+  margin: 10px;
+  width: 50%;
+  height: 35px;
 }
 
-
-/* 입력 필드 스타일 조정 */
-.place-edit-field input,
-.place-edit-field select {
-    width: 150px; /* 가로 크기 조절 */
-    max-width: 150px; /* 최대 너비 제한 */
-    padding: 3px; /* 내부 여백 추가 */
-    border: 2px solid #ccc; /* 테두리 스타일 */
-    border-radius: 20px; /* 둥글게 만들기 */
-    transition: all 0.3s ease-in-out; /* 부드러운 효과 */
+#workplaceType{
+  border-radius: 10px;
+  margin: 10px;
+  width: 50%;
+  height: 35px;
 }
 
-/* 입력 필드에 포커스 시 스타일 */
-.place-edit-field input:focus,
-.place-edit-field select:focus {
-    border-color: #007bff; /* 포커스 시 테두리 색 변경 */
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+#workplaceStatus{
+  border-radius: 10px;
+  margin: 10px;
+  width: 50%;
+  height: 35px;
+  
 }
 
-
-#place-capacity-edit {
-  width: 80px; /* 원하는 크기로 조정 */
+#lineId{
+  border-radius: 10px;
+  margin: 10px;
+  width: 50%;
+  height: 35px;
 }
 
-.place-capacity-input {
-  width: 80px !important;
+#managerName{
+  border-radius: 10px;
+  margin: 10px;
+  width: 40%;
+  height: 35px;
+}
+
+#workplaceCapacity{
+  border-radius: 10px;
+  margin: 10px;
+  width: 25%;
+  height: 35px;
+}
+
+#workplaceCapacityUnit{
+  border-radius: 10px;
+  margin: 0px;
+  width: 15%;
+  height: 35px;
 }
