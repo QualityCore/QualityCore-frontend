@@ -8,7 +8,6 @@ const WorkplaceList = () => {
     const getData = async () => {
       try {
         const data = await fetchWorkplaces();
-        console.log("API응답데이터",data);
 
         setWorkplaces(data); // 상태 업데이트
       } catch (error) {
@@ -24,7 +23,7 @@ const WorkplaceList = () => {
       <ul>
         {workplaces.map((workplace) => (
           <li key={workplace.workplaceId}>
-            {workplace.name} - {workplace.location}
+              
           </li>
         ))}
       </ul>

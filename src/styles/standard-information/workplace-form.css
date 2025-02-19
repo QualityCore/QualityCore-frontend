@@ -46,3 +46,33 @@
   position: absolute;
 }
 
+.workplace-input-group {
+  display: flex;
+  align-items: center; /* 요소 수직 정렬 */
+  gap: 15px; /* 요소 간 간격 */
+}
+
+
+.line-info {
+  margin-left: 30px; /* 드롭다운을 오른쪽으로 이동 */
+}
+
+.workplace-select-line-info {
+  margin-left: -5px;  /* 왼쪽 정렬 */
+}
+
+
+.workplace-select {
+
+  width: 150px; /* Adjust the width as needed */
+  height: 35px; /* Adjust the height as needed */
+  font-size: 15px; /* Adjust the font size as needed */
+  border-radius: 20px; /* 둥글게 만들기 */
+  text-align: center;
+}
+
+#CapacityUnit{
+  width: 70px !important;
+ 
+}
+  
