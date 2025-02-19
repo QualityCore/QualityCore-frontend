@@ -24,7 +24,7 @@ const Header = () => {
 
       // 생산계획
       '/plan-overview': { main: '생산계획', sub: '생산계획 조회' },
-      '/plan-generate': { main: '생산계획', sub: '생산라인별 계획' },
+      '/plan-generate': { main: '생산계획', sub: '생산계획 생성' },
       '/plan-material': { main: '생산계획', sub: '자재 구매신청' },
 
       // 작업지시
