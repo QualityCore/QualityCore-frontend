@@ -9,6 +9,8 @@ import Attendance from "./pages/attendance/Attendance";
 import WorkOrder from "./pages/work/WorkOrder"
 import WorkCreate from "./pages/work/WorkCreate";
 
+import ProductionPlanSteps from "./pages/productionPlan/ProductionPlanSteps"
+
 const App = () => {
   return (
     <Router>
@@ -25,6 +27,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/plan-overview" element={<ProductionPlan />} />
+              <Route path="/plan-generate" element={<ProductionPlanSteps />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/work/orders" element={<WorkOrder />} />
               <Route path="/work/create" element={<WorkCreate />} />

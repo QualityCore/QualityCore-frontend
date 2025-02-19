@@ -87,12 +87,16 @@
     text-align: left;
     border-bottom: 1px solid #E2E8F0;
     font-weight: 600;
+    text-align: center; 
+  vertical-align: middle; 
   }
   
   .plan-table td {
     padding: 12px;
     border-bottom: 1px solid #E2E8F0;
     font-size: 0.9rem;
+    text-align: center;
+  vertical-align: middle; 
   }
   
   .status {
