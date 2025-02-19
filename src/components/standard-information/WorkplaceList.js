@@ -8,7 +8,6 @@ const WorkplaceList = () => {
     const getData = async () => {
       try {
         const data = await fetchWorkplaces();
-        console.log("API응답데이터",data);
 
         setWorkplaces(data); // 상태 업데이트
       } catch (error) {

@@ -62,4 +62,17 @@
 }
 
 
+.workplace-select {
 
+  width: 150px; /* Adjust the width as needed */
+  height: 35px; /* Adjust the height as needed */
+  font-size: 15px; /* Adjust the font size as needed */
+  border-radius: 20px; /* 둥글게 만들기 */
+  text-align: center;
+}
+
+#CapacityUnit{
+  width: 70px !important;
+ 
+}
+  
