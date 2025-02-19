@@ -71,78 +71,77 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-table {
+.workOrderTable {
     width: 97%;
     margin-top: 5px;
     border-collapse: collapse;
     margin-left: 15px;
 }
 
-th,
-td {
+.workOrderTable th,
+.workOrderTable td {
     padding: 10px;
     text-align: center;
     border: none;
 }
 
-thead {
+.workOrderTable thead {
     background-color: white;
     font-weight: bold;
 }
 
-/* 테이블 각 열의  */
-/* th:nth-child(1),
-td:nth-child(1) {
+.workOrderTable th:nth-child(1),
+.workOrderTable td:nth-child(1) {
     width: 100px;
 }
 
-th:nth-child(2),
-td:nth-child(2) {
+.workOrderTable th:nth-child(2),
+.workOrderTable td:nth-child(2) {
     width: 100px;
 }
 
-th:nth-child(3),
-td:nth-child(3) {
+.workOrderTable th:nth-child(3),
+.workOrderTable td:nth-child(3) {
     width: 180px;
 }
 
-th:nth-child(4),
-td:nth-child(4) {
+.workOrderTable th:nth-child(4),
+.workOrderTable td:nth-child(4) {
     width: 150px;
 }
 
-th:nth-child(5),
-td:nth-child(5) {
+.workOrderTable th:nth-child(5),
+.workOrderTable td:nth-child(5) {
     width: 150px;
 }
 
-th:nth-child(6),
-td:nth-child(6) {
+.workOrderTable th:nth-child(6),
+.workOrderTable td:nth-child(6) {
     width: 120px;
 }
 
-th:nth-child(7),
-td:nth-child(7) {
+.workOrderTable th:nth-child(7),
+.workOrderTable td:nth-child(7) {
     width: 100px;
 }
 
-th:nth-child(8),
-td:nth-child(8) {
+.workOrderTable th:nth-child(8),
+.workOrderTable td:nth-child(8) {
     width: 100px;
 }
 
-th:nth-child(9),
-td:nth-child(9) {
+.workOrderTable th:nth-child(9),
+.workOrderTable td:nth-child(9) {
     width: 110px;
 }
 
-th:nth-child(10),
-td:nth-child(10) {
+.workOrderTable th:nth-child(10),
+.workOrderTable td:nth-child(10) {
     width: 180px;
-} */
+}
 
 /* 진행률 */
-.progress-container {
+.progress_container {
     width: 100%;
     background-color: #e0e0e0;
     border-radius: 10px;
@@ -152,7 +151,7 @@ td:nth-child(10) {
 }
 
 /* 진행률 바 */
-.progress-bar {
+.progress_bar {
     height: 100%;
     background-color: rgb(145, 100, 148);
     /* 기본 색상 */
@@ -167,40 +166,38 @@ td:nth-child(10) {
 }
 
 /* 진행률 값에 따라 너비를 동적으로 설정 */
-.progress-bar[data-progress="100"] {
+.progress_bar[data-progress="100"] {
     width: 100%;
 }
 
-.progress-bar[data-progress="87.5"] {
+.progress_bar[data-progress="87.5"] {
     width: 87.5%;
 }
 
-.progress-bar[data-progress="75"] {
+.progress_bar[data-progress="75"] {
     width: 75%;
 }
 
-.progress-bar[data-progress="62.5"] {
+.progress_bar[data-progress="62.5"] {
     width: 62.5%;
 }
 
-.progress-bar[data-progress="30"] {
+.progress_bar[data-progress="30"] {
     width: 50%;
 }
 
-.progress-bar[data-progress="15"] {
+.progress_bar[data-progress="15"] {
     width: 37.5%;
 }
 
-.progress-bar[data-progress="15"] {
+.progress_bar[data-progress="15"] {
     width: 25%;
 }
 
-.progress-bar[data-progress="12.5"] {
+.progress_bar[data-progress="12.5"] {
     width: 12.5%;
 }
 
-.progress-bar[data-progress="0"] {
+.progress_bar[data-progress="0"] {
     width: 0%;
 }
-
-/* 필요 시 다른 진행률 값도 추가 */

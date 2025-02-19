@@ -6,7 +6,7 @@ function WorkCreate() {
         <>
             <div className="mainBar">
                 <h2 className="tableName">작업지시서</h2>
-                <table className="table">
+                <table className="workTable">
                     <tr>
                         <th>지시번호</th>
                         <td>16</td>

@@ -10,41 +10,43 @@
 }
 
 /* 메인 테이블 */
-.table {
+.workTable {
     width: 80%;
     height: 15%;
     margin-left: 135px;
+    border-spacing: 0;
+    border-collapse: collapse;
 }
 
-.table th,
-.table td {
+.workTable th,
+.workTable td {
     border: 1px solid #000;
     text-align: center;
 }
 
-.table th {
+.workTable th {
     background-color: #D9D9D9;
 }
 
-/* .table th:nth-child(1),
-.table td:nth-child(1) {
+.workTable th:nth-child(1),
+.workTable td:nth-child(1) {
     width: 100px;
 }
 
-.table th:nth-child(2),
-.table td:nth-child(2) {
+.workTable th:nth-child(2),
+.workTable td:nth-child(2) {
     width: 100px;
 }
 
-.table th:nth-child(3),
-.table td:nth-child(3) {
+.workTable th:nth-child(3),
+.workTable td:nth-child(3) {
     width: 100px;
 }
 
-.table th:nth-child(4),
-.table td:nth-child(4) {
+.workTable th:nth-child(4),
+.workTable td:nth-child(4) {
     width: 100px;
-} */
+}
 
 .tableName {
     margin-left: 135px;
@@ -88,11 +90,13 @@
     border: 1px solid;
     margin-left: 132px;
     width: 1150px;
+    border-spacing: 0;
+    border-collapse: collapse;
 }
 
 .bomTable th,
 .bomTable td {
-    border: 1px solid #000;
+    border: 1px solid;
     text-align: center;
 }
 
