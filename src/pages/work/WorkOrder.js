@@ -1,9 +1,9 @@
-import "./workOrders.css"
+import workOrders from "./workCreate.module.css"
 function WorkOrder() {
 
     return (
         <>
-            <div className="searchbar">
+            <div className={workOrders.searchbar}>
                 <label>작업지시번호&nbsp;&nbsp;&nbsp;&nbsp;</label>
                 <input type="text" />
                 <label>생산공정&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -48,9 +48,9 @@ function WorkOrder() {
                     <option value="">생산중단</option>
                     <option value="">생산종료</option>
                 </select>
-                <button className="searchButton">🔎검색</button>
+                <button className={workOrders.searchButton}>🔎검색</button>
             </div>
-            <div className="mainbar">
+            <div className={workOrders.mainbar}>
                 <table>
                     <thead>
                         <tr>
@@ -78,8 +78,8 @@ function WorkOrder() {
                             <td>1LINE</td>
                             <td>생산중</td>
                             <td>
-                                <div className="progress-container">
-                                    <div className="progress-bar">100%</div>
+                                <div className={workOrders.progress_container}>
+                                    <div className={workOrders.progress_bar}>100%</div>
                                 </div>
                             </td>
                         </tr>

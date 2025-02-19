@@ -10,7 +10,7 @@ const Attendance = () => {
     const [currentDateTime, setCurrentDateTime] = useState(""); // 현재 날짜 상태
 
     // 기준 날짜 (무사고 시작일)
-    const startDate = new Date("2020-01-21");
+    const startDate = new Date("2020-02-18");
 
     // 무사고 일수 계산
     useEffect(() => {

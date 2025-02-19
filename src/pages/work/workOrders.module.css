@@ -142,7 +142,7 @@ td:nth-child(10) {
 } */
 
 /* 진행률 */
-.progress-container {
+.progress_container {
     width: 100%;
     background-color: #e0e0e0;
     border-radius: 10px;
@@ -152,7 +152,7 @@ td:nth-child(10) {
 }
 
 /* 진행률 바 */
-.progress-bar {
+.progress_bar {
     height: 100%;
     background-color: rgb(145, 100, 148);
     /* 기본 색상 */
@@ -167,39 +167,39 @@ td:nth-child(10) {
 }
 
 /* 진행률 값에 따라 너비를 동적으로 설정 */
-.progress-bar[data-progress="100"] {
+.progress_bar[data-progress="100"] {
     width: 100%;
 }
 
-.progress-bar[data-progress="87.5"] {
+.progress_bar[data-progress="87.5"] {
     width: 87.5%;
 }
 
-.progress-bar[data-progress="75"] {
+.progress_bar[data-progress="75"] {
     width: 75%;
 }
 
-.progress-bar[data-progress="62.5"] {
+.progress_bar[data-progress="62.5"] {
     width: 62.5%;
 }
 
-.progress-bar[data-progress="30"] {
+.progress_bar[data-progress="30"] {
     width: 50%;
 }
 
-.progress-bar[data-progress="15"] {
+.progress_bar[data-progress="15"] {
     width: 37.5%;
 }
 
-.progress-bar[data-progress="15"] {
+.progress_bar[data-progress="15"] {
     width: 25%;
 }
 
-.progress-bar[data-progress="12.5"] {
+.progress_bar[data-progress="12.5"] {
     width: 12.5%;
 }
 
-.progress-bar[data-progress="0"] {
+.progress_bar[data-progress="0"] {
     width: 0%;
 }
 
