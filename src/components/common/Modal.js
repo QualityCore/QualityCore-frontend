@@ -8,10 +8,10 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, message }) => {
     <div className="modal"  >
       <div className="modal-content">
         <p>{message}</p>
-        <button onClick={onConfirm} className="confirm-btn">
+        <button onClick={onConfirm} className="m-confirm-btn">
           확인
         </button>
-        <button onClick={onClose} className="mcancel-btn">
+        <button onClick={onClose} className="m-cancel-btn">
           취소
         </button>
       </div>
