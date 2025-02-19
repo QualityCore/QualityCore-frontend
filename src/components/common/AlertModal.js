@@ -8,7 +8,7 @@ const AlertModal = ({ isOpen, onClose, message }) => {
     <div className="modal">
       <div className="modal-content">
         <p>{message}</p>
-        <button onClick={onClose} className="confirm-btn">
+        <button onClick={onClose} className="m-confirm-btn">
           확인
         </button>
       </div>

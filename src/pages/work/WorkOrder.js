@@ -51,7 +51,7 @@ function WorkOrder() {
                 <button className="searchButton">🔎검색</button>
             </div>
             <div className="mainbar">
-                <table>
+                <table className="workOrderTable">
                     <thead>
                         <tr>
                             <th>작업번호</th>
@@ -78,8 +78,8 @@ function WorkOrder() {
                             <td>1LINE</td>
                             <td>생산중</td>
                             <td>
-                                <div className="progress-container">
-                                    <div className="progress-bar">100%</div>
+                                <div className="progress_container">
+                                    <div className="progress_bar">100%</div>
                                 </div>
                             </td>
                         </tr>
