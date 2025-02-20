@@ -100,6 +100,23 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
 
     // Step2로 이동 시 라인 배정 데이터 생성
     const handleNextStep = () => {
+
+        // 계획 날짜 검증
+        if (!formData.planYm) {
+            alert("계획 날짜를 입력해주세요.");
+            return;
+        }
+
+        // 제품 정보 검증
+        const invalidProducts = formData.products.some(product => 
+            !product.productId || !product.productName || !product.planQty
+        );
+
+        if (invalidProducts) {
+            alert("모든 제품의 제품명과 계획수량을 입력해주세요.");
+            return;
+        }
+
         const linesPerBatch = 5; // 한 회차당 라인 수
         const qtyPerLine = 6000; // 라인당 생산 가능 수량
     
