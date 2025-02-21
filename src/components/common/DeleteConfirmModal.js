@@ -4,12 +4,11 @@ import "../../styles/common/modal.css";
 const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, itemName }) => {
   const [deleteInput, setDeleteInput] = useState("");
 
-  const confirmText = `${itemName} 데이터를 삭제 합니다.`; // 🔥 삭제 확인 문구
+  const confirmText = `${itemName} 데이터를 삭제 합니다.`.trim(); // 🔥 삭제 확인 문구 및 공백제거거
 
   // 입력 필드 업데이트
-  const handleInputChange = (e) => {
-    setDeleteInput(e.target.value);
-  };
+  const handleInputChange = (e) => { setDeleteInput(e.target.value.trim());
+    };
 
   return (
     <div className={`modal ${isOpen ? "show" :""}`}>
