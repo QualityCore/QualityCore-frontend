@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/productionPlan/ProductionPlanStep1.css";
-import { fetchProductBOM, fetchProducts } from "../../apis/productionPlanApi/ProductionPlanStep1Api";
+import { productionPlanStep1Api, fetchProductBOM, fetchProducts } from "../../apis/productionPlanApi/ProductionPlanStep1Api";
 import { 
     Beer, 
     Ruler,          
@@ -11,6 +11,7 @@ import {
     Plus,
     Trash2
 } from 'lucide-react';
+import _ from 'lodash';
 
 const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 }) => {
     const [products, setProducts] = useState([]); // 전체 제품 목록
@@ -20,10 +21,10 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
         const loadProducts = async () => {
             try {
                 const productList = await fetchProducts();
-                console.log(" 불러온 제품 목록:", productList);
+                console.log("불러온 제품 목록:", productList);
                 setProducts(productList);
             } catch (error) {
-                console.error(" 제품 목록 로드 실패:", error);
+                console.error("제품 목록 로드 실패:", error);
             }
         };
         loadProducts();
@@ -40,11 +41,9 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
         });
     };
 
-  
     // 제품 행 삭제
     const handleRemoveProduct = (index) => {
         const updatedProducts = formData.products.filter((_, i) => i !== index);
-        // 삭제된 제품의 BOM 정보도 함께 제거
         const removedProduct = formData.products[index];
         if (removedProduct.productId) {
             setProductBOMList(prev => {
@@ -86,7 +85,7 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
     };
 
     // BOM 정보 로드
-    const loadProductBOM = async (productId, index) => {
+    const loadProductBOM = async (productId) => {
         try {
             if (!productId) return;
             const bomData = await fetchProductBOM(productId);
@@ -95,10 +94,87 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
                 [productId]: bomData
             }));
         } catch (error) {
-            console.error(" BOM 정보 불러오기 실패:", error);
+            console.error("BOM 정보 불러오기 실패:", error);
         }
- 
-    }
+    };
+
+    // Step2로 이동 시 라인 배정 데이터 생성
+    const handleNextStep = () => {
+
+        // 계획 날짜 검증
+        if (!formData.planYm) {
+            alert("계획 날짜를 입력해주세요.");
+            return;
+        }
+
+        // 제품 정보 검증
+        const invalidProducts = formData.products.some(product => 
+            !product.productId || !product.productName || !product.planQty
+        );
+
+        if (invalidProducts) {
+            alert("모든 제품의 제품명과 계획수량을 입력해주세요.");
+            return;
+        }
+
+        const linesPerBatch = 5; // 한 회차당 라인 수
+        const qtyPerLine = 6000; // 라인당 생산 가능 수량
+    
+        // 모든 제품의 수량을 처리하기 위한 배열
+        let allProductsQueue = formData.products.map(product => ({
+            ...product,
+            remainingQty: parseInt(product.planQty)
+        }));
+    
+        const allocatedLines = [];
+        let currentBatch = 1;
+        let currentLine = 1;
+    
+        // 모든 제품의 수량이 할당될 때까지 반복
+        while (allProductsQueue.some(p => p.remainingQty > 0)) {
+            // 현재 회차에서 사용 가능한 라인 수 확인
+            const remainingLinesInBatch = linesPerBatch - (currentLine - 1);
+    
+            if (remainingLinesInBatch > 0) {
+                // 아직 현재 회차에서 라인 할당 가능
+                for (let product of allProductsQueue) {
+                    if (product.remainingQty > 0 && currentLine <= linesPerBatch) {
+                        const allocatedQty = Math.min(qtyPerLine, product.remainingQty);
+                        
+                        allocatedLines.push({
+                            productId: product.productId,
+                            productName: product.productName,
+                            lineNo: currentLine,
+                            planBatchNo: currentBatch,
+                            allocatedQty,
+                            startDate: '',
+                            endDate: ''
+                        });
+    
+                        product.remainingQty -= allocatedQty;
+                        currentLine++;
+                    }
+                }
+            }
+    
+            // 현재 회차의 모든 라인을 사용했거나, 더 이상 할당할 제품이 없으면 다음 회차로
+            if (currentLine > linesPerBatch) {
+                currentBatch++;
+                currentLine = 1;
+            }
+        }
+        // 회차별로 그룹화
+        const groupedByBatch = _.groupBy(allocatedLines, 'planBatchNo');
+        
+        setFormData(prev => ({
+            ...prev,
+            allocatedLines: groupedByBatch
+        }));
+
+        goToStep(2);
+    };
+
+
     return (
         <div className="production-plan-container">
             <div className="steps-container">
@@ -178,7 +254,7 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
                     </button>
     
                     <div className="button-group">
-                        <button type="button" onClick={() => goToStep(2)}>
+                        <button type="button" onClick={handleNextStep}>
                             다음 단계 <span>→</span>
                         </button>
                     </div>
