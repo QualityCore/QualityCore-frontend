@@ -272,25 +272,39 @@ const Attendance = () => {
         return dates;
     };
 
-    const handleEventClick = (info) => {
-        const event = info.event;  // 클릭된 이벤트 객체
-        console.log('클릭된 이벤트:', info.event);
-        console.log('클릭된 이벤트의 extendedProps:', info.event.extendedProps);
+    const handleEventClick = async (info) => {
+        console.log("handleEventClick 호출됨:", info); // 클릭된 이벤트 정보 전체 출력
 
-        // 필요한 데이터 추출
+        const { event } = info; // 클릭된 이벤트 객체
+        console.log("클릭된 이벤트 객체:", event);
+
         const { title, start, end, extendedProps } = event;
 
+        // scheduleId 추출 (extendedProps.scheduleId가 없으면 event.id 사용)
+        const scheduleId = extendedProps?.scheduleId || event.id;
+        console.log("추출된 scheduleId:", scheduleId);
+
+        if (!scheduleId || scheduleId.trim() === "") {
+            console.error("유효한 scheduleId를 찾을 수 없습니다. 이벤트 데이터:", { extendedProps, event });
+            return; // 함수 종료
+        }
+
+        // 날짜 형식 변환
         const formattedStart = start instanceof Date ? start.toLocaleString() : "유효하지 않은 시작일";
         const formattedEnd = end instanceof Date ? end.toLocaleString() : "유효하지 않은 종료일";
+        console.log("시작일:", formattedStart, "종료일:", formattedEnd);
 
-        // extendedProps에 포함된 데이터
-        const workStatus = extendedProps?.workStatus || "미정";
-        const workTeam = extendedProps?.workTeam || "정보없음";
-        const empName = extendedProps?.empName || "이름없음";
-        const email = extendedProps?.email || "이메일없음";
-        const phone = extendedProps?.phone || "전화번호없음";
+        // extendedProps 기본값 설정
+        const {
+            workStatus = "미정",
+            workTeam = "정보없음",
+            empName = "이름없음",
+            email = "이메일없음",
+            phone = "전화번호없음",
+        } = extendedProps || {};
+        console.log("추출된 extendedProps 데이터:", { workStatus, workTeam, empName, email, phone });
 
-        // selectedEvent 데이터 업데이트
+        // selectedEvent 업데이트
         setSelectedEvent({
             title,
             start: formattedStart,
@@ -301,20 +315,25 @@ const Attendance = () => {
             email,
             phone,
         });
-        console.log('선택된 이벤트:', {
-            title,
-            start: formattedStart,
-            end: formattedEnd,
-            workStatus,
-            workTeam,
-            empName,
-            email,
-            phone,
-        });
+        console.log("selectedEvent 업데이트 완료");
+
+        try {
+            console.log("fetchSchedule 호출 시작: scheduleId =", scheduleId);
+            const scheduleData = await fetchSchedule(scheduleId); // API 호출
+            console.log("스케줄 데이터 가져오기 성공:", scheduleData);
+        } catch (error) {
+            console.error("스케줄 데이터 가져오기 실패:", error);
+        }
 
         // 모달 열기
         detailOpenModal();
     };
+
+
+
+
+
+
 
     const closeSuccessModal = () => setIsSuccessModal(false); // 성공 모달 닫는 함수
 

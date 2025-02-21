@@ -11,17 +11,45 @@ export const fetchAllSchedules = async (empId) => {
     }
 };
 
-// 스케줄 상세페이지
 export const fetchSchedule = async (scheduleId) => {
+    if (!scheduleId) {
+        console.error("fetchSchedule - scheduleId가 제공되지 않았습니다.");
+        throw new Error("fetchSchedule - scheduleId는 필수입니다.");
+    }
+
+    console.log(`fetchSchedule 호출: scheduleId = ${scheduleId}`);
+
+    const url = `http://localhost:8080/api/v1/schedule/${scheduleId}`;
+    console.log(`요청 URL: ${url}`);
+
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/schedule/${scheduleId}`);
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            console.error(`API 요청 실패, 상태 코드: ${response.status}, URL: ${url}`);
+            throw new Error(`스케줄을 가져오는 데 실패했습니다 (상태 코드: ${response.status})`);
+        }
+
         const data = await response.json();
-        return data.result.schedule;
+        console.log('API 응답 데이터:', data);
+
+        if (data && data.result && data.result.schedule) {
+            return data.result.schedule;
+        } else {
+            console.error('스케줄 데이터가 없습니다:', data);
+            throw new Error('스케줄 데이터가 존재하지 않습니다.');
+        }
     } catch (error) {
-        console.error("Error fetching schedule:", error);
+        console.error("스케줄을 가져오는 중 오류 발생:", error);
         throw error;
     }
 };
+
+
+
+
+
+
 
 // 스케줄 등록하기
 export const createSchedule = async (scheduleData) => {
