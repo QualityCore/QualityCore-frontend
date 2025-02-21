@@ -1,0 +1,204 @@
+.container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    min-height: calc(100vh - 190px);
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+  }
+  
+  /* 스텝 인디케이터 */
+  .stepsContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-bottom: 2rem;
+    padding-right: 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    color: #2B3674;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
+  
+  /* 알림 배너 */
+  .alertBanner {
+    background-color: #FEE2E2;
+    color: #EF4444;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* 자재 섹션 */
+  .materialSection {
+    background-color: #F4F7FE;
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .materialSection h3 {
+    color: #2D3748;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-bottom: 2px solid #E2E8F0;
+    padding-bottom: 0.5rem;
+  }
+  
+  .materialTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .materialTable th {
+    background-color: #5687F2;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  
+  .materialTable th:first-child {
+    border-top-left-radius: 12px;
+  }
+  
+  .materialTable th:last-child {
+    border-top-right-radius: 12px;
+  }
+  
+  .materialTable td {
+    padding: 12px;
+    background-color: white;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 0.9rem;
+  }
+  
+  .materialTable tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .statusBadge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  
+  .shortage {
+    background-color: #FEE2E2;
+    color: #EF4444;
+  }
+  
+  .sufficient {
+    background-color: #D1FAE5;
+    color: #10B981;
+  }
+  
+  /* 액션 버튼 */
+  .buttonGroup {
+    display: flex;
+    justify-content: space-between; /* 양쪽 끝 정렬 */
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+
+.rightButtons {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 오른쪽 버튼들 사이 간격 */
+  }
+  
+  .prevButton,
+  .nextButton,
+  .purchaseButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+  }
+  
+  .prevButton {
+    background-color: #E2E8F0;
+    color: #2D3748;
+  }
+
+  .buttonGroup > button {
+    margin-left: 10px; /* 버튼 사이 간격 */
+  }
+  
+  .nextButton {
+    background-color: #5687F2;
+    color: white;
+  }
+  
+  .purchaseButton {
+    background-color: #48BB78;
+    color: white;
+  }
+  
+  .prevButton:hover {
+    background-color: #CBD5E0;
+  }
+  
+  .nextButton:hover {
+    background-color: #4776E0;
+  }
+  
+  .purchaseButton:hover {
+    background-color: #38A169;
+  }
+  
+  .beerButtonGroup {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+/* 맥주선택버튼 */
+.beerButtonGroup button {
+    padding: 8px 16px;
+    border: 1px solid #E2E8F0;
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.beerButtonGroup button.activeButton {
+    background-color: #5687F2;
+    color: white;
+}
+
+  /* 반응형 디자인 */
+  @media (max-width: 768px) {
+    .materialTable {
+      font-size: 0.8rem;
+    }
+  
+    .buttonGroup {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .prevButton,
+    .nextButton,
+    .purchaseButton {
+      width: 100%;
+    }
+  }
