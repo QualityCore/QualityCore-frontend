@@ -1,100 +1,102 @@
-import { useState, useEffect } from "react";
-import { ShoppingCart} from 'lucide-react';
+import { useState, useEffect, useMemo } from "react";
+import { ShoppingCart } from 'lucide-react';
 import { 
     calculateMaterialRequirements, 
     saveMaterialPlan 
 } from '../../apis/productionPlanApi/ProductionPlanStep3Api';
 import styles from '../../styles/productionPlan/ProductionPlanStep3.module.css';
+import { aggregateMaterialsByBeer, aggregateMaterials } from '../../utils/materialUtils';
 
-const ProductionPlanStep3 = ({
-    formData,
-    setFormData,
-    goToStep,
-    currentStep = 3
-}) => {
-    const [rawMaterials,setRawMaterials] = useState([]); //원자재
-    const [packagingMaterials, setPackagingMaterials] = useState([]) // 부자재(포장)
-    const [isLoading,setIsLoading] = useState(true);
-    const [selectedBeer,setSelectedBeer] = useState(null);
+const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 }) => {
+    const [rawMaterials, setRawMaterials] = useState([]);
+    const [packagingMaterials, setPackagingMaterials] = useState([]);
+    const [rawMaterialsByBeer, setRawMaterialsByBeer] = useState({});
+    const [packagingMaterialsByBeer, setPackagingMaterialsByBeer] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedBeer, setSelectedBeer] = useState(null);
 
-    // 고유한 맥주 목록 추출
-    const uniqueBeers = [...new Set(
-        rawMaterials
-            .filter(m => m.beerName) 
-            .map(m => m.beerName)
-    )];
+    const uniqueBeers = useMemo(() => [...new Set(formData.products.map(p => p.productName))], [formData]);
+
+    const aggregatedRawMaterials = useMemo(() => aggregateMaterials(rawMaterials), [rawMaterials]);
+    const aggregatedPackagingMaterials = useMemo(() => aggregateMaterials(packagingMaterials), [packagingMaterials]);
     
-    console.log('고유 맥주 목록:', uniqueBeers);
-    console.log('원자재 데이터:', rawMaterials);
-
-    //선택된 맥주의 원자재 필터링
-    const filteredRawMaterials = selectedBeer
-        ? rawMaterials.filter(m => m.beerName === selectedBeer)
-        : rawMaterials;
-
-
-    const filteredPackagingMaterials = selectedBeer
-        ? packagingMaterials.filter(m => m.beerName === selectedBeer)
-        : packagingMaterials;
-
-
-
-    // 소수점 자릿수 제한 (4자리리)
-const formatNumber = (num, decimalPlaces = 4) => {
-    return Number(num.toFixed(decimalPlaces));
-};
-useEffect(() => {
-    let isMounted = true;
-
-    const fetchMaterialRequirements = async () => {
-        try {
-            // 전체 products를 포함한 DTO 생성
-            const materialRequestData = {
-                planYm: formData.planYm,
-                products: formData.products.map(product => ({
-                    productId: product.productId,
-                    productName: product.productName,
-                    planQty: parseInt(product.planQty),
-                    sizeSpec: product.sizeSpec || '',
-                    status: '',
-                    beerType: ''
-                }))
-            };
+    const filteredRawMaterials = useMemo(() => (
+        selectedBeer
+            ? rawMaterialsByBeer[selectedBeer] || [] // 선택한 맥주의 데이터만 보여줌
+            : aggregatedRawMaterials // 전체 합산 데이터를 보여줌
+    ), [selectedBeer, rawMaterialsByBeer, aggregatedRawMaterials]);
     
-            console.log('전송할 데이터:', materialRequestData);
+    const filteredPackagingMaterials = useMemo(() => (
+        selectedBeer
+            ? packagingMaterialsByBeer[selectedBeer] || []
+            : aggregatedPackagingMaterials
+    ), [selectedBeer, packagingMaterialsByBeer, aggregatedPackagingMaterials]);
+
+    // 경고 배너 표시 로직 추가
+    const hasShortageMaterilas = useMemo(() => {
+
+        const rawMaterialShortage = rawMaterials.some(material => material.status === '부족');
+        const packagingMaterialShortage = packagingMaterials.some(material => material.status === '부족');
     
-            const response = await calculateMaterialRequirements(materialRequestData);
-            
-            const { rawMaterials = [], packagingMaterials = [] } = response.result || {};
+    return rawMaterialShortage || packagingMaterialShortage;
+    }, [rawMaterials, packagingMaterials]);
     
-            if (isMounted) {
-                setRawMaterials(rawMaterials);
-                setPackagingMaterials(packagingMaterials);
-                
-                setFormData(prev => ({
-                    ...prev,
-                    materials: [...rawMaterials, ...packagingMaterials]
-                }));
     
+
+    const formatNumber = (num, decimalPlaces = 4) => Number(num.toFixed(decimalPlaces));
+
+    useEffect(() => {
+        const fetchMaterialRequirements = async () => {
+            try {
+                const materialRequestData = {
+                    planYm: formData.planYm,
+                    products: formData.products.map(({ productId, productName, planQty }) => ({
+                        productId,
+                        productName,  // 🔑 실제 맥주 이름 전달
+                        planQty: parseInt(planQty)
+                    }))
+                };
+        
+                const response = await calculateMaterialRequirements(materialRequestData);
+        
+                const rawMaterialsData = response.result?.rawMaterials || [];
+                const packagingMaterialsData = response.result?.packagingMaterials || [];
+        
+                // 맥주별 자재 분류
+                const rawMaterialsByBeerMap = rawMaterialsData.reduce((acc, material) => {
+                    const beerName = material.beerName;
+                    if (!acc[beerName]) acc[beerName] = [];
+                    acc[beerName].push(material);
+                    return acc;
+                }, {});
+        
+                const packagingMaterialsByBeerMap = packagingMaterialsData.reduce((acc, material) => {
+                    const beerName = material.beerName;
+                    if (!acc[beerName]) acc[beerName] = [];
+                    acc[beerName].push(material);
+                    return acc;
+                }, {});
+        
+                setRawMaterials(rawMaterialsData);
+                setPackagingMaterials(packagingMaterialsData);
+                setRawMaterialsByBeer(rawMaterialsByBeerMap);
+                setPackagingMaterialsByBeer(packagingMaterialsByBeerMap);
+        
+            } catch (error) {
+                console.error('자재 정보 조회 중 오류:', error);
+            } finally {
                 setIsLoading(false);
             }
-        } catch (error) {
-            if (isMounted) {
-                console.error('자재 정보 조회 중 상세 오류:', error.response?.data);
-                console.error('전체 에러 정보:', error);
-                setIsLoading(false);
-            }
+        };
+        
+        
+
+        if (formData.planYm && formData.products.length > 0) {
+            fetchMaterialRequirements();
         }
-    };
-    if (formData && formData.products && formData.products.length > 0) {
-        fetchMaterialRequirements();
-    }
-
-    return () => {
-        isMounted = false;
-    };
-}, []);
-
+    }, [formData.planYm, formData.products]);
+    
+    
 
     const handleSave = async () => {
         try {
@@ -108,9 +110,7 @@ useEffect(() => {
     if (isLoading) {
         return <div>자재 정보를 불러오는 중...</div>;
     }
-
-    console.log('원자재 상태:', rawMaterials);
-    console.log('부자재(포장재) 상태:', packagingMaterials);
+ 
       
     return (
         <div className={styles.container}>
@@ -131,12 +131,14 @@ useEffect(() => {
 
             <h2 className={styles.title}>자재 정보</h2>
 
-            <div className={styles.alertBanner}>
-                <span>❗ 일부 자재의 재고가 부족합니다. 구매신청이 필요합니다.</span>
-            </div>
+            {hasShortageMaterilas && (
+                <div className={styles.alertBanner}>
+                    <span>❗ 일부 자재의 재고가 부족합니다. 구매신청이 필요합니다.</span>
+                </div>
+             )}
 
-   {/* 맥주 선택 버튼 추가 */}
-             <div className={styles.beerButtonGroup}>
+            {/* 맥주 선택 버튼 추가 */}
+            <div className={styles.beerButtonGroup}>
                 <button 
                     className={selectedBeer === null ? styles.activeButton : ''}
                     onClick={() => setSelectedBeer(null)}
@@ -154,55 +156,46 @@ useEffect(() => {
                 ))}
             </div>
 
-{/* 원자재  */}
+       
+{/* 원자재 테이블 */}
 <div className={styles.materialSection}>
-    <h3>원자재</h3>
+    <h3>{selectedBeer ? `${selectedBeer} 원자재` : "원자재"}</h3>
     <table className={styles.materialTable}>
         <thead>
             <tr>
                 <th>자재명</th>
                 <th>단위</th>
-                <th>기준소요량</th>
+                <th>기준소요량</th>  
                 <th>계획소요량</th>
-                <th>현재재고</th>
-                <th>상태</th>
+                {!selectedBeer && <th>현재재고</th>}
+                {!selectedBeer && <th>상태</th>}
             </tr>
         </thead>
         <tbody>
-            {selectedBeer ? (
-                // 개별 맥주 보기 - 현재재고, 상태 컬럼 제거
-                filteredRawMaterials.map((material, index) => (
-                    <tr key={index}>
-                        <td>{material.materialName}</td>
-                        <td>{material.unit}</td>
-                        <td>{formatNumber(material.stdQty)}</td>
-                        <td>{formatNumber(material.planQty)}</td>
-                    </tr>
-                ))
-            ) : (
-                // 전체 보기 - 기존 로직 유지
-                filteredRawMaterials.map((material, index) => (
-                    <tr key={index}>
-                        <td>{material.materialName}</td>
-                        <td>{material.unit}</td>
-                        <td>{formatNumber(material.stdQty)}</td>
-                        <td>{formatNumber(material.planQty)}</td>
-                        <td>{formatNumber(material.currentStock)}</td>
+            {filteredRawMaterials.map((material, index) => (
+                <tr key={index}>
+                    <td>{material.materialName}</td>
+                    <td>{material.unit}</td>
+                    <td>{formatNumber(material.stdQty)}</td>
+                    <td>{formatNumber(material.planQty)}</td>
+                    {!selectedBeer && <td>{formatNumber(material.currentStock)}</td>}
+                    {!selectedBeer && (
                         <td>
                             <span className={`${styles.statusBadge} ${material.status === '부족' ? styles.shortage : styles.sufficient}`}>
                                 {material.status}
                             </span>
                         </td>
-                    </tr>
-                ))
-            )}
+                    )}
+                </tr>
+            ))}
         </tbody>
     </table>
 </div>
 
-          {/* 부자재(포장재)*/}
+
+{/* 부자재 (포장재) */}
 <div className={styles.materialSection}>
-    <h3>부자재</h3>
+    <h3>{selectedBeer ? `${selectedBeer} 부자재` : "부자재"}</h3>
     <table className={styles.materialTable}>
         <thead>
             <tr>
@@ -210,41 +203,32 @@ useEffect(() => {
                 <th>단위</th>
                 <th>기준소요량</th>
                 <th>계획소요량</th>
-                <th>현재재고</th>
-                <th>상태</th>
+                {!selectedBeer && <th>현재재고</th>}
+                {!selectedBeer && <th>상태</th>}
             </tr>
         </thead>
         <tbody>
-            {selectedBeer ? (
-                // 개별 맥주 보기 - 현재재고, 상태 컬럼 제거
-                filteredPackagingMaterials.map((material, index) => (
-                    <tr key={index}>
-                        <td>{material.materialName}</td>
-                        <td>{material.unit}</td>
-                        <td>{formatNumber(material.stdQty)}</td>
-                        <td>{formatNumber(material.planQty)}</td>
-                    </tr>
-                ))
-            ) : (
-                // 전체 보기 - 기존 로직 유지
-                filteredPackagingMaterials.map((material, index) => (
-                    <tr key={index}>
-                        <td>{material.materialName}</td>
-                        <td>{material.unit}</td>
-                        <td>{formatNumber(material.stdQty)}</td>
-                        <td>{formatNumber(material.planQty)}</td>
-                        <td>{formatNumber(material.currentStock)}</td>
+            {filteredPackagingMaterials.map((material, index) => (
+                <tr key={index}>
+                    <td>{material.materialName}</td>
+                    <td>{material.unit}</td>
+                    <td>{formatNumber(material.stdQty)}</td> {/* ✅ 기준 소요량 다르면 분리 */}
+                    <td>{formatNumber(material.planQty)}</td>
+                    {!selectedBeer && <td>{formatNumber(material.currentStock)}</td>}
+                    {!selectedBeer && (
                         <td>
                             <span className={`${styles.statusBadge} ${material.status === '부족' ? styles.shortage : styles.sufficient}`}>
                                 {material.status}
                             </span>
                         </td>
-                    </tr>
-                ))
-            )}
+                    )}
+                </tr>
+            ))}
         </tbody>
     </table>
 </div>
+
+
 
             {/* 버튼 */}
             <div className={styles.buttonGroup}>
