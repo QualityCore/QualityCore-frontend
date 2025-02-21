@@ -131,7 +131,11 @@
     height: 80%;
     background-color: #ddd;
     margin-left: 195px;
-    margin-top: -190px;
+    margin-top: -183px;
+}
+
+.calendarBar {
+    float: right;
 }
 
 .rightContent {
@@ -143,6 +147,7 @@
     width: 96%;
     border-collapse: collapse;
     border: 1px solid #ddd;
+    margin-left: 17px;
 }
 
 .styledTb th,
@@ -172,4 +177,74 @@
 
 .tableName {
     margin-left: 20px;
+}
+
+/* 모달 스타일 */
+.modal {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 115px;
+}
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.formLabel {
+    margin-bottom: -17px;
+    font-size: 15px;
+}
+
+.formInput {
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    color: #333;
+    margin-left: 385px;
+}
+
+.submitButton {
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: #218838;
+}
+
+.scheduleButton {
+    background-color: #218838;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    margin-right: 80px;
+}
+
+.scheduleButton:hover {
+    background-color: #155a24;
 }
