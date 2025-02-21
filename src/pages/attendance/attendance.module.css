@@ -338,3 +338,12 @@
     font-family: emoji;
     font-weight: bold;
 }
+
+.headerCon {
+    display: flex;
+
+}
+
+.headerCon>div:nth-child(2) {
+    margin-top: 30px;
+}
