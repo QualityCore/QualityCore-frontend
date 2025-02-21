@@ -33,6 +33,9 @@
     /* 부모 컨테이너 너비에 맞춤 */
     height: 100%;
     /* 부모 컨테이너 높이에 맞춤 */
+    position: relative;
+    /* 캘린더가 고정되거나 위치가 지정되지 않으면 z-index가 제대로 작동하지 않음 */
+    z-index: 1000;
 }
 
 /* 날짜 셀 스타일 */
@@ -131,7 +134,11 @@
     height: 80%;
     background-color: #ddd;
     margin-left: 195px;
-    margin-top: -190px;
+    margin-top: -183px;
+}
+
+.calendarBar {
+    float: right;
 }
 
 .rightContent {
@@ -143,6 +150,7 @@
     width: 96%;
     border-collapse: collapse;
     border: 1px solid #ddd;
+    margin-left: 17px;
 }
 
 .styledTb th,
@@ -172,4 +180,161 @@
 
 .tableName {
     margin-left: 20px;
+}
+
+/* 모달 스타일 */
+.modal {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+}
+
+
+.modalForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.formLabel {
+    margin-bottom: -17px;
+    font-size: 15px;
+}
+
+.formInput {
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    color: #333;
+    margin-left: 385px;
+}
+
+.submitButton {
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: #218838;
+}
+
+.scheduleButton {
+    background-color: #218838;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    margin-right: 80px;
+    margin-top: 7px;
+}
+
+.scheduleButton:hover {
+    background-color: #155a24;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1049;
+}
+
+/* 성공 알림 모달 */
+.successModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+}
+
+
+.successModalOverlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.successModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.successCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.successModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.successModalContent {
+    padding: 20px;
+}
+
+.successCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 375px;
+}
+
+.successMessage {
+    margin-left: 35px;
+    font-size: large;
+    font-family: emoji;
+    font-weight: bold;
 }
