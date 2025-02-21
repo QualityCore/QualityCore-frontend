@@ -48,48 +48,34 @@ useEffect(() => {
 
     const fetchMaterialRequirements = async () => {
         try {
-            // 모든 제품에 대한 자재 요구사항 계산
-            const materialRequests = formData.products.map(async (product) => {
-                const materialRequestData = {
-                    planYm: formData.planYm,
+            // 전체 products를 포함한 DTO 생성
+            const materialRequestData = {
+                planYm: formData.planYm,
+                products: formData.products.map(product => ({
                     productId: product.productId,
                     productName: product.productName,
                     planQty: parseInt(product.planQty),
-                    sizeSpec: product.sizeSpec || '', 
-                    status: '', 
-                    beerType: '' 
-                };
-
-                const response = await calculateMaterialRequirements(materialRequestData);
-                return response.result;
-            });
-
-            // 모든 제품의 자재 요구사항 병합
-            const results = await Promise.all(materialRequests);
-
-            let allRawMaterials = [];
-            let allPackagingMaterials = [];
-
-            results.forEach(result => {
-                allRawMaterials = [
-                    ...allRawMaterials,
-                    ...(result.rawMaterials || [])
-                ];
-                allPackagingMaterials = [
-                    ...allPackagingMaterials,
-                    ...(result.packagingMaterials || [])
-                ];
-            });
-
+                    sizeSpec: product.sizeSpec || '',
+                    status: '',
+                    beerType: ''
+                }))
+            };
+    
+            console.log('전송할 데이터:', materialRequestData);
+    
+            const response = await calculateMaterialRequirements(materialRequestData);
+            
+            const { rawMaterials = [], packagingMaterials = [] } = response.result || {};
+    
             if (isMounted) {
-                setRawMaterials(allRawMaterials);
-                setPackagingMaterials(allPackagingMaterials);
+                setRawMaterials(rawMaterials);
+                setPackagingMaterials(packagingMaterials);
                 
                 setFormData(prev => ({
                     ...prev,
-                    materials: [...allRawMaterials, ...allPackagingMaterials]
+                    materials: [...rawMaterials, ...packagingMaterials]
                 }));
-
+    
                 setIsLoading(false);
             }
         } catch (error) {
@@ -100,7 +86,6 @@ useEffect(() => {
             }
         }
     };
-
     if (formData && formData.products && formData.products.length > 0) {
         fetchMaterialRequirements();
     }
