@@ -34,11 +34,10 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
 
     // 경고 배너 표시 로직 추가
     const hasShortageMaterilas = useMemo(() => {
-
         const rawMaterialShortage = rawMaterials.some(material => material.status === '부족');
         const packagingMaterialShortage = packagingMaterials.some(material => material.status === '부족');
-    
-    return rawMaterialShortage || packagingMaterialShortage;
+        
+        return rawMaterialShortage || packagingMaterialShortage;
     }, [rawMaterials, packagingMaterials]);
     
     
@@ -52,7 +51,7 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
                     planYm: formData.planYm,
                     products: formData.products.map(({ productId, productName, planQty }) => ({
                         productId,
-                        productName,  // 🔑 실제 맥주 이름 전달
+                        productName,
                         planQty: parseInt(planQty)
                     }))
                 };
@@ -61,6 +60,15 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
         
                 const rawMaterialsData = response.result?.rawMaterials || [];
                 const packagingMaterialsData = response.result?.packagingMaterials || [];
+        
+                // 🔍 로그 추가
+                console.log('원자재 데이터:', rawMaterialsData.map(m => ({
+                    beerName: m.beerName,
+                    materialName: m.materialName,
+                    planQty: m.planQty,
+                    currentStock: m.currentStock,
+                    status: m.status
+                })));
         
                 // 맥주별 자재 분류
                 const rawMaterialsByBeerMap = rawMaterialsData.reduce((acc, material) => {
