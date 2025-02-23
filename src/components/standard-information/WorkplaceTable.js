@@ -1,6 +1,6 @@
 import { useState , useEffect } from "react";
 import axios from "axios";
-import ConfirmModal from "./common/Modal";
+import ConfirmModal from "./common/ConfirmModal";
 import SuccessModal from "./common/SuccessfulModal";
 import DeleteConfirmModal from "./common/DeleteConfirmModal";
 import "../../styles/standard-information/workplace-table.css";
@@ -306,12 +306,15 @@ import "../../styles/standard-information/workplace-table.css";
               </div>
               
               <div className="place-edit-field">
-                <label for="workplaceCapacity">생산가능용량</label>
-                  <input id="workplaceCapacity" type="text" name="workplaceCapacity" value={updatedData.workplaceCapacity} onChange={handleChange}/>
-                  <select id="workplaceCapacityUnit" name="workplaceCapacityUnit" value={updatedData.workplaceCapacityUnit} onChange={handleChange}>
-                    <option value="L">L</option>  
-                    <option value="kg">kg</option>  
-                  </select>
+               <label for="workplaceCapacity">생산가능용량</label>
+                <div className="place-capacity-container">
+                    <input id="workplaceCapacity" type="text" name="workplaceCapacity" value={updatedData.workplaceCapacity} onChange={handleChange}/>
+                    
+                    <select id="workplaceCapacityUnit" name="workplaceCapacityUnit" value={updatedData.workplaceCapacityUnit} onChange={handleChange}>
+                      <option value="L">L</option>  
+                      <option value="kg">kg</option>  
+                    </select>
+                  </div>
               </div>
             </div>  
 
@@ -327,7 +330,7 @@ import "../../styles/standard-information/workplace-table.css";
         )}
 
 
-          {/*수정 확인 모달 */}
+          {/*수정 확인 모달*/}
           <ConfirmModal
            isOpen={showConfirmModal}
            onClose={()=>setShowConfirmModal(false)}

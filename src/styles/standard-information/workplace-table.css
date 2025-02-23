@@ -56,18 +56,25 @@
   padding: 10px;
   border-radius: 10px;
   width: 50%;
-  height: 55%;
+  height: 60%;
   text-align: left;
-  line-height: 2.0;
+  line-height: 1.8;
+  border: 1px solid #ccc; /* 연한 회색 테두리 */
 }
 
 .place-edit-row {
   display: flex;
   align-items: center; /* 레이블과 입력 필드를 수직으로 정렬 */
-  gap: 20px; /* 레이블과 입력 필드 사이의 간격 */
-  margin-bottom: 20px; /* 행 사이 간격 */
+  
 }
 
+.place-edit-field {
+  display: flex;
+  flex-direction: column; /* 기본적으로 세로 정렬 */
+  flex: 0.5; /* 각 요소가 균등한 너비를 가짐 */
+}
+
+ 
 
 .place-update-btn {
   background: blue;
@@ -98,6 +105,7 @@
   margin: 10px;
   width: 40%;
   height: 35px;
+  border: 1px solid #ccc; 
   
 }
 /*작업장코드*/
@@ -106,54 +114,67 @@
   margin: 10px;
   width: 30%;
   height: 35px;
+  border: 1px solid #ccc; 
 }
-/*작업장*/
+/*작업장 위치*/
 #workplaceLocation{
   border-radius: 10px;
   margin: 10px;
   width: 50%;
   height: 35px;
+  border: 1px solid #ccc; 
 }
-
+/* 작업장 타입 */
 #workplaceType{
   border-radius: 10px;
   margin: 10px;
   width: 50%;
   height: 35px;
+  border: 1px solid #ccc; 
 }
-
+/* 작업장 상태태 */
 #workplaceStatus{
   border-radius: 10px;
   margin: 10px;
   width: 50%;
   height: 35px;
+  border: 1px solid #ccc; 
   
 }
-
+/* 라인정보보 */
 #lineId{
   border-radius: 10px;
   margin: 10px;
   width: 50%;
   height: 35px;
+  border: 1px solid #ccc; 
 }
-
+/* 작업담당자자 */
 #managerName{
   border-radius: 10px;
   margin: 10px;
   width: 40%;
   height: 35px;
+  border: 1px solid #ccc; 
 }
-
+/* 생산 가능용량량 */
 #workplaceCapacity{
   border-radius: 10px;
   margin: 10px;
   width: 25%;
   height: 35px;
+  border: 1px solid #ccc; 
 }
-
+/* 리터/킬로그램 선택바 */
 #workplaceCapacityUnit{
   border-radius: 10px;
   margin: 0px;
   width: 15%;
   height: 35px;
+  border: 1px solid #ccc; 
+}
+
+.place-capacity-container {
+  display: flex;
+  align-items: center;  /* 수직 정렬 */
 }

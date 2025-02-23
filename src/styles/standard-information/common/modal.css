@@ -67,3 +67,15 @@
   height: 150px;
   margin: 0 auto 20px;
 }
+
+.warning-animation{
+ width: 200px;
+ height: 200px;
+ margin: 0 auto 20px; 
+}
+
+.confirm-animation{
+ width: 200px;
+ height: 200px;
+ margin: 0 auto 20px; 
+}

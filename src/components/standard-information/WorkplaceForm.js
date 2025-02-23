@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 import SuccessfulModal from "./common/SuccessfulModal";
-import ConfirmModal from "./common/Modal";
+import ErrorModal from "./common/ErrorModal";
+import ConfirmModal from "./common/ConfirmModal";
 import "../../styles/standard-information/workplace-form.css";
 
 
@@ -175,10 +176,10 @@ const WorkplaceForm = ({  apiUrl }) => {
       />
 
       {/* 오류 모달 */}
-      <SuccessfulModal
+      <ErrorModal
       isOpen={showErrorModal}
       onClose={()=> setShowErrorModal(false)}
-      message={`등록 실패: ${errorMessage}`}
+      message={`${errorMessage}`}
       />
 
     </div>
