@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-import AlertModal from "../common/AlertModal";
-import ConfirmModal from "../../components/common/Modal";
+import SuccessfulModal from "./common/SuccessfulModal";
+import ConfirmModal from "./common/Modal";
 import "../../styles/standard-information/workplace-form.css";
 
 
@@ -67,10 +67,9 @@ const WorkplaceForm = ({  apiUrl }) => {
           workplaceCapacity: "",
           workplaceCapacityUnit: "L",
         });
-        // 일정 시간 후 새로고침
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); // 1초 후 새로고침
+
+        
+       
       }
     }catch(error){
       setErrorMessage(error.response?.data?.message||"등록하는데 문제가 발생했어 확인해봐요");
@@ -80,6 +79,7 @@ const WorkplaceForm = ({  apiUrl }) => {
 
     const handleSuccessModalClose = () => {
       setShowSuccessModal(false);
+      window.location.reload();
     };  // 성공 모달 닫기기
 
 
@@ -168,14 +168,14 @@ const WorkplaceForm = ({  apiUrl }) => {
 
 
       {/* 등록 완료 모달 */}
-      <AlertModal
+      <SuccessfulModal
       isOpen={showSuccessModal}
       onClose={handleSuccessModalClose}
       message="등록이 완료되었습니다"
       />
 
       {/* 오류 모달 */}
-      <AlertModal
+      <SuccessfulModal
       isOpen={showErrorModal}
       onClose={()=> setShowErrorModal(false)}
       message={`등록 실패: ${errorMessage}`}

@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/common/modal.css"; 
+import "../../../styles/standard-information/common/modal.css"; 
 
 const ConfirmModal = ({ isOpen, onClose, onConfirm, message }) => {
   if (!isOpen) return null; // 모달이 열려있지 않으면 렌더링하지 않음

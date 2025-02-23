@@ -1,8 +1,8 @@
 import { useState , useEffect } from "react";
 import axios from "axios";
-import ConfirmModal from "../common/Modal";
-import AlertModal from "../common/AlertModal";
-import DeleteConfirmModal from "../common/DeleteConfirmModal";
+import ConfirmModal from "./common/Modal";
+import SuccessModal from "./common/SuccessfulModal";
+import DeleteConfirmModal from "./common/DeleteConfirmModal";
 import "../../styles/standard-information/workplace-table.css";
   /*
     -렌더링 : React가 화면을 다시 그리는과정
@@ -64,7 +64,7 @@ import "../../styles/standard-information/workplace-table.css";
     // 데이터 변경이 일어나도 기존값이 사라지지 않도록 방지지
     const handleEditClick = (workplace) => {
       if(!workplace||!workplace.workplaceId){
-        console.error("❌ Error: 선택된 작업장의 ID가 없습니다!");
+        console.error("Error: 선택된 작업장의 ID가 없습니다!");
         return;
       }
       
@@ -99,11 +99,6 @@ import "../../styles/standard-information/workplace-table.css";
 
     // API 호출하여 수정 요청 실행
     /*
-      async / await 을 사용하는 이유
-      -비동기 요청(백엔드API호출)을 처리할 때 사용
-      -서버에서 응답이 올 때까지 기다리도록 await 사용
-      -오류가 발생하면 catch 블록에 처리 가능
-
       --어떤 상황에서 사용?
       - API 요청을 보낼때 (데이터를 서버에서 받아올 때)
       - 비동기 코드 실행후 결과를 기달려야 할때
@@ -117,12 +112,12 @@ import "../../styles/standard-information/workplace-table.css";
 
       // workplaceId 가 undefined일 경우 API 요청 방지
       if(!workplaceId){
-        console.error("❌ Error: workplaceId가 없습니다! API 요청 중단.");
+        console.error("Error: workplaceId가 없습니다! API 요청 중단.");
         return;
       }
 
       if(!apiUrl){
-        console.error("❌ Error: API URL이 설정되지 않았습니다!");
+        console.error("Error: API URL이 설정되지 않았습니다!");
         return;
       }
 
@@ -132,8 +127,8 @@ import "../../styles/standard-information/workplace-table.css";
         const response = await axios.put(putUrl,updatedData)
 
         if(response.status === 200){
-          console.log("✅ 수정 성공! showSuccessModal 활성화");
-          setShowSuccessModal(true);  // ✅ 성공 모달 표시
+          console.log("수정 성공! showSuccessModal 활성화");
+          setShowSuccessModal(true);  // 성공 모달 표시
           setShowConfirmModal(false); // 확인 모달 닫기
           setShowEditForm(false); // 수정 폼 닫기
         }
@@ -170,7 +165,7 @@ import "../../styles/standard-information/workplace-table.css";
 
     // 삭제 버튼 클릭시 모달 열기기
      const handleDeleteClick = (workplaceId, workplaceName) => {
-      if (!workplaceId) return; // ✅ workplaceId가 없으면 실행 안 함
+      if (!workplaceId) return; // workplaceId가 없으면 실행 안 함
       setDeleteTargetId(workplaceId);
       setDeleteTargetName(workplaceName);
       setShowDeleteModal(true);
@@ -187,7 +182,7 @@ import "../../styles/standard-information/workplace-table.css";
 
     // 최종 삭제 실행행
     const confirmDelete = async () => {
-      if (!deleteTargetId){console.error("❌ 삭제 대상 ID가 설정되지 않았습니다.");
+      if (!deleteTargetId){console.error("삭제 대상 ID가 설정되지 않았습니다.");
         return;
       }
          
@@ -198,7 +193,7 @@ import "../../styles/standard-information/workplace-table.css";
         closeModal(); // 모달 닫기 및 상태 초기화
         window.location.reload(); // 새로고침 (필요 시)
       } catch (error) {
-        console.error("❌ 삭제 실패:", error);
+        console.error("삭제 실패:", error);
       }
     };
   
@@ -341,9 +336,9 @@ import "../../styles/standard-information/workplace-table.css";
           />
           
           {/*수정완료 모달*/}
-          <AlertModal
+          <SuccessModal
             isOpen={showSuccessModal}
-            onClose={handleRefresh}  // ✅ "확인" 버튼 클릭 시 새로고침 실행
+            onClose={handleRefresh}  // "확인" 버튼 클릭 시 새로고침 실행
             message="작업장 정보가 성공적으로 수정되었습니다."
           />
 
