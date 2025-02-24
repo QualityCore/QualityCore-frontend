@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ProductionPlanStep1 from "./ProductionPlanStep1";
 import ProductionPlanStep2 from "./ProductionPlanStep2";
-// import ProductionPlanStep3 from "./ProductionPlanStep3";
+import ProductionPlanStep3 from "./ProductionPlanStep3";
 import { productionPlanStep1Api } from "../../apis/productionPlanApi/ProductionPlanStep1Api";
 
 
@@ -32,7 +32,7 @@ const ProductionPlanSteps = () => {
         <div>
             {step === 1 && <ProductionPlanStep1 formData={formData} setFormData={setFormData} goToStep={goToStep} currentStep={step} />}
             {step === 2 && <ProductionPlanStep2 formData={formData} setFormData={setFormData} goToStep={goToStep} currentStep={step} />}
-            {/* {step === 3 && <ProductionPlanStep3 formData={formData} setFormData={setFormData} goToStep={goToStep} onSave={handleSave} currentStep={step} />} */}
+            {step === 3 && <ProductionPlanStep3 formData={formData} setFormData={setFormData} goToStep={goToStep} onSave={handleSave} currentStep={step} />}
         </div>
     );
 };
