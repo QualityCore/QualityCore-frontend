@@ -6,6 +6,7 @@ import {
 } from '../../apis/productionPlanApi/ProductionPlanStep3Api';
 import styles from '../../styles/productionPlan/ProductionPlanStep3.module.css';
 import { aggregateMaterialsByBeer, aggregateMaterials } from '../../utils/materialUtils';
+import MaterialRequestModal from './MaterialRequestModal';
 
 const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 }) => {
     const [rawMaterials, setRawMaterials] = useState([]);
@@ -39,6 +40,13 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
         
         return rawMaterialShortage || packagingMaterialShortage;
     }, [rawMaterials, packagingMaterials]);
+
+    const handleMaterialRequestSave = (materialRequests) => {
+        setFormData(prevData => ({
+            ...prevData,
+            materialRequests: materialRequests
+        }));
+    };
     
     
 
@@ -242,9 +250,10 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
             <div className={styles.buttonGroup}>
                 <button onClick={() => goToStep(2)} className={styles.prevButton}>이전</button>
                 <div className={styles.rightButtons}>
-                    <button className={styles.purchaseButton}>
-                        <ShoppingCart size={18} /> 부족자재 구매신청
-                    </button>
+                <MaterialRequestModal 
+                    shortageMaterials={[...rawMaterials, ...packagingMaterials].filter(m => m.status === '부족')} 
+                    onSave={handleMaterialRequestSave}
+                    />
                     <button onClick={handleSave} className={styles.nextButton}>저장</button>
                 </div>
             </div>
