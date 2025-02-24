@@ -4,8 +4,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Schedule from "./attendance.module.css";
 import Modal from "react-modal";
-import { fetchSchedule, createSchedule, fetchAllSchedules } from '../../apis/attendanceApi/attendanceApi'; // 서버 API 호출
+import { fetchSchedule, createSchedule, fetchAllSchedules, updateSchedule, deleteSchedule  } from '../../apis/attendanceApi/attendanceApi'; // 서버 API 호출
 import SuccessAnimation from "../../lottie/SuccessNotification";
+import WarningAnimation from "../../lottie/WarningNotification";
 
 Modal.setAppElement("#root");
 
@@ -26,9 +27,33 @@ const Attendance = () => {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [currentWorkingHours, setCurrentWorkingHours] = useState(0);
     const [isSuccessModal, setIsSuccessModal] = useState(false); // 성공모달
+    const [isWarningOpen, setIsWarningOpen] = useState(false); // 경고모달
+    const [editEventData, setEditEventData] = useState(null); // 수정 데이터를 위한 상태
+    const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
+    const [minCheckOutDate, setMinCheckOutDate] = useState(""); // 
+    const [minEndDate, setMinEndDate] = useState("");
+    const [modalMessage, setModalMessage] = useState(''); // 성공메시지
+    const [warningMessage, setWarningMessage] = useState(''); // 경고메시지
+
+    const getDatesBetween = (startDate, endDate) => {
+        const dates = [];
+        let currentDate = new Date(startDate);
+
+        if (!endDate) {
+            endDate = startDate; // 종료일이 없으면 시작일로 대체
+        }
+
+        while (currentDate <= new Date(endDate)) {
+            if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) { // 주말 제외
+                dates.push(new Date(currentDate).toISOString().split("T")[0]);
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return dates;
+    };
 
     const startDate = new Date("2025-02-18");
-
     useEffect(() => {
         const currentDate = new Date();
         const dayDifference = Math.floor(
@@ -48,75 +73,102 @@ const Attendance = () => {
     const getColor = (status) => {
         switch (status) {
             case "출근":
-                return { backgroundColor: "#28a745", textColor: "#fff" };
+                return {
+                    backgroundColor: "#28a745", 
+                    color: "#fff", 
+                    border: "none", 
+                    borderRadius: "5px", 
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)"
+                };
             case "휴가":
-                return { backgroundColor: "#007bff", textColor: "#fff" };
+                return {
+                    backgroundColor: "#007bff", 
+                    color: "#fff", 
+                    border: "none", 
+                    borderRadius: "5px", 
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)"
+                };
             case "병가":
-                return { backgroundColor: "#ffc107", textColor: "#fff" };
+                return {
+                    backgroundColor: "#ffc107", 
+                    color: "#fff", 
+                    border: "none", 
+                    borderRadius: "5px", 
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)"
+                };
+            case "기타":
+                return {
+                    backgroundColor: "#f44336", 
+                    color: "#fff", 
+                    border: "none", 
+                    borderRadius: "5px", 
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)"
+                };
             default:
-                // 예상하지 못한 status 값이 들어왔을 때 기본 색상 제공
-                return { backgroundColor: "#6c757d", textColor: "#fff" }; // 회색과 흰색 기본 색상
+                return {
+                    backgroundColor: "#6c757d", 
+                    color: "#fff", 
+                    border: "none", 
+                    borderRadius: "5px", 
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)"
+                };
         }
-    };
-
+    };    
 
     useEffect(() => {
-        const empId = "EMP002";
-
+        const empId = "EMP001"; // 나중에 로그인한 유저 가져와야함!!!!!
+    
         // 직원의 전체 스케줄 가져오기
         fetchAllSchedules(empId)
             .then((schedules) => {
-                console.log('응답받은 스케줄 리스트:', schedules);
-
                 if (schedules && schedules.length > 0) {
                     setUserSchedule(schedules[0]);
-
-                    // 2. 각 스케줄 데이터 확인
-                    schedules.forEach((schedule, index) => {
-                        console.log(`스케줄 ${index + 1}:`, schedule);
-                    });
-
+    
                     const calendarEvents = schedules.map((schedule) => {
-                        const { workStatus, checkIn, checkOut, empName, workTeam, email, phone, profileImage } = schedule;
+                        const { workStatus, checkIn, checkOut, empName, workTeam, email, phone, profileImage, scheduleId, scheduleEtc } = schedule;
                         const startDate = new Date(checkIn);
                         const endDate = new Date(checkOut);
-
                         const color = getColor(workStatus);
-
-                        return {
-                            title: `${workStatus}`,
-                            start: startDate.toISOString(),
-                            end: endDate.toISOString(),
-                            allDay: true,
-                            description: `Work Team: ${workTeam}`,
-                            extendedProps: {
-                                email: email,
-                                phone: phone,
-                                profileImage: profileImage || "public/images/baba.png",
-                            },
-                            backgroundColor: color.backgroundColor,
-                            textColor: color.textColor,
-                        };
+    
+                        // 주말 제외 날짜들 계산
+                        const dates = getDatesBetween(startDate, endDate);
+    
+                        return dates.map((date) => {
+                            return {
+                                title: `${workStatus}`,
+                                start: new Date(date).toISOString(),
+                                end: new Date(date).toISOString(),
+                                allDay: true,
+                                description: `Work Team: ${workTeam}`,
+                                extendedProps: {
+                                    scheduleId,
+                                    empName,
+                                    workTeam,
+                                    workStatus,
+                                    email: email,
+                                    phone: phone,
+                                    profileImage: profileImage || "public/images/baba.png",
+                                    scheduleEtc
+                                },
+                                backgroundColor: color.backgroundColor,
+                                textColor: color.textColor,  // `color`를 `textColor`로 적용
+                                border: color.border,
+                                borderRadius: color.borderRadius,
+                                boxShadow: color.boxShadow
+                            };
+                        });
                     });
-
-                    // 4. 생성된 calendarEvents 배열 출력
-
-                    setEvents(calendarEvents);  // 한 번에 setEvents 호출
-                    console.log('setEvents 호출 후 상태:', calendarEvents);
+    
+                    setEvents(calendarEvents.flat());  // 한 번에 setEvents 호출
                 }
-            })
-            .catch((error) => {
             });
     }, []);
-
-
-
+    
     const calculateWorkingHours = () => {
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth();  // 현재 달
         const currentYear = currentDate.getFullYear();  // 현재 년도
 
-        // 해당 월의 첫 날과 마지막 날 계산
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
 
@@ -136,7 +188,6 @@ const Attendance = () => {
         return totalWorkingHours;
     };
 
-    // 현재 근무시간 업데이트 함수
     useEffect(() => {
         const updateWorkingHours = () => {
             const currentDate = new Date();
@@ -172,127 +223,273 @@ const Attendance = () => {
 
     }, []);
 
-    // totalWorkingHours와 currentWorkingHours를 화면에 출력
     const totalWorkingHours = calculateWorkingHours();
 
     const openModal = () => setIsModal(true);
     const closeModal = () => setIsModal(false);
     const detailOpenModal = () => setIsDetailModal(true);
-    const detailCloseModal = () => setIsDetailModal(false);
+    const detailCloseModal = () => {
+        setIsDetailModal(false);
+        setEditEventData(null); // 수정 데이터 초기화
+        setIsEditMode(false); // 수정 모드 종료
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewEvent({ ...newEvent, [name]: value });
+        if (name === "startDate") {
+            setMinEndDate(value); // 시작 날짜가 변경될 때 최소 종료 날짜 업데이트
+        }
     };
 
-    const handleSubmit = () => {
-        const scheduleData = {
-            scheduleId: "SD006",
-            checkIn: newEvent.startDate,
-            checkOut: newEvent.endDate,
-            workStatus: newEvent.workStatus,
-            empName: newEvent.empName,
-            profileImage: newEvent.profileImage,
-            workTeam: newEvent.workTeam,
-            empId: "EMP002",
-            remark: newEvent.scheduleEtc
+    // 수정 데이터 변경 핸들러
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditEventData({ ...editEventData, [name]: value });
+        if (name === "checkIn") {
+            setMinCheckOutDate(value); // 시작 날짜 변경 시 최소 종료 날짜 업데이트
+        }
+    };
+
+   // 스케줄 수정
+const handleUpdateSchedule = async () => {
+    if (!editEventData || !selectedEvent) {
+        setWarningMessage("수정할 데이터가 없거나, 선택된 이벤트가 없습니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+
+    // checkIn과 checkOut을 Date 객체로 변환
+    const startDate = new Date(editEventData.checkIn);
+    const endDate = new Date(editEventData.checkOut);
+
+    if (endDate.getTime() < startDate.getTime()) {
+        setWarningMessage("종료 날짜는 시작 날짜보다 이후여야 합니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+
+     // 출근 시간을 오늘로 제한
+if (editEventData.workStatus === "출근") {
+    const selectedCheckIn = new Date(editEventData.checkIn);
+    const selectedCheckOut = new Date(editEventData.checkOut);
+
+    // 시작일과 종료일이 동일한 날짜여야 한다.
+    if (selectedCheckIn.toDateString() !== selectedCheckOut.toDateString()) {
+        setWarningMessage("출근 시작일과 종료일은 동일한 날짜여야 합니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+
+    // 동일한 날짜에 이미 출근 기록이 있는지 확인
+    const existingEvent = events.find(event => {
+        const eventDate = new Date(event.start);
+        return eventDate.toDateString() === selectedCheckIn.toDateString() && event.title === "출근";
+    });
+
+    // 이미 출근 기록이 있으면 새로운 기록 추가를 방지
+    if (existingEvent) {
+        setWarningMessage("이미 출근 기록이 존재합니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+}
+
+    try {
+        const updatedData = {
+            scheduleId: selectedEvent.extendedProps.scheduleId,
+            checkIn: editEventData.checkIn || selectedEvent.checkIn,
+            checkOut: editEventData.checkOut || selectedEvent.checkOut,
+            workStatus: editEventData.workStatus || selectedEvent.workStatus,
+            scheduleEtc: editEventData.scheduleEtc || selectedEvent.scheduleEtc,
         };
 
-        // getDatesBetween 함수를 이용하여 주말 제외하고 날짜 범위 내 개별 날짜 반환
-        const eventDates = getDatesBetween(newEvent.startDate, newEvent.endDate);  // 각 날짜에 대해 개별적으로 이벤트 생성
+        const response = await updateSchedule(updatedData);
 
-        // API 호출하여 DB에 데이터 저장
-        createSchedule(scheduleData)
-            .then((data) => {
-                console.log('서버에서 받은 데이터:', data);
+        if (response) {
+            const updatedSchedules = await fetchAllSchedules("EMP001"); // 최신 스케줄 가져오기
+            const calendarEvents = updatedSchedules.flatMap((schedule) => {
+                const { workStatus, checkIn, checkOut, empName, workTeam, email, phone, profileImage, scheduleId, scheduleEtc } = schedule;
+                const startDate = new Date(checkIn);
+                const endDate = new Date(checkOut);
+                const color = getColor(workStatus);
 
-                // 서버에 데이터 저장 후 모든 스케줄을 다시 받아옵니다
-                fetchAllSchedules("EMP002")  // EMP001로 스케줄 가져오기
-                    .then((schedules) => {
-                        console.log('새로고침 후 받은 스케줄 리스트:', schedules);
+                // 주말 제외 날짜들 계산
+                const dates = getDatesBetween(startDate, endDate);
 
-                        if (schedules && schedules.length > 0) {
-                            // 각 스케줄에 대해 이벤트를 반환하고 날짜별로 개별 띠를 생성
-                            const calendarEvents = schedules.map((schedule) => {
-                                const { workStatus, checkIn, checkOut, empName, workTeam, email, phone, profileImage } = schedule;
-                                const startDate = new Date(checkIn);
-                                const endDate = new Date(checkOut);
-
-                                // 각 날짜별로 띠를 분리할 때, 주말을 제외하고 개별 이벤트를 생성
-                                const dates = getDatesBetween(startDate, endDate);  // 주말을 제외한 각 날짜 반환
-
-                                // 주어진 날짜들에 대해 각각 이벤트 객체를 생성
-                                return dates.map((date) => {
-                                    const color = getColor(workStatus);
-                                    return {
-                                        title: `${workStatus}`,
-                                        start: new Date(date).toISOString(),
-                                        end: new Date(date).toISOString(),
-                                        allDay: true,
-                                        description: `Work Team: ${workTeam}`,
-                                        extendedProps: {
-                                            email: email,
-                                            phone: phone,
-                                            profileImage: profileImage || "public/images/baba.png",
-                                        },
-                                        backgroundColor: color.backgroundColor,
-                                        textColor: color.textColor,
-                                    };
-                                });
-                            });
-
-                            // 모든 이벤트를 한 번에 업데이트
-                            setEvents(calendarEvents.flat());  // 2D 배열을 1D 배열로 변환
-                            console.log('setEvents 호출 후 상태:', calendarEvents.flat());
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("스케줄을 가져오는 중 오류 발생:", error);
-                    });
-
-                closeModal();
-                setIsSuccessModal(true);
-            })
-            .catch((error) => {
-                console.error("스케줄 등록 오류:", error);
+                return dates.map((date) => ({
+                    title: `${workStatus}`,
+                    start: new Date(date).toISOString(),
+                    end: new Date(date).toISOString(),
+                    allDay: true,
+                    description: `Work Team: ${workTeam}`,
+                    extendedProps: {
+                        scheduleId,
+                        empName,
+                        workTeam,
+                        workStatus,
+                        email,
+                        phone,
+                        profileImage: profileImage || "public/images/baba.png",
+                        scheduleEtc
+                    },
+                    backgroundColor: color.backgroundColor,
+                    textColor: color.textColor,
+                    border: color.border,
+                    borderRadius: color.borderRadius,
+                    boxShadow: color.boxShadow
+                }));
             });
+
+            setEvents(calendarEvents); // 캘린더 이벤트 업데이트
+            detailCloseModal(); // 모달 닫기
+            setModalMessage("스케줄이 성공적으로 변경되었습니다.");
+            setIsSuccessModal(true); // 성공 모달 띄우기
+        }
+    } catch (error) {
+        // Removed console.log
+    }
+};
+
+
+    // 스케줄 등록
+const handleSubmit = async () => {  // async 추가
+    // 1. 필수 입력값 체크
+    if (!newEvent.startDate || !newEvent.workStatus || (newEvent.workStatus !== '출근' && !newEvent.endDate)) {
+        setWarningMessage("모든 필수 입력값을 입력해주세요!");
+        setIsWarningOpen(true);
+        return;
+    }
+
+    // 2. 종료일이 시작일보다 빠를 경우 체크
+    if (newEvent.endDate && newEvent.startDate > newEvent.endDate) {
+        setWarningMessage("종료일은 시작일보다 빠를 수 없습니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+
+    // 3. 중복 일정 확인
+    const selectedDate = new Date(newEvent.startDate).toISOString().split("T")[0];
+    const existingEvent = events.find(
+        (event) => new Date(event.start).toISOString().split("T")[0] === selectedDate
+    );
+
+    if (existingEvent) {
+        setWarningMessage("해당 날짜에 스케줄이 존재합니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+
+     // 주말(토요일, 일요일) 체크
+     const checkWeekend = (date) => {
+        const day = new Date(date).getDay(); // 0(일요일) ~ 6(토요일)
+        return day === 0 || day === 6;
     };
 
-    const getDatesBetween = (startDate, endDate) => {
-        const dates = [];
-        let currentDate = new Date(startDate);
+    // 시작일과 종료일이 모두 주말이라면 등록 막기
+    if (checkWeekend(newEvent.startDate) && checkWeekend(newEvent.endDate)) {
+        setWarningMessage("주말은 등록할 수 없습니다.");
+        setIsWarningOpen(true);
+        return;
+    }
 
-        while (currentDate <= new Date(endDate)) {
-            if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-                dates.push(new Date(currentDate).toISOString().split("T")[0]);
-            }
-            currentDate.setDate(currentDate.getDate() + 1);
+    // 4. 주말만 등록하는 경우 체크
+    if (checkWeekend(newEvent.startDate) && !newEvent.endDate) {
+        setWarningMessage("주말은 등록할 수 없습니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+    if (checkWeekend(newEvent.endDate) && !newEvent.startDate) {
+        setWarningMessage("주말은 등록할 수 없습니다.");
+        setIsWarningOpen(true);
+        return;
+    }
+
+    const scheduleData = {
+        scheduleId: newEvent.scheduleId,
+        checkIn: newEvent.startDate,
+        checkOut: newEvent.workStatus === '출근' ? newEvent.startDate : newEvent.endDate,
+        workStatus: newEvent.workStatus,
+        empName: newEvent.empName,
+        profileImage: newEvent.profileImage,
+        workTeam: newEvent.workTeam,
+        empId: "EMP001",
+        scheduleEtc: newEvent.scheduleEtc
+    };
+
+    try {
+        await createSchedule(scheduleData);  // createSchedule 호출도 async로 처리
+        const schedules = await fetchAllSchedules("EMP001");  // fetchAllSchedules 호출도 async로 처리
+
+        if (schedules && schedules.length > 0) {
+            const calendarEvents = schedules.map((schedule) => {
+                const { workStatus, checkIn, checkOut, empName, workTeam, email, phone, profileImage, scheduleId, scheduleEtc } = schedule;
+                const startDate = new Date(checkIn);
+                const endDate = checkOut ? new Date(checkOut) : startDate;
+
+                // 주말 제외 날짜들 계산
+                const dates = getDatesBetween(startDate, endDate);
+
+                return dates.map((date) => {
+                    const color = getColor(workStatus);
+                    return {
+                        title: `${workStatus}`,
+                        start: new Date(date).toISOString(),
+                        end: new Date(date).toISOString(),
+                        allDay: true,
+                        description: `Work Team: ${workTeam}`,
+                        extendedProps: {
+                            scheduleId,
+                            empName,
+                            workTeam,
+                            workStatus,
+                            scheduleEtc,
+                            email,
+                            phone,
+                            profileImage: profileImage || "public/images/baba.png",
+                        },
+                        backgroundColor: color.backgroundColor,
+                        textColor: color.textColor,  // `color`를 `textColor`로 적용
+                        border: color.border,
+                        borderRadius: color.borderRadius,
+                        boxShadow: color.boxShadow
+                    };
+                });
+            });
+
+            setEvents(calendarEvents.flat());  // 한 번에 setEvents 호출
         }
 
-        return dates;
-    };
+        setIsModal(false);
+        setModalMessage("스케줄이 성공적으로 등록되었습니다.");
+        setIsSuccessModal(true);
 
-    const handleEventClick = (info) => {
-        const event = info.event;  // 클릭된 이벤트 객체
-        console.log('클릭된 이벤트:', info.event);
-        console.log('클릭된 이벤트의 extendedProps:', info.event.extendedProps);
+        // 새로 등록된 스케줄을 클릭했을 때 이벤트 처리
+        const newSchedule = {
+            title: newEvent.workStatus,
+            start: new Date(newEvent.startDate).toLocaleDateString(),
+            end: new Date(newEvent.endDate).toLocaleDateString(),
+            extendedProps: {
+                scheduleId: scheduleData.scheduleId,
+                empName: newEvent.empName,
+                workStatus: newEvent.workStatus,
+                workTeam: newEvent.workTeam,
+                email: newEvent.email || "이메일없음",
+                phone: newEvent.phone || "전화번호없음",
+                profileImage: newEvent.profileImage || "public/images/baba.png",
+                scheduleEtc: newEvent.scheduleEtc
+            }
+        };
 
-        // 필요한 데이터 추출
-        const { title, start, end, extendedProps } = event;
+        // 이벤트 클릭 처리
+        const { scheduleId, empName, scheduleEtc } = newSchedule.extendedProps;
+        const formattedStart = newSchedule.start;
+        const formattedEnd = newSchedule.end;
 
-        const formattedStart = start instanceof Date ? start.toLocaleString() : "유효하지 않은 시작일";
-        const formattedEnd = end instanceof Date ? end.toLocaleString() : "유효하지 않은 종료일";
+        const { workStatus = "미정", workTeam = "정보없음", email = "이메일없음", phone = "전화번호없음" } = newSchedule.extendedProps || {};
 
-        // extendedProps에 포함된 데이터
-        const workStatus = extendedProps?.workStatus || "미정";
-        const workTeam = extendedProps?.workTeam || "정보없음";
-        const empName = extendedProps?.empName || "이름없음";
-        const email = extendedProps?.email || "이메일없음";
-        const phone = extendedProps?.phone || "전화번호없음";
-
-        // selectedEvent 데이터 업데이트
         setSelectedEvent({
-            title,
+            title: newSchedule.title,
             start: formattedStart,
             end: formattedEnd,
             workStatus,
@@ -300,24 +497,120 @@ const Attendance = () => {
             empName,
             email,
             phone,
-        });
-        console.log('선택된 이벤트:', {
-            title,
-            start: formattedStart,
-            end: formattedEnd,
-            workStatus,
-            workTeam,
-            empName,
-            email,
-            phone,
+            scheduleEtc
         });
 
-        // 모달 열기
-        detailOpenModal();
+    } catch (error) {
+        // 에러 처리
+        console.error(error); // 에러 처리, 나중에 수정 필요
+    }
+};
+
+    // 스케줄 상세정보 보기
+    const handleEventClick = async (info) => {
+        const { event } = info;
+        const { title, extendedProps } = event;
+        const { scheduleId, empName, scheduleEtc, checkOut } = extendedProps;
+    
+        if (!scheduleId || scheduleId.trim() === "") return;
+    
+        const { workStatus = "미정", workTeam = "정보없음", email = "이메일없음", phone = "전화번호없음" } = extendedProps || {};
+    
+        try {
+            // scheduleId를 바탕으로 fetchSchedule 호출
+            const scheduleData = await fetchSchedule(scheduleId);
+            setSelectedEvent({
+                title,
+                workStatus,
+                workTeam,
+                empName,
+                email,
+                phone,
+                scheduleEtc,
+                checkIn: scheduleData?.checkIn || "시간 없음",
+                checkOut: scheduleData?.checkOut || "시간 없음",
+                extendedProps: extendedProps  // extendedProps 유지
+            });
+    
+            setEditEventData({
+                checkIn: scheduleData?.checkIn || null,
+                checkOut: scheduleData?.checkOut || null,
+                workStatus: scheduleData?.workStatus || workStatus,
+                scheduleEtc: scheduleData?.scheduleEtc || scheduleEtc,
+            });
+    
+            detailOpenModal(); // 모달 열기
+        } catch (error) {
+            // 에러 처리 없이 단순 리턴
+        }
     };
+    
+    const closeSuccessModal = () => setIsSuccessModal(false);
 
-    const closeSuccessModal = () => setIsSuccessModal(false); // 성공 모달 닫는 함수
-
+    // 스케줄 삭제
+    const handleDeleteSchedule = async (scheduleId) => {
+        if (!scheduleId) return;
+    
+        try {
+            const deletedSchedule = await deleteSchedule(scheduleId);
+    
+            if (deletedSchedule && deletedSchedule.code === 200) {
+                setModalMessage("스케줄이 성공적으로 삭제되었습니다.");
+                setIsSuccessModal(true);
+                detailCloseModal();
+    
+                // 스케줄 삭제 후 캘린더 이벤트에서 해당 스케줄을 제거
+                setEvents((prevEvents) => prevEvents.filter(event => event.extendedProps.scheduleId !== scheduleId));
+    
+                const empId = "EMP001";  // 현재 로그인한 사용자 ID
+    
+                // 스케줄 목록 새로 가져오기
+                fetchAllSchedules(empId)
+                    .then((schedules) => {
+                        if (schedules && schedules.length > 0) {
+                            setUserSchedule(schedules[0]);
+    
+                            const calendarEvents = schedules.map((schedule) => {
+                                const { scheduleId, workStatus, checkIn, checkOut, empName, workTeam, email, phone, profileImage, scheduleEtc } = schedule;
+                                const startDate = new Date(checkIn);
+                                const endDate = new Date(checkOut);
+                                const color = getColor(workStatus);
+    
+                                const dates = getDatesBetween(startDate, endDate);
+    
+                                return dates.map((date) => ({
+                                    title: `${workStatus}`,
+                                    start: new Date(date).toISOString(),
+                                    end: new Date(date).toISOString(),
+                                    allDay: true,
+                                    description: `Work Team: ${workTeam}`,
+                                    extendedProps: {
+                                        scheduleId,
+                                        empName,
+                                        workTeam,
+                                        workStatus,
+                                        email,
+                                        phone,
+                                        profileImage: profileImage || "public/images/baba.png",
+                                        scheduleEtc
+                                    },
+                                    backgroundColor: color.backgroundColor,
+                                    textColor: color.textColor,
+                                    border: color.border,
+                                    borderRadius: color.borderRadius,
+                                    boxShadow: color.boxShadow
+                                }));
+                            });
+    
+                            setEvents(calendarEvents.flat());
+                        }
+                    });
+            }
+        } catch (error) {
+            // 여기에 에러 처리 없이 그냥 리턴
+        }
+    };
+    
     return (
         <>
             {/* ----------------------------------------------------------------------------------------------------------------------------------------------------------- */}
@@ -325,14 +618,14 @@ const Attendance = () => {
                 <div className={Schedule.profileBar}>
                     <div className={Schedule.leftContent}>
                         <img className={Schedule.profile} src={userSchedule?.profileImage || "../images/baba.png"} alt="프로필사진" />
-                        <p className={Schedule.profileName}>{userSchedule?.empName}님</p>
+                        <p className={Schedule.profileName}><b>{userSchedule?.empName}</b>&nbsp;님</p>
                         <p className={Schedule.profileName1}>환영합니다.</p>
                     </div>
                     <div className={Schedule.divider}></div>
                     <div className={Schedule.rightContent}>
                         <h3 style={{ color: 'red' }}>{noAccidentDays}&nbsp;일 무사고</h3>
                         <p>{currentDateTime}</p>
-                        <p>근무 기록을 기록합니다.</p>
+                        <p><b>오늘도 안전 무사고!!</b></p>
                     </div>
                 </div>
                 {/* ----------------------------------------------------------------------------------------------------------------------------------------------------------- */}
@@ -358,7 +651,6 @@ const Attendance = () => {
                     </table>
                 </div>
             </div>
-
             <button className={Schedule.scheduleButton} onClick={openModal}>스케줄 등록</button>
             {/* ----------------------------------------------------------------------------------------------------------------------------------------------------------- */}
             <Modal isOpen={isModal} onRequestClose={closeModal} overlayClassName="modal-overlay" className={Schedule.modal}>
@@ -366,7 +658,6 @@ const Attendance = () => {
                     <button className={Schedule.closeButton} onClick={closeModal}>X</button>
                     <h2 className={Schedule.modalTitle}>스케줄 등록</h2>
                 </div>
-
                 <form className={Schedule.modalForm}>
                     <input
                         type="text"
@@ -375,33 +666,52 @@ const Attendance = () => {
                         onChange={handleInputChange}
                         style={{ display: 'none' }}
                     />
-                    <label className={Schedule.formLabel}>
-                        시작일 :&nbsp;&nbsp;
-                        <input type="date" name="startDate" value={newEvent.startDate} onChange={handleInputChange} className={Schedule.formInput} />
-                    </label><br />
-                    <label className={Schedule.formLabel}>
-                        종료일 :&nbsp;&nbsp;
-                        <input type="date" name="endDate" value={newEvent.endDate} onChange={handleInputChange} className={Schedule.formInput} />
-                    </label><br />
-                    <label className={Schedule.formLabel}>
-                        근무 상태 :&nbsp;&nbsp;
-                        <select name="workStatus" value={newEvent.workStatus} onChange={handleInputChange} className={Schedule.formInput}>
+                    <label className={Schedule.formLabel}>시작일 :&nbsp;&nbsp;</label><br />
+                        <input
+                            type="date"
+                            name="startDate"
+                            value={newEvent.startDate}
+                            onChange={handleInputChange}
+                            className={Schedule.formInput}
+                        />
+                  <br />
+                    {/* 출근 상태일 때 종료일 필드를 렌더링하지 않도록 조건 추가 */}
+                    {newEvent.workStatus !== '출근' && (
+  <>
+    <label className={Schedule.formLabel}>종료일 :&nbsp;&nbsp;</label><br />
+    <input
+      type="date"
+      name="endDate"
+      value={newEvent.endDate}
+      onChange={handleInputChange}
+      className={Schedule.formInput}
+      min={minEndDate}
+    />
+    <br />
+  </>
+)}
+                    <label className={Schedule.formLabel}>근무 상태 :&nbsp;&nbsp;</label> <br />
+                        <select
+                            name="workStatus"
+                            value={newEvent.workStatus}
+                            onChange={handleInputChange}
+                            className={Schedule.formInput}
+                        >
                             <option value="출근">출근</option>
                             <option value="휴가">휴가</option>
                             <option value="병가">병가</option>
-                            <option value="공휴일">공휴일</option>
+                            <option value="기타">기타</option>
                         </select><br />
-                        <label className={Schedule.formLabelRemarks}>
-                            특이사항 :&nbsp;&nbsp;
+                        <label className={Schedule.formLabel}>특이사항 :&nbsp;&nbsp;</label>
+                        <br />
                             <textarea
-                                name="remarks"
+                                name="scheduleEtc"
                                 value={newEvent.scheduleEtc}
                                 onChange={handleInputChange}
                                 className={Schedule.formInput}
                                 placeholder="특이사항을 입력하세요"
                             />
-                        </label><br />
-                    </label><br />
+                    <br />
                     <button type="button" onClick={handleSubmit} className={Schedule.submitButton}>등록</button>
                 </form>
             </Modal>
@@ -413,30 +723,108 @@ const Attendance = () => {
                 </div>
                 <div className={Schedule.successModalContent}>
                     <SuccessAnimation /> {/* 성공 애니메이션 컴포넌트 추가 */}
-                    <p className={Schedule.successMessage}>스케줄이 성공적으로 등록되었습니다.</p>
+                    <p className={Schedule.successMessage}>{modalMessage}</p>
                 </div>
             </Modal>
+            {/* ----------------------------------------------------------------------------------------------------------------------------------------------------------- */}
+            {/* 경고 알림 모달 */}
+            <Modal
+  isOpen={isWarningOpen}  // 올바른 상태 변수 사용
+  onRequestClose={() => setIsWarningOpen(false)}  // 닫기 핸들러 수정
+  className={Schedule.warningModal}
+  overlayClassName="modal-overlay"
+>
+  <div className={Schedule.warningModalHeader}>
+    <button className={Schedule.warningCloseButton} onClick={() => setIsWarningOpen(false)}>X</button>
+  </div>
+  <div className={Schedule.warningModalContent}>
+    <WarningAnimation /> {/* 경고 애니메이션 추가 */}
+    <p className={Schedule.warningMessage}>{warningMessage}</p>  {/* 메시지 변수 수정 */}
+  </div>
+</Modal>
 
             {/* ----------------------------------------------------------------------------------------------------------------------------------------------------------- */}
-            {/* 이벤트 상세정보 모달 */}
             {selectedEvent && (
-                <Modal isOpen={isDetailModal} onRequestClose={detailCloseModal} className={Schedule.modal} overlayClassName="modal-overlay">
-                    <div className={Schedule.modalHeader}>
-                        <button className={Schedule.closeButton} onClick={detailCloseModal}>X</button>
-                        <h2 className={Schedule.modalTitle}>상세정보</h2>
-                    </div>
+    <Modal isOpen={isDetailModal} onRequestClose={detailCloseModal} className={Schedule.modal} overlayClassName="modal-overlay">
+        <div className={Schedule.modalHeader}>
+            <button className={Schedule.closeButton} onClick={detailCloseModal}>X</button>
+            {!isEditMode && <h2 className={Schedule.modalTitle}>스케줄</h2>}
+            {isEditMode && <h2 className={Schedule.modalTitle}>스케줄 수정</h2>}
+        </div>
 
-                    <div className={Schedule.modalContent}>
-                        <p>이름 : {selectedEvent.empName}</p>
-                        <p>작업조 : {selectedEvent.workTeam}</p>
-                        <p>근무 상태 : {selectedEvent.workStatus}</p>
-                        <p>시작 시간 : {selectedEvent.start}</p>
-                        <p>종료 시간 : {selectedEvent.end}</p>
-                        <p>이메일 : {selectedEvent.email}</p>
-                        <p>전화번호 : {selectedEvent.phone}</p>
-                    </div>
-                </Modal>
-            )}
+        <div className={Schedule.modalContent}>
+            {/* 상세 정보 보기 */}
+            <div className={Schedule.detailView}>
+                {!isEditMode ? (
+                    <>
+                        <p><b>이름 : </b>{selectedEvent.empName}</p>
+                        <p><b>작업조 : </b>{selectedEvent.workTeam}</p>
+                        <p><b>근무 상태 : </b>{selectedEvent.workStatus}</p>
+                        <p><b>시작 시간 : </b>{selectedEvent.checkIn ? selectedEvent.checkIn : "시간 없음"}</p>
+                        <p><b>종료 시간 : </b>{selectedEvent.checkOut ? selectedEvent.checkOut : "시간 없음"}</p>
+                        <p><b>메모 : </b>{selectedEvent.scheduleEtc}</p>
+
+                        {/* 수정 버튼 */}
+                        <button
+                            onClick={() => { setIsEditMode(true);
+                                            setEditEventData(selectedEvent);}}
+                            className={Schedule.editButton}
+                        >수정</button>
+                        <button
+    className={Schedule.editRemoveButton}
+    onClick={() => {handleDeleteSchedule(selectedEvent.extendedProps.scheduleId);  // 삭제 시 해당 스케줄 ID 전달
+}}
+>
+    삭제
+</button>
+                    </>
+                ) : null}
+            </div>
+
+            {/* 수정 가능 상태 */}
+            <div className={Schedule.editView}>
+                {isEditMode ? (
+                    <>
+                        <label>
+                            근무 상태 :
+                        </label>
+                            <select name="workStatus" defaultValue={editEventData.workStatus} onChange={handleEditChange}>
+                                <option value="출근">출근</option>
+                                <option value="휴가">휴가</option>
+                                <option value="병가">병가</option>
+                                <option value="기타">기타</option>
+                            </select>
+                        <label>
+                            시작 시간 :
+                        </label>
+                            <input
+                                type="date"
+                                name="checkIn"
+                                defaultValue={editEventData.checkIn?.split("T")[0]}
+                                onChange={handleEditChange}
+                            />
+                        <label>
+                            종료 시간 : 
+                        </label>
+                            <input
+                                type="date"
+                                name="checkOut"
+                                defaultValue={editEventData.checkOut?.split("T")[0]}
+                                onChange={handleEditChange}
+                                min={minCheckOutDate}
+                            />
+                        <label className={Schedule.textLabel}>메모 :</label>
+                        <textarea name="scheduleEtc" defaultValue={editEventData.scheduleEtc} onChange={handleEditChange}></textarea>
+
+                        {/* 저장 및 취소 버튼 */}
+                        <button onClick={handleUpdateSchedule} className={Schedule.saveButton}>저장</button>
+                        <button onClick={() => setIsEditMode(false)} className={Schedule.cancelButton}>취소</button>
+                    </>
+                ) : null}
+            </div>
+        </div>
+    </Modal>
+)}
             {/* ----------------------------------------------------------------------------------------------------------------------------------------------------------- */}
             <div className={Schedule.maiBar}>
                 <FullCalendar
@@ -454,10 +842,20 @@ const Attendance = () => {
                     height="100%"
                     expandRows={true}
                     eventClick={handleEventClick}
+                    eventDidMount={(info) => {
+                        // 이벤트가 렌더링 된 후 스타일을 직접 적용
+                        const { backgroundColor, textColor, borderColor, borderRadius, boxShadow } = info.event.extendedProps;
+                
+                        const eventElement = info.el;
+                        eventElement.style.backgroundColor = backgroundColor;
+                        eventElement.style.color = textColor;
+                        eventElement.style.borderColor = borderColor;
+                        eventElement.style.borderRadius = borderRadius;
+                        eventElement.style.boxShadow = boxShadow;
+                      }}
                 />
             </div>
         </>
     );
 };
-
 export default Attendance;

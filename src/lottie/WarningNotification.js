@@ -12,7 +12,7 @@ const WarningAnimation = () => {
     },
   };
 
-  return <Lottie options={defaultOptions} height={100} width={100} />;
+  return <Lottie options={defaultOptions} height={150} width={150} />;
 };
 
 export default WarningAnimation;
