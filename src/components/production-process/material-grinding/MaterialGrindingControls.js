@@ -106,7 +106,9 @@ const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
                 <SuccessfulModal 
                     isOpen={showSuccessModal}
                     message="데이터가 성공적으로 저장되었습니다!" 
-                    onClose={() => setShowSuccessModal(false)}
+                    onClose={() =>{
+                        console.log("성공모달닫힘");
+                        setShowSuccessModal(false)}}
                 />
            
 
@@ -114,9 +116,11 @@ const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
             {/*오류 모달 (등록 실패 시) */}
          
                 <ErrorModal 
-                    isOpen={showSuccessModal}
+                    isOpen={showErrorModal}
                     message="데이터 저장에 실패했습니다. 다시 시도해주세요." 
-                    onClose={() => setShowErrorModal(false)}
+                    onClose={() =>{
+                        console.log("오류모달 닫힘");
+                         setShowErrorModal(false)}}
                 />
          
 
