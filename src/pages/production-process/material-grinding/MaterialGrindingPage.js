@@ -20,7 +20,6 @@ const MaterialGrindingPage = () => {
 
     return (
         <div className="material-grinding-container">
-            <h2 className="material-grinding-title">분쇄 공정</h2>
             <MaterialGrindingForm  grindingData={grindingData} setGrindingData={setGrindingData} />
             <MaterialGrindingControls grindingData={grindingData} />
         </div>
