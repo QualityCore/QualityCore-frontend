@@ -6,6 +6,7 @@ import {
 } from '../../apis/productionPlanApi/ProductionPlanStep3Api';
 import styles from '../../styles/productionPlan/ProductionPlanStep3.module.css';
 import { aggregateMaterialsByBeer, aggregateMaterials } from '../../utils/materialUtils';
+import MaterialRequestModal from './MaterialRequestModal';
 
 const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 }) => {
     const [rawMaterials, setRawMaterials] = useState([]);
@@ -15,6 +16,8 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
     const [isLoading, setIsLoading] = useState(true);
     const [selectedBeer, setSelectedBeer] = useState(null);
 
+    console.log("formData : ",formData);
+    
     const uniqueBeers = useMemo(() => [...new Set(formData.products.map(p => p.productName))], [formData]);
 
     const aggregatedRawMaterials = useMemo(() => aggregateMaterials(rawMaterials), [rawMaterials]);
@@ -39,6 +42,13 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
         
         return rawMaterialShortage || packagingMaterialShortage;
     }, [rawMaterials, packagingMaterials]);
+
+    const handleMaterialRequestSave = (materialRequests) => {
+        setFormData(prevData => ({
+            ...prevData,
+            materialRequests: materialRequests
+        }));
+    };
     
     
 
@@ -106,14 +116,32 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
     
     
 
-    const handleSave = async () => {
-        try {
-            await saveMaterialPlan(formData);
-            alert('생산 계획이 성공적으로 저장되었습니다!');
-        } catch (error) {
-            alert('저장 중 오류가 발생했습니다.');
-        }
+    const prepareDataForSave = (formData) => {
+        const preparedData = {
+            ...formData,
+            planYm: formData.planYm || new Date().toISOString().split('T')[0], 
+            allocatedLines: Object.values(formData.allocatedLines).flat(),
+            materials: formData.materials || [],
+            products: formData.products.map(product => ({
+                ...product,
+                planQty: Number(product.planQty)
+            }))
+        };
+        console.log("Prepared data for save:", preparedData);
+        return preparedData;
     };
+
+      const handleSave = async () => {
+        const preparedData = prepareDataForSave(formData);
+        console.log("Prepared data for save:", preparedData);
+        try {
+          await saveMaterialPlan(preparedData);
+          alert('생산 계획이 성공적으로 저장되었습니다!');
+        } catch (error) {
+          console.error("저장 중 오류 발생:", error.response?.data);
+          alert('저장 중 오류가 발생했습니다.');
+        }
+      };
 
     if (isLoading) {
         return <div>자재 정보를 불러오는 중...</div>;
@@ -242,9 +270,10 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
             <div className={styles.buttonGroup}>
                 <button onClick={() => goToStep(2)} className={styles.prevButton}>이전</button>
                 <div className={styles.rightButtons}>
-                    <button className={styles.purchaseButton}>
-                        <ShoppingCart size={18} /> 부족자재 구매신청
-                    </button>
+                <MaterialRequestModal 
+                    shortageMaterials={[...rawMaterials, ...packagingMaterials].filter(m => m.status === '부족')} 
+                    onSave={handleMaterialRequestSave}
+                    />
                     <button onClick={handleSave} className={styles.nextButton}>저장</button>
                 </div>
             </div>
