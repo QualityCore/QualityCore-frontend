@@ -12,10 +12,31 @@ import {
     Trash2
 } from 'lucide-react';
 import _ from 'lodash';
+import Lottie from 'lottie-react';
+import cautionAnimation from '../../lottie/caution.json';
+
+const ValidationModal = ({ message, onClose }) => {
+    return (
+      <div className="validation-modal">
+        <div className="validation-content">
+          <Lottie 
+            animationData={cautionAnimation} 
+            loop={true} 
+            style={{ width: 200, height: 200 }}
+          />
+          <p>{message}</p>
+          <button onClick={onClose}>확인</button>
+        </div>
+      </div>
+    );
+  };
 
 const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 }) => {
     const [products, setProducts] = useState([]); // 전체 제품 목록
     const [productBOMList, setProductBOMList] = useState({}); // 각 제품의 BOM 정보
+    const [showValidation, setShowValidation] = useState(false);
+    const [validationMessage, setValidationMessage] = useState('');
+
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -103,7 +124,8 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
 
         // 계획 날짜 검증
         if (!formData.planYm) {
-            alert("계획 날짜를 입력해주세요.");
+            setValidationMessage("계획 날짜를 입력해주세요.");
+            setShowValidation(true);
             return;
         }
 
@@ -113,7 +135,8 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
         );
 
         if (invalidProducts) {
-            alert("모든 제품의 제품명과 계획수량을 입력해주세요.");
+            setValidationMessage("모든 제품의 제품명과 계획수량을 입력해주세요.");
+            setShowValidation(true);
             return;
         }
 
@@ -323,6 +346,14 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
                     </div>
                 ))}
             </div>
+
+            {showValidation && (
+                <ValidationModal 
+                    message={validationMessage} 
+                    onClose={() => setShowValidation(false)} 
+                />
+            )}
+
         </div>
     );
     
