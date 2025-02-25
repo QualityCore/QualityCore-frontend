@@ -1,0 +1,29 @@
+/* src/styles/materialGrinding.css
+.material-grinding-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.material-grinding-title {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.submit-button, .save-button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+} */
