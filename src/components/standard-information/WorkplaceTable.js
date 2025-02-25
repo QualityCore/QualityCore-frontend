@@ -2,6 +2,7 @@ import { useState , useEffect } from "react";
 import axios from "axios";
 import ConfirmModal from "./common/ConfirmModal";
 import SuccessModal from "./common/SuccessfulModal";
+import ErrorModal from "./common/ErrorModal";
 import DeleteConfirmModal from "./common/DeleteConfirmModal";
 import "../../styles/standard-information/workplace-table.css";
   /*
@@ -19,6 +20,7 @@ import "../../styles/standard-information/workplace-table.css";
       const[현재상태값(초기값:0),상태를변경하는함수] = useState(0);
   */
 
+      
 
   const WorkplaceTable = ({workplaces,apiUrl}) => {
     
@@ -39,8 +41,13 @@ import "../../styles/standard-information/workplace-table.css";
     // 수정 완료 후 성공 메시지를 표시하는 모달 상태 (true = 열림, false = 닫힘)
     const[showSuccessModal , setShowSuccessModal] = useState(false);
 
+    // 오류 모달창 상태
+    const[showErrorModal , setShowErrorModal] = useState(false);
+
     // API 요청 중 오류 발생 시 저장하는 메시지
     const[errorMessage , setErrorMessage] = useState("");
+
+    useEffect(()=>{},[showEditForm]);
 
     /* 
      --useEffect 사용 이유--
@@ -55,21 +62,25 @@ import "../../styles/standard-information/workplace-table.css";
      */
 
 
-    useEffect(()=>{},[showEditForm]);
+   
 
+
+    // 오류 모달 닫기
+    const handleErrorClose = () => {
+      setShowErrorModal(false);
+      setErrorMessage("");
+    };
 
     // 수정 버튼 클릭 시 해당 장업장 정보 불러오기
     //workplaceId 가 없으면 console.error 로 오류 표시 후 함수실행을 중단
     //기존 updatedData(prev)를 유지하면서 새 데이터 추가
     // 데이터 변경이 일어나도 기존값이 사라지지 않도록 방지지
     const handleEditClick = (workplace) => {
-      if(!workplace||!workplace.workplaceId){
+      if(!workplace|| !workplace.workplaceId){
         console.error("Error: 선택된 작업장의 ID가 없습니다!");
         return;
       }
-      
       setSelectedWorkplace(workplace);
-
       //기존값이 날아가는 것을 방지
       setUpdatedData((prev)=>({
         ...prev,...workplace,
@@ -81,16 +92,19 @@ import "../../styles/standard-information/workplace-table.css";
     // 입력 필드 값 변경 핸들러러
     // 기존데이터(prev)를 유지하면서 변경된 값만 업데이트
     // 값이 undefined이면 문자열("")을 기본값으로 설정
-    // 예상치 못한 undefined 값으로 인해 오류 발생을 방지
+    // 예상치 못한 undefined 값으로 인해 오류 발생을 방지   
     const handleChange = (e) => {
       setUpdatedData((prev)=>({
         ...prev,[e.target.name]:e.target.value||prev[e.target.name]||"",
       }));
     };
+
+
     // 수정하기 버튼 클릭 시 확인 모달 표시
     const handleUpdateClick = () => {
       setShowConfirmModal(true);
     };
+
 
     const handleRefresh = () => {
       setShowSuccessModal(false); // 모달 닫기
@@ -109,34 +123,53 @@ import "../../styles/standard-information/workplace-table.css";
 
       const confirmUpdate  = async ()=>{
       const workplaceId = (selectedWorkplace?.workplaceId|| updatedData?.workplaceId||"").trim();
+      const newWorkplaceCode = updatedData?.workplaceCode?.trim();
 
       // workplaceId 가 undefined일 경우 API 요청 방지
       if(!workplaceId){
+        setErrorMessage("Error: workplaceId가 없습니다! API 요청 중단.");
+        setShowErrorModal(true);
         console.error("Error: workplaceId가 없습니다! API 요청 중단.");
         return;
       }
 
       if(!apiUrl){
+        setErrorMessage("Error: API URL이 설정되지 않았습니다!");
+        setShowErrorModal(true);
         console.error("Error: API URL이 설정되지 않았습니다!");
         return;
       }
 
-      const putUrl = `${apiUrl}/workplaces/${workplaceId}`;
+       //  중복 코드 체크
+       const isCodeDuplicate = workplaces.some(
+        (workplace) => workplace.workplaceCode === newWorkplaceCode && workplace.workplaceId !== workplaceId
+       );
 
-      try{
-        const response = await axios.put(putUrl,updatedData)
-
-        if(response.status === 200){
-          console.log("수정 성공! showSuccessModal 활성화");
-          setShowSuccessModal(true);  // 성공 모달 표시
-          setShowConfirmModal(false); // 확인 모달 닫기
-          setShowEditForm(false); // 수정 폼 닫기
+        if (isCodeDuplicate) {
+        setErrorMessage("이미 사용 중인 작업장 코드입니다. 다른 코드를 입력해주세요.");
+        setShowErrorModal(true);
+        return;
         }
-      }catch(error){
-        setErrorMessage(error.response?.data?.massage||"수정하는데 문제가생겼어요!");
-        setShowSuccessModal(false);
-      }
-    };
+
+        // 중복이 없을 경우 API 호출
+        const putUrl = `${apiUrl}/workplaces/${workplaceId}`;
+
+        try{
+            const response = await axios.put(putUrl,updatedData);
+
+          if(response.status === 200){
+            console.log("수정 성공! showSuccessModal 활성화");
+            setShowSuccessModal(true);  // 성공 모달 표시
+            setShowConfirmModal(false); // 확인 모달 닫기
+            setShowEditForm(false); // 수정 폼 닫기
+          }
+        }catch(error){
+          const errorMsg = error.response?.data?.message || "수정하는데 문제가 발생했어요"
+          setErrorMessage(errorMsg);
+          setShowErrorModal(true); // 오류 모달 표시
+          setShowSuccessModal(false);
+        }
+      };
 
 
     // ================================================================================================================================================
@@ -151,6 +184,9 @@ import "../../styles/standard-information/workplace-table.css";
 
     //삭제 확인 모달(첫번째) (true = 열림 , false = 닫힘)
     const[showDeleteModal , setShowDeleteModal] = useState(false); 
+
+    // 삭제 성공 모달 상태 추가
+    const [showDeleteSuccessModal , setShowDeleteSuccessModal] = useState(false);
 
     const deleteWorkplace = async(workplaceId) => {
       try{
@@ -180,18 +216,24 @@ import "../../styles/standard-information/workplace-table.css";
     };
 
 
+    // 삭제 성공시 모달상태 추가
+    const handleDeleteSuccessClose = () =>{
+      setShowDeleteSuccessModal(false);
+      window.location.reload() // 새로고침
+    };
+
+
     // 최종 삭제 실행행
     const confirmDelete = async () => {
       if (!deleteTargetId){console.error("삭제 대상 ID가 설정되지 않았습니다.");
         return;
-      }
-         
-    
+      }   
+
       try {
         console.log("삭제요청! ID :" , deleteTargetId); // 로그 추가
         await deleteWorkplace(deleteTargetId); // API 호출
         closeModal(); // 모달 닫기 및 상태 초기화
-        window.location.reload(); // 새로고침 (필요 시)
+        setShowDeleteSuccessModal(true); // 삭제 성공시 모달표시시
       } catch (error) {
         console.error("삭제 실패:", error);
       }
@@ -217,7 +259,11 @@ import "../../styles/standard-information/workplace-table.css";
           </tr>
         </thead>
         <tbody>
-          {workplaces.map((item, index) => (
+          {workplaces.sort((a,b)=>{
+            const numA = parseInt(a.workplaceName.match(/\d+/)?.[0] || "0", 10);
+            const numB = parseInt(b.workplaceName.match(/\d+/)?.[0] || "0", 10);
+            return numA - numB;
+          }).map((item, index) => (
               <tr key={index}>
                 <td>{item.workplaceName}</td>
                 <td>{item.workplaceCode}</td>
@@ -345,6 +391,13 @@ import "../../styles/standard-information/workplace-table.css";
             message="작업장 정보가 성공적으로 수정되었습니다."
           />
 
+          {/* 오류 발생시 오류모달 */}
+          <ErrorModal
+            isOpen={showErrorModal}
+            onClose={handleErrorClose}
+            message={errorMessage}
+          />
+
 
           {/*삭제 확인 모달 */}
           {showDeleteModal && (
@@ -355,6 +408,13 @@ import "../../styles/standard-information/workplace-table.css";
               itemName={deleteTargetName}
               />
           )}
+
+          {/* 삭제 성공시 모달 */}
+          <SuccessModal
+            isOpen={showDeleteSuccessModal}
+            onClose={handleDeleteSuccessClose}
+            message="작업장이 성공적으로 삭제 되었습니다."
+          />
       </div>  
     );
   }
