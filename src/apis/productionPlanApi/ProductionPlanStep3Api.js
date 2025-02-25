@@ -14,6 +14,8 @@ export const calculateMaterialRequirements = async (planData) => {
 };
 
 export const saveMaterialPlan = async (completeData) => {
+    console.log("🚀 Step3 API 요청 데이터:", JSON.stringify(completeData, null, 2)); // JSON 포맷 정리
+
     try {
         const response = await axios.post(
             `http://localhost:8080/api/v1/save`, 
@@ -21,7 +23,7 @@ export const saveMaterialPlan = async (completeData) => {
         );
         return response.data;
     } catch (error) {
-        console.error("자재 계획 저장 중 오류:", error);
+        console.error("❌ 자재 계획 저장 중 오류:", error);
         throw error;
     }
 };

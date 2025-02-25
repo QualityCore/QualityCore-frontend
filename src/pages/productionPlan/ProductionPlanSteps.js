@@ -9,7 +9,7 @@ import { productionPlanStep1Api } from "../../apis/productionPlanApi/ProductionP
 const ProductionPlanSteps = () => {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
-        planYm: "",
+        planYm: new Date().toISOString().split('T')[0], 
         products: [{ productId: '', productName: '', planQty: '' }],
         materials: [], // step3에서 사용할 자재 정보
         allocatedLines: [], // step2에서 사용할 라인 배정 정보
