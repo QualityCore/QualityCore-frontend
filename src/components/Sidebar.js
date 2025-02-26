@@ -110,8 +110,8 @@ const Sidebar = () => {
           </button>
           {openCategory === "생산공정" && (
             <ul className="submenu">
-              <li><Link to="/raw-material-preparation">원재료 분쇄공정정</Link></li>
-              <li><Link to="/mashing-process">당화공정정</Link></li>
+              <li><Link to="/material-grinding">분쇄공정</Link></li>
+              <li><Link to="/mashing-process">당화공정</Link></li>
               <li><Link to="/filtration-process">여과공정</Link></li>
               <li><Link to="/boiling-process">끓임공정</Link></li>
               <li><Link to="/cooling-process">냉각공정</Link></li>

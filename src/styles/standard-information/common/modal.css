@@ -79,3 +79,21 @@
  height: 200px;
  margin: 0 auto 20px; 
 }
+
+.complete-animation{
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+}
+
+.beer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    background-color: #f8f8f8;
+  }
+  
+  #beer-liquid {
+    transition: height 3s ease-in-out;
+  }

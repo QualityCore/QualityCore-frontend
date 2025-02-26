@@ -1,0 +1,167 @@
+.material-grinding-form {
+    margin: inherit;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 5px;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* 부모 기준점 */  
+  }
+  
+  .grinding-title {
+    text-align: left; /* 텍스트 우측 정렬 */
+    margin-bottom: 40px;
+    margin-left: 30px;
+  }
+  
+  .g-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* 첫 번째 열을 넓게 설정하여 정렬 */
+    gap: 20px;
+    align-items: center; 
+    justify-content: center;
+  }
+
+  .g-grid-item {
+    display: flex;
+    justify-content: column;
+    align-items: center;
+    padding: 5px;
+    height: 100%; /* 높이를 동일하게 설정 */
+}
+
+  
+  .grinding-group {
+    display: flex;
+    justify-content: center; /* 내부 요소 중앙 정렬 */
+    
+    
+  }
+  
+  .grinding-group label {
+  
+    text-align: right; /* 텍스트 우측 정렬 */
+    font-size: 20px;
+  }
+  
+  .timer-display {
+    grid-column: span 2;
+    text-align: center;
+  }
+  
+  .timer {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d9534f;
+  }
+  
+  .full-width {
+    grid-column: span 2;
+  }
+  
+
+  /* 등록하기 버튼 (연한 보라색) */
+.grinding-save-button {
+    background-color: #9370db; /* 보라색 */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .grinding-save-button:hover {
+    background-color: #7b68ee; /* 조금 더 진한 보라 */
+  }
+  
+  /* 다음 공정으로 이동 버튼 (연한 녹색) */
+  .next-process-button {
+    background-color: #32cd32;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .next-process-button:hover {
+    background-color: #2e8b57; /* 조금 더 진한 녹색 */
+  }
+  
+
+  .g-form-grid input,
+.g-form-grid select {
+    
+    width: 150px;         /* 부모 컨테이너의 너비를 채움 */
+    height: 35px;        /* 동일한 높이 적용 */
+    padding: 5px;        /* 내부 여백 */
+    font-size: 17px;     /* 글자 크기 동일하게 */
+    border: 1px solid #ccc;
+    border-radius: 5px;  /* 둥근 모서리 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+.grinding-save-button,
+.next-process-button {
+    position: absolute;
+    bottom: -10px; /* 폼 아래로 이동 */
+    left: 90%;
+    transform: translateX(-50%); /* 가로 중앙 정렬 */
+    width: auto;
+    padding: 12px 20px;
+}
+
+.grinding-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+
+.g-label03{
+  margin-right: 0px;
+}
+
+
+
+
+.g-item02{
+  width: 80px !important; /* 너비 통일 */
+}
+
+.g-item03{
+  width: 80px !important; /* 너비 통일 */
+}
+
+.g-item05{
+  width: 80px !important; /* 너비 통일 */
+}
+
+.g-item06{
+  width: 80px !important; /* 너비 통일 */
+}
+
+.g-item07{
+  width: 80px !important; /* 너비 통일 */
+}
+
+.g-item08{
+  width: 80px !important; /* 너비 통일 */
+}
+
+.g-item09{
+  width: 100px !important; /* 너비 통일 */
+}
+
+.g-item10{
+  width: 100px !important; /* 너비 통일 */
+}
