@@ -58,7 +58,6 @@ const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
 
             if (response && response.httpStatusCode >= 200 && response.httpStatusCode < 300) {
                 setShowSuccessModal(true); // 성공 모달 표시
-                // setGrindingData((prev) => ({ ...prev, processStatus: "가동중" }));
                 startTimer();
               } else {
                 console.error("예상치 못한 응답:", response);
@@ -66,7 +65,7 @@ const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
               }
         } catch (error) {
             console.error("저장 실패:", error);
-            setShowErrorModal(true); 
+            setShowErrorModal(true);  
         }
     };
 
@@ -85,29 +84,33 @@ const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
 
 
     return (
-        <div className="material-grinding-controls">
-        {timer > 0 && (
+      <form className="material-grinding-form" onSubmit={(event) => event.preventDefault()}>
+          {timer > 0 && (
             <p>
              남은시간: {Math.floor(timer / 60)}분 {timer % 60}초
             </p>
-        )}
-           <button onClick={handleButtonClick} className="grinding-save-button">
+          )}
+          <div className="grinding-button-container">
+           <button onClick={handleButtonClick} 
+                   className={`grinding-save-button ${buttonLabel === "다음공정으로 이동" ? "next-process-button" : ""}`}>
                 {buttonLabel}
             </button>
-             
+          </div>  
              
             {/* 확인 모달 (등록 전) */}
             
             <ConfirmModal
-                isOpen={showConfirmModal}
-                message=" 등록하시겠습니까?"
-                onConfirm={() => {
-                setShowConfirmModal(false);
-                handleSave();
-                }}
-                onClose={() => {
-                setShowConfirmModal(false);
-                }}
+            isOpen={showConfirmModal}
+            message=" 등록하시겠습니까?"
+            onConfirm={() => {
+            setShowConfirmModal(false);
+            setTimeout(() => {
+              handleSave(); // 모달이 닫힌 후 100ms 후 실행
+            }, 100);
+            }}
+            onClose={() => {
+            setShowConfirmModal(false);
+            }}
             />
            
 
@@ -146,7 +149,7 @@ const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
                     setButtonLabel("다음공정으로 이동");}}
                 />
 
-        </div>
+        </form>
     );
 };
 
