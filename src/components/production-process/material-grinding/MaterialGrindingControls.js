@@ -1,4 +1,5 @@
 import React , {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import materialGrindingApi from "../../../apis/production-process/material-grinding/MaterialGrindingApi";
 import ConfirmModal from "../../standard-information/common/ConfirmModal"; 
 import SuccessfulModal from "../../standard-information/common/SuccessfulModal"; 
@@ -7,20 +8,21 @@ import CompleteModal from "../../standard-information/common/CompleteModal";
 import "../../../styles/production-process/materialGrinding.css";
 
 
-const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
+const MaterialGrindingControls = ({ grindingData,setGrindingData }) => {
 
     const[timer , setTimer] = useState(0);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [showCompleteModal, setShowCompleteModal] = useState(false);
+    const navigate = useNavigate();
     const [buttonLabel , setButtonLabel] = useState("등록하기");
 
     const startTimer = () => {
         console.log("⏳ 타이머 시작됨, grindDuration:", grindingData.grindDuration);
         
         // 테스트 모드에서는 10초로 설정, 실제 운영시에는 grindDuration * 60
-        const totalTime = process.env.NODE_ENV === "development" ? 10 : Number(grindingData.grindDuration) * 60;
+        const totalTime = process.env.NODE_ENV === "development" ? 5 : Number(grindingData.grindDuration) * 60;
         setTimer(totalTime);
 
         const countdown = setInterval(() => {
@@ -70,17 +72,19 @@ const MaterialGrindingControls = ({ grindingData /* , setGrindingData*/ }) => {
     };
 
     // 버튼 클릭 handler - 현재 버튼 라벨에 따라 동작이 달라짐
-    const handleButtonClick = () => {
-        console.log(`${buttonLabel} 버튼 클릭됨!`);
-        if (buttonLabel === "등록하기") {
+
+    const handleButtonClick = () => { 
+      if (buttonLabel === "등록하기") {
           setShowConfirmModal(true);
-        } else if (buttonLabel === "다음공정으로 이동") {
-        //   setButtonLabel("당화공정으로 이동");
-        // } else if (buttonLabel === "당화공정으로 이동") {
-        //   console.log("당화공정으로 이동 버튼 클릭됨 - 이동 로직 추가 예정");
-          // 여기서 나중에 당화공정 화면으로 이동하는 로직을 추가하면 됩니다.
-        }
-      };
+      } else if (buttonLabel === "다음공정으로 이동") {
+          console.log("🚀 다음 공정으로 이동!");
+          setGrindingData((prev) => ({
+              ...prev,
+              processStatus: "완료",  // 상태 변경!
+          }));
+          navigate("/mashing-process"); // ✅ 당화공정으로 이동
+      }
+  };
 
 
     return (

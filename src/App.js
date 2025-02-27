@@ -10,6 +10,7 @@ import WorkOrder from "./pages/work/WorkOrder"
 import WorkCreate from "./pages/work/WorkCreate";
 import ProductionPlanSteps from "./pages/productionPlan/ProductionPlanSteps"
 import MaterialGrindingPage from "./pages/production-process/material-grinding/MaterialGrindingPage";
+import MashingProcessPage from "./pages/production-process/mashing-process/MashingProcessPage";
 
 
 
@@ -35,6 +36,7 @@ const App = () => {
               <Route path="/work/create" element={<WorkCreate />} />
               <Route path="/workplace" element={<WorkplacePage />} />
               <Route path="/material-grinding" element={<MaterialGrindingPage />} />
+              <Route path="/mashing-process" element={<MashingProcessPage/>} />
             </Routes>
           </div>
         </div>

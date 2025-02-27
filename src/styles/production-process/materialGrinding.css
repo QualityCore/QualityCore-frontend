@@ -97,7 +97,7 @@
   .g-form-grid input,
 .g-form-grid select {
     
-    width: 150px;         /* 부모 컨테이너의 너비를 채움 */
+    width: 170px;         /* 부모 컨테이너의 너비를 채움 */
     height: 35px;        /* 동일한 높이 적용 */
     padding: 5px;        /* 내부 여백 */
     font-size: 17px;     /* 글자 크기 동일하게 */

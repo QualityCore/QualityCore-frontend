@@ -21,7 +21,7 @@ const MaterialGrindingPage = () => {
     return (
         <div className="material-grinding-container">
             <MaterialGrindingForm  grindingData={grindingData} setGrindingData={setGrindingData} />
-            <MaterialGrindingControls grindingData={grindingData} />
+            <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData}/>
         </div>
     );
 };

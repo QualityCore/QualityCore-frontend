@@ -14,7 +14,18 @@ const materialGrindingApi = {
             console.error("❌ 분쇄 데이터 저장 실패:", error);
             throw error;
         }
-    }
+    },
+
+
+    getWorkOrders: async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/work-orders`); 
+            return response.data;
+        } catch (error) {
+            console.error("❌ 작업지시 목록 불러오기 실패:", error);
+            throw error;
+        }
+    },
 
    
 };
