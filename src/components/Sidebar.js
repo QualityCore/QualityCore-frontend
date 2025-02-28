@@ -96,7 +96,6 @@ const Sidebar = () => {
             <ul className="submenu">
               <li><Link to="/work/orders">작업지시서 관리</Link></li>
               <li><Link to="/work/create">작업지시서 등록</Link></li>
-              <li><Link to="/workpersonnel">작업지시 대비 인원 관리</Link></li>
               <li><Link to="/workprogress">공정별 작업지시 현황</Link></li>
             </ul>
           )}
