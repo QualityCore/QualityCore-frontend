@@ -34,7 +34,7 @@ const Header = () => {
 
 
       // 생산공정 관리
-      '/raw-material-preparation': { main: '생산공정 관리', sub: '원재료 분쇄공정' },
+      '/material-grinding': { main: '생산공정 관리', sub: '분쇄공정' },
       '/mashing-process': { main: '생산공정 관리', sub: '당화공정' },
       '/filtration-process': { main: '생산공정 관리', sub: '여과공정' },
       '/boiling-process': { main: '생산공정 관리', sub: '끓임공정' },
