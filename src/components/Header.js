@@ -30,7 +30,6 @@ const Header = () => {
       // 작업지시
       '/work/orders': { main: '작업지시', sub: '작업지시서 관리' },
       '/work/create': { main: '작업지시', sub: '작업지시서 등록' },
-      '/workpersonnel': { main: '작업지시', sub: '작업지시 대비 인원 관리' },
       '/workprogress': { main: '작업지시', sub: '공정별 작업지시 현황' },
 
 

@@ -33,41 +33,15 @@
     width: 200px;
 }
 
-.searchbar br {
-    margin-bottom: 20px;
-}
-
-/* 검색버튼 */
-.searchButton {
-    margin-left: 60px;
-    padding: 5px 15px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.searchButton:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-}
-
-/* 클릭 시 효과 */
-.searchButton:active {
-    background-color: #3e8e41;
-    transform: scale(0.95);
-}
-
-
 .mainbar {
     background-color: white;
-    width: 1450px;
-    height: 581px;
+    width: 1435px;
+    height: 720px;
     margin-left: 55px;
-    margin-top: 20px;
-    border-radius: 20px;
+    margin-top: 25px;
+    padding-left: 15px;
+    border-radius: 10px;
+    padding-top: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -97,27 +71,27 @@
 
 .workOrderTable th:nth-child(2),
 .workOrderTable td:nth-child(2) {
-    width: 100px;
+    width: 130px;
 }
 
 .workOrderTable th:nth-child(3),
 .workOrderTable td:nth-child(3) {
-    width: 180px;
+    width: 100px;
 }
 
 .workOrderTable th:nth-child(4),
 .workOrderTable td:nth-child(4) {
-    width: 150px;
+    width: 160px;
 }
 
 .workOrderTable th:nth-child(5),
 .workOrderTable td:nth-child(5) {
-    width: 150px;
+    width: 120px;
 }
 
 .workOrderTable th:nth-child(6),
 .workOrderTable td:nth-child(6) {
-    width: 120px;
+    width: 100px;
 }
 
 .workOrderTable th:nth-child(7),
@@ -127,7 +101,7 @@
 
 .workOrderTable th:nth-child(8),
 .workOrderTable td:nth-child(8) {
-    width: 100px;
+    width: 105px;
 }
 
 .workOrderTable th:nth-child(9),
@@ -137,7 +111,7 @@
 
 .workOrderTable th:nth-child(10),
 .workOrderTable td:nth-child(10) {
-    width: 180px;
+    width: 100px;
 }
 
 /* 진행률 */
@@ -200,4 +174,35 @@
 
 .progress_bar[data-progress="0"] {
     width: 0%;
+}
+
+.searchInput {
+    margin-left: 1225px;
+    width: 200px;
+    height: 25px;
+    margin-top: 25px;
+    padding: 2px;
+}
+
+/* 검색버튼 */
+.searchButton {
+    padding: 7px 9px;
+    height: 35px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.searchButton:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* 클릭 시 효과 */
+.searchButton:active {
+    background-color: #3e8e41;
+    transform: scale(0.95);
 }

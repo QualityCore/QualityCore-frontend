@@ -7,7 +7,10 @@
     margin-top: 40px;
     border-radius: 20px;
     padding-top: 45px;
+    overflow: auto;
+    /* 내용이 넘칠 경우 자동으로 스크롤바 표시 */
 }
+
 
 /* 메인 테이블 */
 .workTable {
@@ -55,10 +58,6 @@
 
 /* BOM쪽  */
 
-.bomName {
-    margin-left: 135px;
-}
-
 .bomCreateButton {
     float: right;
     margin-top: 30px;
@@ -92,6 +91,7 @@
     width: 1150px;
     border-spacing: 0;
     border-collapse: collapse;
+    margin-top: 70px;
 }
 
 .bomTable th,
@@ -141,4 +141,18 @@
 .createButton:active {
     background-color: #3e8e41;
     transform: scale(0.95);
+}
+
+.planInfoName {
+    display: flex;
+}
+
+.planSelect {
+    height: 25px;
+}
+
+.planH3 {
+    margin: 0;
+    margin-bottom: 20px;
+    margin-left: 130px;
 }

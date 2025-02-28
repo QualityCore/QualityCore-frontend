@@ -1,57 +1,56 @@
-import "./workOrders.css"
+import { useEffect, useState } from "react";
+import { findAllWorkOrders } from "../../apis/workOrderApi/workOrdersApi";
+import workOrder from "./workOrders.module.css";
+import Pagination from "../../Pagination/Pagination";
+
 function WorkOrder() {
+    const [workOrders, setWorkOrders] = useState([]); // 상태관리
+    const [pageInfo, setPageInfo] = useState({
+        page: 0, totalPages: 1, first: true, last: true
+    }) // 1. 페이지네이션(페이지 기본값설정)
+
+    const fetchData = async (page = 0) => {
+        try {
+            const data = await findAllWorkOrders(page);
+            console.log("✅ API 응답 데이터:", data);
+
+            if (data && Array.isArray(data.content)) {
+                setWorkOrders(data.content);  // ✅ 작업지시서 리스트 저장
+                setPageInfo({
+                    page: data.number,
+                    totalPages: data.totalPages,
+                    first: data.first,
+                    last: data.last
+                });
+            } else {
+                console.error("❌ API 응답이 예상한 형식이 아닙니다:", data);
+                setWorkOrders([]);  // 데이터가 없을 경우 초기화
+            }
+        } catch (error) {
+            console.error("❌ 작업지시서 데이터를 불러오는 중 오류 발생:", error);
+            setWorkOrders([]);  // 에러 발생 시 데이터 초기화
+        }
+    };
+
+
+
+
+    useEffect(() => {
+        console.log("🚀 useEffect 실행됨");
+        fetchData(pageInfo.page);
+    }, [pageInfo.page]);
+
 
     return (
         <>
-            <div className="searchbar">
-                <label>작업지시번호&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <input type="text" />
-                <label>생산공정&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <select name="" id="">
-                    <option value="당화">당화</option>
-                    <option value="여과">여과</option>
-                    <option value="끓임">끓임</option>
-                    <option value="냉각">냉각</option>
-                    <option value="발효">발효</option>
-                    <option value="숙성">숙성</option>
-                    <option value="여과 및 탄산조정">여과 및 탄산조정</option>
-                    <option value="패키징 및 출하">패키징 및 출하</option>
-                </select>
-                <label>지시수량&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <input type="text" />
-                <br />
-                <label>작업조&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <select name="" id="">
-                    <option value="A">A조</option>
-                    <option value="B">B조</option>
-                    <option value="C">C조</option>
-                </select>
-                <label>생산시작일자&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <input type="date" />
-                <label>생산종료일자&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <input type="date" />
-                <br />
-                <label>생산라인&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <select name="" id="">
-                    <option value="1">1라인</option>
-                    <option value="2">2라인</option>
-                    <option value="3">3라인</option>
-                    <option value="4">4라인</option>
-                    <option value="5">5라인</option>
-                </select>
-                <label>제품명&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <input type="text" />
-                <label>작업지시상태&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                <select name="" id="">
-                    <option value="">생산대기중</option>
-                    <option value="">생산중</option>
-                    <option value="">생산중단</option>
-                    <option value="">생산종료</option>
-                </select>
-                <button className="searchButton">🔎검색</button>
-            </div>
-            <div className="mainbar">
-                <table className="workOrderTable">
+            <input type="text" className={workOrder.searchInput} placeholder="작업지시서번호를 입력하세요..." /> <button className={workOrder.searchButton}>검색🔎</button>
+            <div className={workOrder.mainbar}>
+                <p>결과내 재검색을 하는 경우, 첫번째 결과에 따른 후속 검색 목록을 보여주고,
+                    후속 검색 목록에서 검색하는 경우에는 첫번째 결과값이 이미 레파지토리에 있으므로
+                    이번 검색은 레파지토리에서 함으로써 DB사용량을 줄이고(비용감소) 성능을 확보한다.
+                    또한 후속 검색목록에 있는 검색방법들은 첫번째 검색 목록에 있는 모듈을 재사용한다.
+                </p>
+                <table className={workOrder.workOrderTable}>
                     <thead>
                         <tr>
                             <th>작업번호</th>
@@ -60,31 +59,34 @@ function WorkOrder() {
                             <th>생산시작일</th>
                             <th>생산종료일</th>
                             <th>수량</th>
-                            <th>생산공정</th>
                             <th>생산라인</th>
                             <th>작업지시상태</th>
                             <th>진행률(%)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>A조</td>
-                            <td>카리나맥주</td>
-                            <td>2025-02-03</td>
-                            <td>2025-02-18</td>
-                            <td>1000개</td>
-                            <td>당화</td>
-                            <td>1LINE</td>
-                            <td>생산중</td>
-                            <td>
-                                <div className="progress_container">
-                                    <div className="progress_bar">100%</div>
-                                </div>
-                            </td>
-                        </tr>
+                        {workOrders.map((work) => (
+                            <tr key={work.lotNo}>
+                                <td>{work.lotNo}</td>
+                                <td>{work.workTeam}</td>
+                                <td>{work.productName}</td>
+                                <td>{work.startDate}</td>
+                                <td>{work.endDate}</td>
+                                <td>{work.planQty}</td>
+                                <td>{work.lineNo} LINE</td>
+                                <td>{work.processStatus}</td>
+                                <td>{work.workProgress}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
+                <Pagination
+                    page={pageInfo.page}
+                    totalPages={pageInfo.totalPages}
+                    first={pageInfo.first}
+                    last={pageInfo.last}
+                    onPageChange={(newPage) => setPageInfo((prev) => ({ ...prev, page: newPage }))}
+                />
             </div>
         </>
     );
