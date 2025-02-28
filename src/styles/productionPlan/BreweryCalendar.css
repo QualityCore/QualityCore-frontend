@@ -1,0 +1,353 @@
+/* src/components/productionPlan/BreweryCalendar.css */
+.calendar-container {
+    width: 100%;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .calendar-header {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .calendar-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .calendar-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .calendar-title h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+  }
+  
+  .calendar-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .calendar-button {
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+  
+  .calendar-button:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .today-button {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+  }
+  
+  .today-button:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .calendar-header-bottom {
+    display: flex;
+    margin-top: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .view-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .view-button {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+  }
+  
+  .view-button.active {
+    background-color: #2563eb;
+    color: white;
+  }
+  
+  .view-button:not(.active) {
+    background-color: #f3f4f6;
+  }
+  
+  .calendar-content {
+    padding: 1rem;
+  }
+  
+  .calendar-grid {
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.25rem;
+  }
+  
+  .calendar-day-header {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .day-header-cell {
+    padding: 0.5rem;
+    text-align: center;
+    background-color: #f9fafb;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-right: 1px solid #e5e7eb;
+  }
+  
+  .day-header-cell:last-child {
+    border-right: none;
+  }
+  
+  .time-row {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    border-bottom: 1px solid #e5e7eb;
+    min-height: 4rem;
+  }
+  
+  .time-row:last-child {
+    border-bottom: none;
+  }
+  
+  .time-cell {
+    padding: 0.5rem;
+    border-right: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: #f9fafb;
+  }
+  
+  .day-cell {
+    border-right: 1px solid #e5e7eb;
+    padding: 0.25rem;
+    position: relative;
+  }
+  
+  .day-cell:last-child {
+    border-right: none;
+  }
+  
+  .event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .event {
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  
+  .event-title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .event-info {
+    font-size: 0.7rem;
+    opacity: 0.75;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .day-view {
+    padding: 1rem;
+  }
+  
+  .day-container {
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.25rem;
+  }
+  
+  .day-header {
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: 500;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+  }
+  
+  .time-slot {
+    display: flex;
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .time-slot:last-child {
+    border-bottom: none;
+  }
+  
+  .time-label {
+    width: 4rem;
+    text-align: right;
+    padding-right: 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+  
+  .time-content {
+    flex: 1;
+    padding-left: 0.75rem;
+    border-left: 1px solid #e5e7eb;
+  }
+  
+  .time-event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .time-event {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .time-event-title {
+    font-weight: 500;
+  }
+  
+  .time-event-time {
+    font-size: 0.875rem;
+  }
+  
+  .time-event-info {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+  
+  .time-slot-empty {
+    height: 1.5rem;
+  }
+  
+  .legend {
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+  }
+  
+  .legend-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .legend-icon {
+    margin-right: 0.25rem;
+    color: #2563eb;
+  }
+  
+  .legend-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .legend-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  @media (min-width: 768px) {
+    .legend-items {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .legend-color {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 0.25rem;
+  }
+  
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; /* 명시적으로 모든 방향 지정 */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* 높은 z-index 값 설정 */
+  }
+  
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1001; /* backdrop보다 높은 값 */
+    width: 22rem; /* 명시적 너비 설정 */
+    max-width: 90%;
+    max-height: 80vh; /* 화면 높이의 80%로 제한 */
+    overflow-y: auto; /* 내용이 많을 경우 스크롤 */
+    display: block; /* 명시적 display 설정 */
+  }
+  
+  .modal-title {
+    font-size: 1.2rem;
+    color: #2B3674;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .modal-label {
+    font-weight: 600;
+    color: #2D3748;
+  }
+  
+  .modal-button {
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    width: 100%;
+    background-color: #2B6CB0;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .modal-button:hover {
+    background-color: #2C5282;
+    transform: translateY(-2px);
+  }

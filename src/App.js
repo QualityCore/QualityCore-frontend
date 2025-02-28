@@ -9,8 +9,8 @@ import Attendance from "./pages/attendance/Attendance";
 import WorkOrder from "./pages/work/WorkOrder"
 import WorkCreate from "./pages/work/WorkCreate";
 import ProductionPlanSteps from "./pages/productionPlan/ProductionPlanSteps"
+import ProductionPlanDetailPage from "./pages/productionPlan/ProductionPlanDetailPage";
 import MaterialGrindingPage from "./pages/production-process/material-grinding/MaterialGrindingPage";
-
 
 
 const App = () => {
@@ -29,6 +29,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/plan-overview" element={<ProductionPlan />} />
+              <Route path="/detail/:planId" element={<ProductionPlanDetailPage/>} />
               <Route path="/plan-generate" element={<ProductionPlanSteps />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/work/orders" element={<WorkOrder />} />

@@ -1,0 +1,330 @@
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import "../../styles/productionPlan/ProductionPlanDetail.css";
+
+const ProductionPlanDetail = ({ planDetail }) => {
+  const [openSections, setOpenSections] = useState({
+    step1: true,
+    step2: false,
+    step3: false,
+    materialRequest: false
+  });
+  
+  const toggleSection = (section) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+  
+  // 날짜 포맷팅 헬퍼 함수
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  // planDetail이 유효한지 확인
+  if (!planDetail || !planDetail.planMst) {
+    return (
+      <div className="error-container">
+        <p className="error-message">상세 정보를 표시할 수 없습니다.</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="steps-accordion">
+      {/* STEP 1: 기본 정보 */}
+      <div className="border rounded-lg overflow-hidden shadow-sm">
+        <div 
+          className="accordion-header"
+          onClick={() => toggleSection('step1')}
+        >
+          <h3 className="accordion-title">STEP 1: 기본 정보</h3>
+          {openSections.step1 ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+        </div>
+        
+        {openSections.step1 && (
+          <div className="accordion-content">
+            <div className="info-grid">
+              <div className="info-card">
+                <h4 className="section-title">계획 정보</h4>
+                <div className="info-list">
+                  <div className="info-item">
+                    <span className="info-label">계획 ID:</span>
+                    <span className="info-value">{planDetail.planMst.planId}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">계획 날짜:</span>
+                    <span className="info-value">{formatDate(planDetail.planMst.planYm)}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">상태:</span>
+                    <span className={`info-value ${planDetail.planMst.status === '확정' ? 'status-confirmed' : 'status-pending'}`}>
+                      {planDetail.planMst.status}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">생성자:</span>
+                    <span className="info-value">{planDetail.planMst.createdBy}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="info-card">
+                <h4 className="section-title">총 생산 정보</h4>
+                <div className="info-list">
+                  <div className="info-item">
+                    <span className="info-label">대표 제품:</span>
+                    <span className="info-value">
+                      {planDetail.planProducts && planDetail.planProducts.length > 0
+                        ? planDetail.planProducts[0].productName + (planDetail.planProducts.length > 1 ? ` 외 ${planDetail.planProducts.length - 1}개` : '')
+                        : '-'}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">제품 수:</span>
+                    <span className="info-value">{planDetail.planProducts?.length || 0}개</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">총 계획 수량:</span>
+                    <span className="info-value">
+                      {planDetail.planProducts?.reduce((sum, p) => sum + p.planQty, 0).toLocaleString() || 0}개
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="section-title">제품 정보</h4>
+              <div className="table-container">
+                <table className="data-table">
+                  <thead className="table-header">
+                    <tr>
+                      <th>제품명</th>
+                      <th>규격</th>
+                      <th>맥주 타입</th>
+                      <th className="text-right">계획 수량</th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                    {planDetail.planProducts?.map(product => (
+                      <tr key={product.planProductId}>
+                        <td className="table-cell">{product.productName}</td>
+                        <td className="table-cell">{product.sizeSpec}</td>
+                        <td className="table-cell">{planDetail.productBeerTypes?.[product.productId] || '-'}</td>
+                        <td className="table-cell text-right font-medium">{product.planQty?.toLocaleString() || 0}개</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* STEP 2: 공정 정보 */}
+      <div className="border rounded-lg overflow-hidden shadow-sm">
+        <div 
+          className="accordion-header"
+          onClick={() => toggleSection('step2')}
+        >
+          <h3 className="accordion-title">STEP 2: 공정 정보</h3>
+          {openSections.step2 ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+        </div>
+        
+        {openSections.step2 && (
+          <div className="accordion-content">
+            <div>
+              <h4 className="section-title">라인 배정 정보</h4>
+              <div className="table-container">
+                <table className="data-table">
+                  <thead className="table-header">
+                    <tr>
+                      <th>배치 번호</th>
+                      <th>라인 번호</th>
+                      <th>제품명</th>
+                      <th className="text-right">계획 수량</th>
+                      <th>시작일</th>
+                      <th>종료일</th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                    {planDetail.planLines?.map(line => {
+                      const product = planDetail.planProducts?.find(p => p.productId === line.productId);
+                      return (
+                        <tr key={line.planLineId}>
+                          <td className="table-cell">{line.planBatchNo}</td>
+                          <td className="table-cell">{line.lineNo}</td>
+                          <td className="table-cell">{product?.productName || '-'}</td>
+                          <td className="table-cell text-right font-medium">{line.planQty?.toLocaleString() || 0}개</td>
+                          <td className="table-cell">{formatDate(line.startDate)}</td>
+                          <td className="table-cell">{formatDate(line.endDate)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* STEP 3: 자재 정보 */}
+      <div className="border rounded-lg overflow-hidden shadow-sm">
+        <div 
+          className="accordion-header"
+          onClick={() => toggleSection('step3')}
+        >
+          <h3 className="accordion-title">STEP 3: 자재 정보</h3>
+          {openSections.step3 ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+        </div>
+        
+        {openSections.step3 && (
+          <div className="accordion-content">
+            {/* 원자재 테이블 */}
+            <div className="mb-6">
+              <h4 className="section-title">원자재</h4>
+              <div className="table-container">
+                <table className="data-table">
+                  <thead className="table-header">
+                    <tr>
+                      <th>자재명</th>
+                      <th>맥주</th>
+                      <th>단위</th>
+                      <th className="text-right">기준소요량</th>
+                      <th className="text-right">계획소요량</th>
+                      <th className="text-right">현재재고</th>
+                      <th className="text-center">상태</th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                    {planDetail.rawMaterials?.map((material, index) => (
+                      <tr key={material.planMaterialId || index}>
+                        <td className="table-cell">{material.materialName}</td>
+                        <td className="table-cell">{material.beerName}</td>
+                        <td className="table-cell">{material.unit}</td>
+                        <td className="table-cell text-right">{material.stdQty?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-right">{material.planQty?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-right">{material.currentStock?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-center">
+                          <span className={`status-badge ${material.status === '부족' ? 'shortage' : 'sufficient'}`}>
+                            {material.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            {/* 부자재 테이블 */}
+            <div>
+              <h4 className="section-title">부자재</h4>
+              <div className="table-container">
+                <table className="data-table">
+                  <thead className="table-header">
+                    <tr>
+                      <th>자재명</th>
+                      <th>맥주</th>
+                      <th>단위</th>
+                      <th className="text-right">기준소요량</th>
+                      <th className="text-right">계획소요량</th>
+                      <th className="text-right">현재재고</th>
+                      <th className="text-center">상태</th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                    {planDetail.packagingMaterials?.map((material, index) => (
+                      <tr key={material.planMaterialId || index}>
+                        <td className="table-cell">{material.materialName}</td>
+                        <td className="table-cell">{material.beerName}</td>
+                        <td className="table-cell">{material.unit}</td>
+                        <td className="table-cell text-right">{material.stdQty?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-right">{material.planQty?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-right">{material.currentStock?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-center">
+                          <span className={`status-badge ${material.status === '부족' ? 'shortage' : 'sufficient'}`}>
+                            {material.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* 자재 구매 요청 정보 */}
+      {planDetail.materialRequests && (
+        <div className="border rounded-lg overflow-hidden shadow-sm">
+          <div 
+            className="accordion-header"
+            onClick={() => toggleSection('materialRequest')}
+          >
+            <h3 className="accordion-title">자재 구매 요청 정보</h3>
+            {openSections.materialRequest ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </div>
+          
+          {openSections.materialRequest && (
+            <div className="accordion-content">
+              <div className="info-grid">
+                <div className="info-card">
+                  <h4 className="section-title">구매 요청 정보</h4>
+                  <div className="info-list">
+                    <div className="info-item">
+                      <span className="info-label">납기요청일:</span>
+                      <span className="info-value">{formatDate(planDetail.materialRequests.deliveryDate)}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">신청사유:</span>
+                      <span className="info-value">{planDetail.materialRequests.reason || '-'}</span>
+                    </div>
+                    {planDetail.materialRequests.note && (
+                      <div className="note-container">
+                        <span className="note-label">특이사항:</span>
+                        <p className="note-text">{planDetail.materialRequests.note}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="section-title">요청 자재 목록</h4>
+                <div className="table-container">
+                  <table className="data-table">
+                    <thead className="table-header">
+                      <tr>
+                        <th>자재명</th>
+                        <th className="text-right">신청 수량</th>
+                      </tr>
+                    </thead>
+                    <tbody className="table-body">
+                      {planDetail.materialRequests.materials?.map((material, index) => (
+                        <tr key={index}>
+                          <td className="table-cell">{material.materialName}</td>
+                          <td className="table-cell text-right font-medium">{material.requestQty?.toFixed(4) || 0}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProductionPlanDetail;
