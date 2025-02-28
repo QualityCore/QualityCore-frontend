@@ -25,3 +25,16 @@ export const fetchProductionPlans = async (planYm, status) => {
   }
 };
 
+
+export const updatePlanStatus = async (planId, status) => {
+  try {
+      const response = await axios.post(`http://localhost:8080/api/v1/statusUpdate/${planId}`, null, {
+          params: { status }
+      });
+      return response.data;
+  } catch (error) {
+      console.error('상태 업데이트 실패:', error);
+      throw error;
+  }
+};
+

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/productionPlan/ProductionPlan.css";
-import { fetchProductionPlans } from "../../apis/productionPlanApi/ProductionPlanApi";
+import { fetchProductionPlans, updatePlanStatus } from "../../apis/productionPlanApi/ProductionPlanApi";
 import { useNavigate } from "react-router-dom"; 
 
 const ProductionPlan = () => {
@@ -40,6 +40,23 @@ const ProductionPlan = () => {
       console.log('행 클릭됨, planId:', planId);
       navigate(`/detail/${planId}`); 
     };
+
+
+    const handleProductionInstruction = async (planId) => {
+      try {
+          // 상태 변경 확인 모달
+          const confirmed = window.confirm('생산 지시를 진행하시겠습니까? ');
+          
+          if (confirmed) {
+              await updatePlanStatus(planId, '확정');
+              
+              // 성공 후 목록 새로고침
+              handleSearch();
+          }
+      } catch (error) {
+          window.alert('상태 변경 중 오류가 발생했습니다.');
+      }
+  };
 
     return (
       <div className="productionPlan-container">
@@ -111,15 +128,14 @@ const ProductionPlan = () => {
                           plan.status === "취소" ? "❌ 취소" : plan.status}
                         </span>
                       </td>
-                      <td onClick={(e) => e.stopPropagation()}> {/* 버튼 클릭 시 행 클릭 이벤트가 발생하지 않도록 */}
-                        {plan.status === "확정" ? (
-                          <button className="action-btn">생산지시</button>
-                        ) : (
-                          <button className="action-btn" disabled>
-                            불가
-                          </button>
-                        )}
-                      </td>
+                      <td onClick={(e) => e.stopPropagation()}> 
+                      <button 
+                          className="action-btn"
+                          onClick={() => handleProductionInstruction(plan.planId)}
+                      >
+                          생산지시
+                      </button>
+                  </td>
                     </tr>
                   );
                 })
