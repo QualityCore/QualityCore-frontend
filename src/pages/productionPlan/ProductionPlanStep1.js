@@ -37,6 +37,87 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
     const [showValidation, setShowValidation] = useState(false);
     const [validationMessage, setValidationMessage] = useState('');
 
+     // BOM 정보 로드
+     const loadProductBOM = async (productId) => {
+        try {
+            if (!productId) return null;
+            
+            const bomData = await fetchProductBOM(productId);
+            
+            if (!bomData) {
+                console.error(`🚨 BOM 데이터가 없음! productId: ${productId}`);
+                return null; // 실패한 경우 명확하게 null 반환
+            }
+    
+            console.log('✅ Fetched BOM Data:', bomData);
+    
+            setProductBOMList(prev => ({
+                ...prev,
+                [productId]: bomData
+            }));
+    
+            return bomData; // 반환값 추가
+        } catch (error) {
+            console.error(`❌ BOM 정보 불러오기 실패: productId: ${productId}`, error);
+            return null;
+        }
+    };
+    
+
+ // 제품 정보 업데이트
+ const handleProductChange = async (index, field, value) => {
+    const updatedProducts = [...formData.products];
+    
+    if (field === 'productId') {
+        const selectedProduct = products.find(p => p.productId === value);
+        
+        try {
+            // BOM 정보 불러오기
+            const bomData = await loadProductBOM(value);
+            
+            console.log('Fetched BOM Data:', bomData);
+
+            updatedProducts[index] = {
+                ...updatedProducts[index],
+                productId: value,
+                productName: selectedProduct ? selectedProduct.productName : '',
+                beerType: bomData?.beerType || '에일맥주' // 안전한 접근
+            };
+
+            setFormData({
+                ...formData,
+                products: updatedProducts
+            });
+        } catch (error) {
+            console.error("BOM 정보 불러오기 실패:", error);
+            
+            // 오류 발생 시 기본값으로 처리
+            updatedProducts[index] = {
+                ...updatedProducts[index],
+                productId: value,
+                productName: selectedProduct ? selectedProduct.productName : '',
+                beerType: '에일맥주'
+            };
+
+            setFormData({
+                ...formData,
+                products: updatedProducts
+            });
+        }
+    } else {
+        updatedProducts[index] = {
+            ...updatedProducts[index],
+            [field]: value
+        };
+
+        setFormData({
+            ...formData,
+            products: updatedProducts
+        });
+    }
+};
+
+
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -80,44 +161,7 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
         });
     };
 
-    // 제품 정보 업데이트
-    const handleProductChange = async (index, field, value) => {
-        const updatedProducts = [...formData.products];
-        
-        if (field === 'productId') {
-            const selectedProduct = products.find(p => p.productId === value);
-            updatedProducts[index] = {
-                ...updatedProducts[index],
-                productId: value,
-                productName: selectedProduct ? selectedProduct.productName : ''
-            };
-            loadProductBOM(value, index);
-        } else {
-            updatedProducts[index] = {
-                ...updatedProducts[index],
-                [field]: value
-            };
-        }
-
-        setFormData({
-            ...formData,
-            products: updatedProducts
-        });
-    };
-
-    // BOM 정보 로드
-    const loadProductBOM = async (productId) => {
-        try {
-            if (!productId) return;
-            const bomData = await fetchProductBOM(productId);
-            setProductBOMList(prev => ({
-                ...prev,
-                [productId]: bomData
-            }));
-        } catch (error) {
-            console.error("BOM 정보 불러오기 실패:", error);
-        }
-    };
+   
 
     // Step2로 이동 시 라인 배정 데이터 생성
     const handleNextStep = () => {
