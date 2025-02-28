@@ -113,7 +113,6 @@
 .etc {
     width: 1145px;
     height: 140px;
-    margin-top: 30px;
     margin-left: 130px;
 }
 
@@ -155,4 +154,29 @@
     margin: 0;
     margin-bottom: 20px;
     margin-left: 130px;
+}
+
+.bomTable th:nth-child(1),
+.bomTable td:nth-child(1) {
+    width: 180px;
+}
+
+.bomTable th:nth-child(2),
+.bomTable td:nth-child(2) {
+    width: 180px;
+}
+
+.bomTable th:nth-child(3),
+.bomTable td:nth-child(3) {
+    width: 180px;
+}
+
+.bomTable th:nth-child(4),
+.bomTable td:nth-child(4) {
+    width: 180px;
+}
+
+.bomTable th:nth-child(5),
+.bomTable td:nth-child(5) {
+    width: 180px;
 }
