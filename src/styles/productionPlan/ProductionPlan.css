@@ -132,3 +132,9 @@
     background-color: #2C5282;
     transform: translateY(-2px);
   }
+
+  .action-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    color: #666666;
+}

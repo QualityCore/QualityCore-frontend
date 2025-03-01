@@ -4,7 +4,7 @@ import "../../styles/productionPlan/ProductionPlanDetailAccordion.css";
 
 const ProductionPlanDetailAccordion = ({ planDetail }) => {
   const [openSections, setOpenSections] = useState({
-    step1: true,
+    step1: false,
     step2: false,
     step3: false,
     materialRequest: false
@@ -62,6 +62,13 @@ const ProductionPlanDetailAccordion = ({ planDetail }) => {
                   <div className="info-item">
                     <span className="info-label">상태:</span>
                     <span className="info-value">{planDetail.planMst.status}</span>
+                  </div>
+                   {/* 총 계획 수량 */}
+                  <div className="info-item">
+                    <span className="info-label">총 계획 수량:</span>
+                    <span className="info-value">
+                      {planDetail.planProducts?.reduce((sum, product) => sum + product.planQty, 0).toLocaleString() || 0} 개
+                    </span>
                   </div>
                 </div>
               </div>
