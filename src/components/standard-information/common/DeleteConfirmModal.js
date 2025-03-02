@@ -1,13 +1,11 @@
 import { useState } from "react";
 import Lottie from "lottie-react";
 import animationData from "../../../lottie/caution.json";
-import "../../../styles/standard-information/common/modal.css"; 
+import styles from "../../../styles/standard-information/common/modal.module.css"; 
 
 const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, itemName }) => {
   const [deleteInput, setDeleteInput] = useState("");
-
   const confirmText = `${itemName} 삭제`.trim(); // 삭제 확인 문구 및 공백제거거
-
 
   // 입력 필드 업데이트
   const handleInputChange = (e) => { 
@@ -19,42 +17,30 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, itemName }) => {
     if(e.key === "Enter" && deleteInput === confirmText){
       onConfirm();
     }
-  } 
-
+  };
 
   return (
-    <div className={`modal ${isOpen ? "show" :""}`}>
-      <div className="modal-content">
-        
-        {/*애니메이션 추가 */}
-        <Lottie animationData={animationData} loop={true} className="caution-animation"  />
-
-        <p className="modal-f-message">*삭제를 원하시면 해당 문구를 동일하게 입력 하세요.</p>
-
-        <p className="modal-s-message">{confirmText}</p>
- 
-        {/* 삭제 문구 입력 필드 */}
-        <input className="deleteMdal"
+    <div className={`${styles.modal} ${isOpen ? styles.show : ""}`}>
+      <div className={styles.modalContent}>
+        <Lottie animationData={animationData} loop={true} className={styles.cautionAnimation}  />
+        <p className={styles.modalFMessage}>*삭제를 원하시면 해당 문구를 동일하게 입력 하세요.</p>
+        <p className={styles.modalSMessage}>{confirmText}</p>
+        <input className={styles.deleteModal}
                type="text" value={deleteInput} 
                onChange={handleInputChange} 
                onKeyDown={handleKeyDown}
                placeholder={confirmText}/>
-
-        <div className="modal-buttons">
-
-          
+        <div className={styles.modalButtons}>
           <button onClick={onConfirm}
                   disabled={deleteInput !== confirmText}
-                  className="m-confirm-btn">
+                  className={styles.mConfirmBtn}>
                   확인
           </button>
-
           <button onClick={() => {
                   onClose();}} 
-                  className="m-cancel-btn">
+                  className={styles.mCancelBtn}>
                   취소
           </button>
-
         </div>
       </div>
     </div>
