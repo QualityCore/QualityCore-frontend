@@ -5,7 +5,7 @@ import ConfirmModal from "../../standard-information/common/ConfirmModal";
 import SuccessfulModal from "../../standard-information/common/SuccessfulModal"; 
 import ErrorModal from "../../standard-information/common/ErrorModal"; 
 import CompleteModal from "../../standard-information/common/CompleteModal";
-import "../../../styles/production-process/materialGrinding.css";
+import styles from "../../../styles/production-process/MaterialGrindingControls.module.css";
 
 const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -25,17 +25,19 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
           setTimer(prev => prev - 1);     
         }, 1000);      
         return () => clearInterval(interval); // ✅ 메모리 누수 방지      
-      } else if (timer === 0 && timerStarted) {  
-        console.log("✅ 타이머 종료! 완료 모달 열기");        
-        setShowCompleteModal(true);        
+      } else if (timer === 0 && timerStarted) {         
+        setShowCompleteModal(true);
+        setTimerStarted(false); // 모달이 뜬 후 타이머 상태 리셋     
       }        
-    }, [timer]); 
+    }, [timer,timerStarted]); // 상태체크
+  
+    
 
-                         
-      const startTimer = () => {              
-        const totalTime = process.env.NODE_ENV === "development" ? 5 : Number(grindingData.grindDuration) * 60;              
-        setTimer(totalTime);        
-      };
+    const startTimer = () => {                    
+      setTimerStarted(true); // ✅ 타이머 실행됨을 명확히 설정
+      const totalTime = process.env.NODE_ENV === "development" ? 5 : Number(grindingData.grindDuration) * 60;              
+      setTimer(totalTime);          
+    };                            
    
     
       const formatDate = (date) => {              
@@ -87,8 +89,7 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
       const handleButtonClick = () => {                        
         if (buttonLabel === "등록하기") {                               
           setShowConfirmModal(true);                       
-        } else if (buttonLabel === "다음공정으로 이동") {                               
-          console.log("🚀 다음 공정으로 이동!");                               
+        } else if (buttonLabel === "다음공정 이동") {                                                             
           setGrindingData(prev => ({                                       
             ...prev,                                        
             processStatus: "완료",                                
@@ -100,15 +101,15 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
         
     
       return (                       
-        <form className="material-grinding-form" onSubmit={(event) => event.preventDefault()}>                                    
+        <form className={styles.materialGrindingForm} onSubmit={(event) => event.preventDefault()}>                                    
             {timer > 0 && (                                
-              <p>남은시간: {Math.floor(timer / 60)}분 {timer % 60}초</p>                        
+              <p className={styles.timerDisplay}>남은시간: {Math.floor(timer / 60)}분 {timer % 60}초</p>                        
             )}
                                     
-            <div className="grinding-button-container">                
+            <div className={styles.grindingButtonContainer}>                
                 <button                    
                     onClick={handleButtonClick}                    
-                    className={`grinding-save-button ${buttonLabel === "다음공정으로 이동" ? "next-process-button" : ""}`}>
+                    className={` ${styles.grindingSaveButton} ${buttonLabel === "다음공정 이동" ? `${styles.nextProcessButton}` : ""}`}>
                     {buttonLabel}
                 </button>            
             </div>
@@ -128,11 +129,10 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
               isOpen={showSuccessModal} 
               message="데이터가 성공적으로 저장되었습니다!" 
               onClose={() => {
-                setShowSuccessModal(false); 
-                setShowCompleteModal(true);
-            }} 
-             
-             
+                setShowSuccessModal(false);
+                setTimerStarted(true); // 타이머 실행됨을 명확히 설정 
+                startTimer();// 확인눌렀을때 타이머 시작            
+              }}                            
             />
             
             <ErrorModal 
@@ -147,7 +147,7 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
                 onClose={() => {
                     console.log("완료 모달 닫힘");
                     setShowCompleteModal(false);
-                    setButtonLabel("다음공정으로 이동");
+                    setButtonLabel("다음공정 이동");
                 }}
             />
         </form>
