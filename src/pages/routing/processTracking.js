@@ -8,11 +8,24 @@ const ProcessTrackingPage = () => {
   const [trackingList, setTrackingList] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const processStages = [
+    { name: '분쇄', title: '분쇄 공정' },
+    { name: '당화', title: '당화 공정' },
+    { name: '여과', title: '여과 공정' },
+    { name: '끓임', title: '끓임 공정' },
+    { name: '냉각', title: '냉각 공정' },
+    { name: '발효', title: '발효 공정' },
+    { name: '숙성', title: '숙성 공정' },
+    { name: '숙성후여과', title: '숙성 후 여과 공정' },
+    { name: '탄산 조정', title: '탄산 조정 공정' },
+    { name: '패키징', title: '패키징 및 출하 공정' }
+  ];
+
   // 공정 상태 옵션
   const processStatusOptions = [
     { value: '', label: '전체' },
-    { value: '대기중', label: '대기중' },
-    { value: '진행중', label: '진행중' },
+    { value: '대기 중', label: '대기 중' },
+    { value: '진행 중', label: '진행 중' },
     { value: '완료', label: '완료' }
   ];
 
@@ -20,10 +33,17 @@ const ProcessTrackingPage = () => {
   const fetchProcessTracking = async () => {
     setLoading(true);
     try {
-        const params = { 
-            lotNo: lotNo.trim(), 
-            processStatus: processStatus 
-        };
+        const params = {};
+        
+        // 값이 있을 때만 파라미터에 추가
+        if (lotNo.trim() !== '') {
+            params.lotNo = lotNo.trim();
+        }
+        
+        if (processStatus !== '') {
+            params.processStatus = processStatus;
+        }
+        
         const result = await routingApi.getProcessTracking(params);
         setTrackingList(result);
     } catch (error) {
@@ -32,9 +52,6 @@ const ProcessTrackingPage = () => {
             || error.message 
             || '공정 현황을 조회하는 중 오류가 발생했습니다.';
         
-        // 에러 상태 설정 (상태 관리 라이브러리 사용 시)
-        // setError(errorMessage);
-        
         console.error('공정 현황 조회 실패:', errorMessage);
         
         // 선택적으로 사용자에게 알림
@@ -42,7 +59,7 @@ const ProcessTrackingPage = () => {
     } finally {
         setLoading(false);
     }
-};
+  };
 
   // 초기 로딩
   useEffect(() => {
@@ -52,8 +69,8 @@ const ProcessTrackingPage = () => {
   // 상태별 색상 결정 함수
   const getStatusColor = (status) => {
     switch(status) {
-      case '대기중': return 'bg-blue-100 text-blue-800';
-      case '진행중': return 'bg-green-100 text-green-800';
+      case '대기 중': return 'bg-blue-100 text-blue-800';
+      case '진행 중': return 'bg-green-100 text-green-800';
       case '완료': return 'bg-gray-100 text-gray-800';
       default: return 'bg-white text-black';
     }
@@ -86,49 +103,31 @@ const ProcessTrackingPage = () => {
   
   // 공정 카드 렌더링
   const renderProcessCard = (tracking) => {
-    console.log('Process Name:', tracking.processName);
-      // 전체 tracking 객체 로깅
-  console.log('Full Tracking Object:', tracking);
-  
-  // 시간 관련 필드 개별 로깅
-  console.log('Start Time:', tracking.startTime);
-  console.log('Expected End Time:', tracking.expectedEndTime);
-    const processMap = {
-      '분쇄': '분쇄',
-      '당화': '당화',
-      '여과': '여과',
-      '끓임': '끓임',
-      '냉각': '냉각',
-      '발효': '발효',
-      '숙성': '숙성',
-      '숙성후여과': '숙성후여과',
-      '탄산 조정': '탄산조정',
-      '패키징': '패키징'
-    };
-  
-    const processClassName = processMap[tracking.processName] || tracking.processName;
-  
+    // 여기서는 클래스 이름 통일을 위해 원래 이름 그대로 처리 (공백 유지)
+    // CSS에서 다양한 선택자로 처리하므로 여기서는 변환하지 않음
     return (
-        <div 
-          key={tracking.lotNo} 
-          className={`process-tracking-card ${processClassName} ${getStatusColor(tracking.processStatus)}`}
-        >
-          <div className="card-header">
-            <span className="lot-no">{tracking.lotNo}</span>
-            <span className="status-badge">
-              {tracking.processStatus}
-            </span>
-          </div>
-          <div className="card-content">
-            <h3>{tracking.processName}</h3>
-            <div className="time-info">
-              <p>시작: {formatDate(tracking.startTime)}</p>
-              <p>예상 종료: {formatDate(tracking.expectedEndTime)}</p>
-            </div>
+      <div 
+        key={tracking.lotNo} 
+        className={`process-tracking-card`}
+        data-status={tracking.processStatus}
+        data-process={tracking.processName.replace(/ /g, '-')} // 공백을 하이픈으로 변환
+      >
+        <div className="card-header">
+          <span className="lot-no">{tracking.lotNo}</span>
+          <span className="status-badge">
+            {tracking.processStatus}
+          </span>
+        </div>
+        <div className="card-content">
+          <h3>{tracking.processName}</h3>
+          <div className="time-info">
+            <p>시작: {formatDate(tracking.startTime)}</p>
+            <p>예상 종료: {formatDate(tracking.expectedEndTime)}</p>
           </div>
         </div>
-      );
-    };
+      </div>
+    );
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -173,18 +172,69 @@ const ProcessTrackingPage = () => {
           {loading ? '조회 중...' : '조회'}
         </button>
       </div>
+  
+      <div className="process-tracking-stages">
+      {processStages.map((stage, index) => {
+        // 해당 공정의 모든 트래킹 정보 필터링
+        const stageTrackings = trackingList
+          .filter(t => t.processName === stage.name);
 
-      <div className="process-tracking-grid">
-        {trackingList.length > 0 ? (
-          trackingList.map(renderProcessCard)
-        ) : (
-          <div className="no-data">
-            {loading ? '데이터를 불러오는 중...' : '조회된 공정 현황이 없습니다.'}
+        const isAnyProcessRunning = stageTrackings.some(t => t.processStatus === '진행 중');
+
+        return (
+          <div 
+            key={stage.name} 
+            className={`process-stage 
+              ${stage.name.replace(/ /g, '-')}  
+              ${isAnyProcessRunning ? 'active' : ''}`}
+          >
+            <div className="stage-header">
+              <div className="stage-title-wrapper">
+                <div className="stage-number">{index + 1}</div>
+                <div className="stage-title">{stage.title}</div>
+              </div>
+            </div>
+            <div className="stage-content">
+              {stageTrackings.length > 0 ? (
+                stageTrackings.map(tracking => (
+                  <div 
+                    key={tracking.lotNo} 
+                    className="process-tracking-card"
+                    data-status={tracking.processStatus}
+                    data-process={tracking.processName.replace(/ /g, '-')}
+                  >
+                    <div className="card-header">
+                      <span className="lot-no">{tracking.lotNo}</span>
+                      <span className="status-badge">
+                        {tracking.processStatus}
+                      </span>
+                    </div>
+                    <div className="card-content">
+                      <div className="time-info">
+                        <p>시작: {formatDate(tracking.startTime)}</p>
+                        <p>예상 종료: {formatDate(tracking.expectedEndTime)}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-tracking-data">
+                  해당 공정의 진행 정보가 없습니다.
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+        );
+      })}
     </div>
-  );
+
+    {trackingList.length === 0 && !loading && (
+      <div className="no-data">
+        조회된 공정 현황이 없습니다.
+      </div>
+    )}
+  </div>
+);
 };
 
 export default ProcessTrackingPage;

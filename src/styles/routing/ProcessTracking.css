@@ -1,201 +1,349 @@
 .productionPlan-container {
-    background-color: #ffffff;
-    border-radius: 1rem;
-    box-shadow: 
-      0 10px 25px rgba(0, 0, 0, 0.08),
-      0 4px 6px rgba(0, 0, 0, 0.04);
-    min-height: calc(100vh - 190px);
-    overflow: hidden;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  }
-  
-  .page-title {
-    font-size: 1.625rem;
-    color: #1a2c5b;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-    border-bottom: 2px solid #f0f4f8;
-    padding-bottom: 1rem;
-    letter-spacing: -0.02em;
-  }
-  
-  .search-bar {
-    display: flex;
-    gap: 1rem;
-    background: linear-gradient(to right, #f8fafc, #f1f5f9);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  }
-  
-  .search-filter {
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
-    flex: 1;
-  }
-  
-  .search-filter label {
-    font-size: 0.875rem;
-    color: #2d3748;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-  }
-  
-  .search-filter input,
-  .search-filter select {
-    background-color: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    font-size: 0.925rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  }
-  
-  .search-filter input:focus,
-  .search-filter select:focus {
-    outline: none;
-    border-color: #3182ce;
-    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
-  }
- 
-  
-  .process-tracking-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .process-tracking-card {
-    background-color: white;
-    border-radius: 1.25rem;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 
-      0 10px 25px rgba(0, 0, 0, 0.04),
-      0 4px 12px rgba(0, 0, 0, 0.02);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .process-tracking-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background-color: currentColor;
-    opacity: 0.7;
-  }
-  
-  .process-tracking-card .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.25rem;
-    background-color: #f9fafb;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
-  
-  .process-tracking-card .lot-no {
-    font-weight: 700;
-    color: #2c5282;
-    font-size: 1rem;
-    letter-spacing: -0.02em;
-  }
-  
-  .process-tracking-card .status-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    text-transform: uppercase;
-    background-color: rgba(0, 0, 0, 0.05);
-    color: #4a5568;
-  }
-  
-  .process-tracking-card .status-badge.대기중 {
-    background-color: #E6F3FF;
-    color: #1E6FEB;
-  }
-  
-  .process-tracking-card .status-badge.진행중 {
-    background-color: #E6F7F0;
-    color: #2BA84A;
-  }
-  
-  .process-tracking-card .status-badge.완료 {
-    background-color: #F0F0F0;
-    color: #6B7280;
-  }
-  
-  .process-tracking-card .card-content {
-    padding: 1.25rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .process-tracking-card .card-content h3 {
-    font-size: 1.125rem;
-    color: #1a365d;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  
-  .process-tracking-card .time-info {
-    display: grid;
-    gap: 0.75rem;
-    color: #4a5568;
-    font-size: 0.875rem;
-    margin-top: auto;
-  }
-  
-  .time-info p {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    opacity: 0.8;
-  }
-  
-  .time-info p::before {
-    content: '';
-    width: 10px;
-    height: 10px;
-    background-color: currentColor;
-    border-radius: 50%;
-    opacity: 0.6;
-  }
-  
-  /* 공정별 색상 정의 (유사한 색상 팔레트 사용) */
-  .process-tracking-card.분쇄 { color: #3B82F6; }
-  .process-tracking-card.당화 { color: #10B981; }
-  .process-tracking-card.여과 { color: #F43F5E; }
-  .process-tracking-card.끓임 { color: #F97316; }
-  .process-tracking-card.냉각 { color: #6366F1; }
-  .process-tracking-card.발효 { color: #8B5CF6; }
-  .process-tracking-card.숙성 { color: #14B8A6; }
-  .process-tracking-card.숙성후여과 { color: #EC4899; }
-  .process-tracking-card.탄산조정 { color: #22D3EE; }
-  .process-tracking-card.패키징 { color: #64748B; }
-  
-  .time-info p {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .time-info p::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background-color: currentColor;
-    border-radius: 50%;
-    opacity: 0.6;
-  }
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    0 4px 6px rgba(0, 0, 0, 0.04);
+  min-height: calc(100vh - 190px);
+  overflow: hidden;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.page-title {
+  font-size: 1.625rem;
+  color: #1a2c5b;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  border-bottom: 2px solid #f0f4f8;
+  padding-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.search-bar {
+  display: flex;
+  gap: 1rem;
+  background: linear-gradient(to right, #f8fafc, #f1f5f9);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.search-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  flex: 1;
+}
+
+.search-filter label {
+  font-size: 0.875rem;
+  color: #2d3748;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.search-filter input,
+.search-filter select {
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.925rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.search-filter input:focus,
+.search-filter select:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+button {
+  background-color: #2563EB;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: auto;
+  margin-bottom: 0;
+  align-self: flex-end;
+}
+
+button:hover {
+  background-color: #1E40AF;
+}
+
+button:disabled {
+  background-color: #CBD5E1;
+  cursor: not-allowed;
+}
+
+.process-tracking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.process-tracking-card {
+  background-color: white;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 카드의 상단 색상 표시 제거 */
+.process-tracking-card::before {
+  display: none;
+}
+
+.process-tracking-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background-color: #f9fafb;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.process-tracking-card .lot-no {
+  font-weight: 700;
+  color: #2c5282;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.process-tracking-card .status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #4a5568;
+}
+
+.process-tracking-card .status-badge.대기 중 {
+  background-color: #E6F3FF;
+  color: #1E6FEB;
+}
+
+.process-tracking-card .status-badge.진행 중 {
+  background-color: #E6F7F0;
+  color: #2BA84A;
+}
+
+.process-tracking-card .status-badge.완료 {
+  background-color: #F0F0F0;
+  color: #6B7280;
+}
+
+.process-tracking-card .card-content {
+  padding: 1.25rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.process-tracking-card .card-content h3 {
+  font-size: 1.125rem;
+  color: #1a365d;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.process-tracking-card .time-info {
+  display: grid;
+  gap: 0.75rem;
+  color: #4a5568;
+  font-size: 0.875rem;
+  margin-top: auto;
+}
+
+.time-info p {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0.8;
+}
+
+.time-info p::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+/* 진행 중인 카드에만 색상 적용 */
+.process-tracking-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.process-stage {
+  background-color: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.no-tracking-data {
+  text-align: center;
+  color: #718096;
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+/* 진행 중인 카드만 활성화 */
+.process-stage.active {
+  opacity: 1;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  border: 2px solid #f0f0f0;
+}
+
+.process-stage:not(.active) .stage-content {
+  opacity: 0.5;
+}
+
+.stage-header {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* 아이콘 제거 */
+.stage-icon-wrapper {
+  display: none;
+}
+
+.stage-title-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.stage-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #4a5568;
+  background-color: #f0f0f0;
+  margin-right: 1rem;
+}
+
+.stage-title {
+  font-weight: 600;
+}
+
+.stage-content {
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+/* 진행 중인 카드 스타일 (배경색 꽉 채우기) */
+.process-tracking-card[data-status="진행 중"] {
+  color: white;
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+/* 공정별 진행중인 카드 배경색 지정 - data-process 속성 사용 */
+.process-stage.분쇄.active .process-tracking-card[data-status="진행 중"] { background-color: #3B82F6; }
+.process-stage.당화.active .process-tracking-card[data-status="진행 중"] { background-color: #10B981; }
+.process-stage.여과.active .process-tracking-card[data-status="진행 중"] { background-color: #F43F5E; }
+.process-stage.끓임.active .process-tracking-card[data-status="진행 중"] { background-color: #F97316; }
+.process-stage.냉각.active .process-tracking-card[data-status="진행 중"] { background-color: #6366F1; }
+.process-stage.발효.active .process-tracking-card[data-status="진행 중"] { background-color: #8B5CF6; }
+.process-stage.숙성.active .process-tracking-card[data-status="진행 중"] { background-color: #14B8A6; }
+.process-stage.숙성후여과.active .process-tracking-card[data-status="진행 중"] { background-color: #EC4899; }
+.process-stage.탄산-조정.active .process-tracking-card[data-status="진행 중"] { background-color: #22D3EE; }
+.process-stage.패키징.active .process-tracking-card[data-status="진행 중"] { background-color: #64748B; }
+
+/* 진행 중인 카드의 텍스트 색상 조정 */
+.process-tracking-card[data-status="진행 중"] .card-header,
+.process-tracking-card[data-status="진행 중"] .card-content {
+  background-color: transparent;
+  color: white;
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.process-tracking-card[data-status="진행 중"] .lot-no,
+.process-tracking-card[data-status="진행 중"] .card-content h3,
+.process-tracking-card[data-status="진행 중"] .time-info,
+.process-tracking-card[data-status="진행 중"] .time-info p {
+  color: white;
+}
+
+.process-tracking-card[data-status="진행 중"] .status-badge {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.process-stage.active .stage-header {
+  background-color: #f8fafc;
+  border-bottom: 2px solid #f0f4f8;
+}
+
+/* 각 공정별 활성화된 스테이지 헤더 색상 */
+.process-stage.분쇄.active .stage-header { border-top: 4px solid #3B82F6; }
+.process-stage.당화.active .stage-header { border-top: 4px solid #10B981; }
+.process-stage.여과.active .stage-header { border-top: 4px solid #F43F5E; }
+.process-stage.끓임.active .stage-header { border-top: 4px solid #F97316; }
+.process-stage.냉각.active .stage-header { border-top: 4px solid #6366F1; }
+.process-stage.발효.active .stage-header { border-top: 4px solid #8B5CF6; }
+.process-stage.숙성.active .stage-header { border-top: 4px solid #14B8A6; }
+.process-stage.숙성후여과.active .stage-header { border-top: 4px solid #EC4899; }
+.process-stage.탄산-조정.active .stage-header { border-top: 4px solid #22D3EE; }
+.process-stage.패키징.active .stage-header { border-top: 4px solid #64748B; }
+
+/* 모든 진행 중 카드에 진동 효과 추가 */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+.process-tracking-card[data-status="진행 중"] {
+  animation: pulse 2s infinite;
+}
+
+/* 진행 중 스테이지를 더 강조 */
+.process-stage.active {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  z-index: 1;
+}
+
+/* 빈 결과 상태 스타일 */
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1rem;
+  color: #718096;
+  font-weight: 500;
+}
