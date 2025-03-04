@@ -5,14 +5,14 @@ const MashingProcessTable = ({ mashingDataList }) => {
         <table className="mashing-process-table">
             <thead>
                 <tr>
-                    <th>작업지시 ID</th>
-                    <th>당화 소요 시간</th>
-                    <th>당화 온도</th>
-                    <th>pH값</th>
-                    <th>곡물 대 물 비율</th>
-                    <th>물 투입량</th>
-                    <th>공정 상태</th>
-                    <th>상태 코드 ID</th>
+                    {/* <th>작업지시 ID</th> */}
+                    {/* <th>당화 소요 시간</th> */}
+                    {/* <th>당화 온도</th> */}
+                    {/* <th>pH값</th> */}
+                    {/* <th>곡물 대 물 비율</th> */}
+                    {/* <th>물 투입량</th> */}
+                    {/* <th>공정 상태</th> */}
+                    {/* <th>상태 코드 ID</th> */}
                 </tr>
             </thead>
             <tbody>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MaterialGrindingForm from "../../../components/production-process/material-grinding/MaterialGrindingForm";
 import MaterialGrindingControls from "../../../components/production-process/material-grinding/MaterialGrindingControls";
-import "../../../styles/production-process/materialGrinding.css";
+import styles from "../../../styles/production-process/MaterialGrindingControls.module.css";
 
 const MaterialGrindingPage = () => {
     const [grindingData, setGrindingData] = useState({
@@ -19,7 +19,7 @@ const MaterialGrindingPage = () => {
     });
 
     return (
-        <div className="material-grinding-container">
+        <div className={styles.grindingButtonContainer}>
             <MaterialGrindingForm  grindingData={grindingData} setGrindingData={setGrindingData} />
             <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData}/>
         </div>
