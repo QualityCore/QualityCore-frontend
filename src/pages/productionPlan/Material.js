@@ -27,7 +27,6 @@ const MaterialManagementPage = () => {
     try {
       const response = await getMaterialRequests();
       
-   
       if (response.result && Array.isArray(response.result.requests)) {
         setMaterialRequests(response.result.requests);
       } else {
@@ -36,34 +35,34 @@ const MaterialManagementPage = () => {
       }
     } catch (error) {
       console.error('자재 구매 신청 내역 조회 실패:', error);
+      setMaterialRequests([]);
     }
   };
   
-
   const handleMaterialRequest = async (event) => {
     event.preventDefault();
     
     const formData = new FormData(event.target);
-    const requestData = {
-      materialId: selectedMaterialId || null,  // 기존 자재 선택 시 ID 전송, 없으면 null
-      materialName: selectedMaterialId ? null : formData.get("materialName"), // 기존 자재 선택 시 materialName 전송 안함
-      requestQty: formData.get("requestQty") || null,
-      deliveryDate: formData.get("deliveryDate") || null,
-      reason: formData.get("reason") || null,
-      note: formData.get("note") || null,
-    };
+   // 기존 코드
+const requestData = {
+  materialId: selectedMaterialId || null,  // 기존 자재 선택 시 ID 전송, 없으면 null
+  materialName: selectedMaterialId ? null : formData.get("materialName"), // 기존 자재 선택 시 materialName 전송 안함
+};
+
 
     console.log("🔍 requestData 확인:", requestData);
 
     try {
-      await requestMaterial(requestData); 
-      alert("자재 구매 신청이 완료되었습니다.");
-      setSelectedMaterialId(""); // 선택 초기화
-      setMaterialName(""); // 신규 자재 입력값 초기화
+        await requestMaterial(requestData); 
+        alert("자재 구매 신청이 완료되었습니다.");
+        setSelectedMaterialId(""); // 선택 초기화
+        setMaterialName(""); // 신규 자재 입력값 초기화
     } catch (error) {
-      console.error("자재 구매 신청 실패:", error);
+        console.error("자재 구매 신청 실패:", error);
     }
-  };
+};
+
+  
 
   
   
@@ -147,19 +146,7 @@ const formatDate = (dateString) => {
           </select>
         </div>
 
-        {/* 신규 자재명 입력 (기존 자재 선택 시 비활성화) */}
-        <div className={styles.formGroup}>
-          <label htmlFor="materialName">자재명 (신규 자재)</label>
-          <input 
-            type="text" 
-            id="materialName" 
-            name="materialName" 
-            value={materialName}
-            onChange={(e) => setMaterialName(e.target.value)}
-            disabled={selectedMaterialId} // 기존 자재 선택 시 입력 불가능
-            required={!selectedMaterialId} // 기존 자재 선택 안 했을 때만 필수
-          />
-        </div>
+      
 
         {/* 신청 수량 */}
         <div className={styles.formGroup}>
