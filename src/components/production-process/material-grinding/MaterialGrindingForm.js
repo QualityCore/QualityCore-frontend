@@ -1,6 +1,7 @@
 import React, { useState , useEffect } from "react";
 import materialGrindingApi from "../../../apis/production-process/material-grinding/MaterialGrindingApi"; 
-import "../../../styles/production-process/materialGrinding.css";
+import styles from "../../../styles/production-process/MaterialGrindingControls.module.css";
+
 
 const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
     const [formData, setFormData] = useState(grindingData);
@@ -14,17 +15,30 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
 
     
     // 작업지시 ID 목록 가져오기 (중복 제거 추가)
-    useEffect(() => {         
+    useEffect(() => {        
         const fetchLineMaterial = async () => {              
             try {               
-                const data = await materialGrindingApi.getLineMaterial(); // 백엔드 API 호출  
-                console.log("📌 API 응답 데이터:", data);
+                const response = await materialGrindingApi.getLineMaterial();
+                console.log("📌 API 응답 데이터:", response);
+        
+                // API 응답에서 배열 데이터 추출
+                const data = response.result?.lineMaterials || [];  
+                console.log("📌 추출된 작업지시 목록:", data);  
+        
+                if (!Array.isArray(data) || data.length === 0) {
+                    console.warn("⚠️ 작업지시 ID 데이터 없음!");
+                    return;
+                }
 
                  // lotNo가 존재하는 데이터만 필터링
-                const filteredData = data.filter(item => item.lotNo);              
+                const filteredData = data.filter(item => item.lotNo);  
+                console.log("📌 lotNo가 있는 데이터:", filteredData);              
+                
                 // 중복된 lotNo 제거 (Set 사용)
                 const uniqueLots = Array.from(new Set(data.map(item => item.lotNo)))
                     .map(lotNo => data.find(item => item.lotNo === lotNo));
+
+                    console.log("📌 최종 저장된 작업지시 목록:", uniqueLots);
                 
                 setLineMaterial(uniqueLots); // 중복 제거된 데이터 저장              
             } catch (error) {                    
@@ -46,18 +60,22 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
         if (!selectedLotNo) return;
     
         try {
-            const materialData = await materialGrindingApi.getMaterialByLotNo(selectedLotNo);
-            console.log("📌 불러온 원료 데이터:", materialData);
+            const response = await materialGrindingApi.getMaterialByLotNo(selectedLotNo);
+            console.log("📌 API 응답 데이터:", response);
     
-            if (!materialData || materialData.length === 0) {
+            // 📌 올바른 배열 데이터로 변환
+            const materialData = response.result?.materials || []; 
+            console.log("📌 변환된 원료 데이터:", materialData);
+    
+            if (!Array.isArray(materialData) || materialData.length === 0) {
                 console.warn("⚠️ 주원료 데이터가 없습니다.");
                 setSelectedMaterial("");
-                setFormData(prev => ({ 
-                    ...prev, 
-                    mainMaterial: "", 
-                    mainMaterialInputVolume: "", 
-                    maltType: "", 
-                    maltInputVolume: "" 
+                setFormData(prev => ({
+                    ...prev,
+                    mainMaterial: "",
+                    mainMaterialInputVolume: "",
+                    maltType: "",
+                    maltInputVolume: ""
                 }));
                 return;
             }
@@ -70,17 +88,17 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
     
             if (validMaterial) {
                 const materialName = validMaterial.materialName;
-                const requiredQty = validMaterial.requiredQtyPerUnit || 0;
+                const totalQty = validMaterial.totalQty || 0;
     
                 setSelectedMaterial(materialName);
                 setFormData(prev => ({
                     ...prev,
                     mainMaterial: materialName,
-                    mainMaterialInputVolume: requiredQty,
+                    mainMaterialInputVolume: totalQty,
                     grindIntervalSetting: materialSettings[materialName]?.grindInterval || "",
                     grindSpeedSetting: materialSettings[materialName]?.grindSpeed || "",
                     maltType: validMalt ? validMalt.materialName : "",  
-                    maltInputVolume: validMalt ? validMalt.requiredQtyPerUnit || 0 : "" 
+                    maltInputVolume: validMalt ? validMalt.totalQty || 0 : "" 
                 }));
             } else {
                 console.warn(`⚠️ 허용되지 않은 원료만 포함됨: ${materialData.map(item => item.materialName).join(", ")}`);
@@ -135,19 +153,40 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
         });
     };
 
-
-    const handleRegister = () => {
-        setProcessStatus("작업 중");
+    const handleRegister = async () => {
+        try {
+            console.log("📌 등록 요청 데이터:", formData);
+            
+            // ✅ 서버로 데이터 전송 (등록 요청)
+            const response = await materialGrindingApi.saveGrindingData(formData);
+            
+            console.log("📌 등록 응답 데이터:", response);
+    
+            if (response.code === 200) {
+                alert("✅ 등록이 완료되었습니다!");
+                setFormData(prev => ({
+                    ...prev,
+                    processStatus: "등록 완료"
+                }));
+            } else {
+                console.error("❌ 등록 실패:", response.message);
+                alert(`등록 실패: ${response.message}`);
+            }
+        } catch (error) {
+            console.error("❌ 등록 요청 중 오류 발생:", error);
+            alert("등록 요청 중 오류가 발생했습니다.");
+        }
     };
+    
 
     return (
-        <div className="material-grinding-form">
-            <h2 className="grinding-title">분쇄 공정</h2>
-            <div className="g-form-grid">
-            <div className="g-grid-item">
-                    <label className="g-label01">작업지시 ID </label>
+        <div className={styles.materialGrindingForm}>
+            <h2 className={styles.grindingTitle}>분쇄 공정</h2>
+            <div className={styles.gFormGrid}>
+            <div className={styles.gGridItem}>
+                    <label className={styles.gLabel01}>작업지시 ID </label>
                     <select 
-                        className="g-item01" 
+                        className={styles.gItem01} 
                         name="lotNo" 
                         value={formData.lotNo}
                         onChange={handleLotNoChange}> 
@@ -160,10 +199,10 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
                     </select>
                 </div>
             
-                <div className="g-grid-item">
-                <label className="g-label02">주원료</label>
+                <div className={styles.gGridItem}>
+                <label className={styles.gLabel02}>주원료</label>
                     <input 
-                        className="g-item02" 
+                        className={styles.gItem02}  
                         type="text" 
                         name="mainMaterial" 
                         value={selectedMaterial} 
@@ -171,15 +210,15 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
                     />
                 </div>
            
-                <div className="g-grid-item">
-                    <label className="g-label03">주원료 투입량</label>
-                    <input className="g-item03" type="number" name="mainMaterialInputVolume" value={formData.mainMaterialInputVolume} onChange={handleChange}/>{" "} kg
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel03}>주원료 투입량</label>
+                    <input className={styles.gItem03} type="number" name="mainMaterialInputVolume" value={formData.mainMaterialInputVolume} onChange={handleChange}/>{" "} kg
                 </div>
             
-                <div className="g-grid-item">
-                    <label className="g-label04">맥아종류</label>
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel04}>맥아종류</label>
                     <input 
-                    className="g-item04" 
+                    className={styles.gItem04}
                     type="text" 
                     name="maltType" 
                     value={formData.maltType} 
@@ -187,10 +226,10 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
                     />
                 </div>
             
-                <div className="g-grid-item">
-                    <label className="g-label05">맥아 투입량</label>
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel05}>맥아 투입량</label>
                     <input 
-                    className="g-item05" 
+                    className={styles.gItem05} 
                     type="number" 
                     name="maltInputVolume" 
                     value={formData.maltInputVolume} 
@@ -198,34 +237,35 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
                     /> kg
                 </div>
            
-                <div className="g-grid-item">
-                    <label className="g-label06">분쇄 간격 설정</label>
-                    <input className="g-item06" type="number" name="grindIntervalSetting" value={formData.grindIntervalSetting} readOnly/>{" "} mm
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel06}>분쇄 간격 설정</label>
+                    <input className={styles.gItem06} type="number" name="grindIntervalSetting" value={formData.grindIntervalSetting} readOnly/>{" "} mm
                 </div>
             
-                <div className="g-grid-item">
-                    <label className="g-label07">분쇄 속도 설정</label>
-                    <input className="g-item07" type="number" name="grindSpeedSetting" value={formData.grindSpeedSetting} readOnly/>{" "} RPM
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel07}>분쇄 속도 설정</label>
+                    <input className={styles.gItem07} type="number" name="grindSpeedSetting" value={formData.grindSpeedSetting} readOnly/>{" "} RPM
                 </div>
             
-                <div className="g-grid-item">
-                    <label className="g-label08">소요 시간</label>
-                    <input className="g-item08" type="number" name="grindDuration" value={formData.grindDuration} onChange={handleChange}/>{" "} 분
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel08}>소요 시간</label>
+                    <input className={styles.gItem08} type="number" name="grindDuration" value={formData.grindDuration} onChange={handleChange}/>{" "} 분
                 </div>
            
-                <div className="g-grid-item">
-                    <label className="g-label09">상태 코드</label>
-                    <input className="g-item09" type="text" name="statusCode" value="SC001" disabled />
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel09}>상태 코드</label>
+                    <input className={styles.gItem09} type="text" name="statusCode" value="SC001" disabled />
                 </div>
 
-                <div className="g-grid-item">
-                    <label className="g-label10">공정 상태</label>
-                    <input className="g-item10" type="text" name="processStatus" value={processStatus} disabled />
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel10}>공정 상태</label>
+                    <input className={styles.gItem10} type="text" name="processStatus" value={formData.processStatus} disabled />
                 </div>
 
-                <div className="g-grid-item">
-                    <label className="g-label11">메모 사항</label>
-                    <input className="g-item11" type="text" name="notes" value={formData.notes} onChange={handleChange}/>
+                <div className={styles.gGridItem}>
+                    <label className={styles.gLabel11}>메모 사항</label>
+                    <input className={styles.gItem11} type="text" name="notes" value={formData.notes}
+                     onChange={handleChange}/>
                 </div>
             </div>
         </div>     

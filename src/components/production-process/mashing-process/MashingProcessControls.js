@@ -6,7 +6,8 @@ import ConfirmModal from "../../standard-information/common/ConfirmModal";
 import SuccessfulModal from "../../standard-information/common/SuccessfulModal"; 
 import ErrorModal from "../../standard-information/common/ErrorModal"; 
 import CompleteModal from "../../standard-information/common/CompleteModal";
-//import "../../../styles/production-process/mashingProcess.css";
+import styles from "../../../styles/production-process/MashingProcessControls.module.css";
+
 
 const MashingProcessControls = ({ workOrder }) => {
     const { mashingId } = useParams(); // URL에서 ID 가져오기
@@ -20,6 +21,7 @@ const MashingProcessControls = ({ workOrder }) => {
         waterInputVolume: "",
         processStatus: "대기중", // 초기 상태값
         statusCode: "SC002", // 고정값
+        notes: "",
     });
 
     const [timer, setTimer] = useState(0);
@@ -101,51 +103,68 @@ const MashingProcessControls = ({ workOrder }) => {
     };
 
     return (
-        <form className="mashing-process-form" onSubmit={(e) => e.preventDefault()}>
-            <h2>당화공정</h2>
-
-            {/* 작업지시 ID (수정 불가) */}
-            <label>작업지시 ID</label>
-            <input type="text" value={mashingData.lotNo} readOnly />
-
-            {/* 당화 소요 시간 */}
-            <label>당화 소요 시간</label>
-            <input type="number" name="mashingTime" value={mashingData.mashingTime} onChange={handleChange} />
-
-            {/* 당화 온도 */}
-            <label>당화 온도</label>
-            <input type="number" name="temperature" value={mashingData.temperature} onChange={handleChange} />
-
-            {/* pH값 (타이머 종료 후 활성화) */}
-            <label>pH값</label>
-            <input type="number" name="phValue" value={mashingData.phValue} onChange={handleChange} disabled={!isProcessing && timer > 0} />
-
-            {/* 곡물 대 물 비율 */}
-            <label>곡물 대 물 비율</label>
-            <div>
-                <input type="number" name="grainRatio" value={mashingData.grainRatio} onChange={handleChange} />
-                :
-                <input type="number" name="waterRatio" value={mashingData.waterRatio} onChange={handleChange} />
+        <form className={styles.mashingProcessForm} onSubmit={(e) => e.preventDefault()}>
+            
+            <h2 className={styles.mashingTitle}>당화공정</h2>
+            
+            <div className={styles.mFormGrid}>
+            
+            <div className={styles.mGridItem}>            
+            <label className={styles.mLabel01}>작업지시 ID</label>
+            <input className={styles.mItem01} type="text" value={mashingData.lotNo} readOnly />
             </div>
-
-            {/* 물 투입량 */}
-            <label>물 투입량</label>
-            <input type="number" name="waterInputVolume" value={mashingData.waterInputVolume} onChange={handleChange} />
-
-            {/* 공정 상태 (수정 불가) */}
-            <label>공정 상태</label>
-            <input type="text" value={mashingData.processStatus} readOnly />
-
-            {/* 남은 시간 표시 */}
+            
+            <div className={styles.mGridItem}>
+            <label className={styles.mLabel02}>당화 소요 시간</label>
+            <input className={styles.mItem02} type="number" name="mashingTime" value={mashingData.mashingTime} onChange={handleChange} />
+            </div>
+            
+            <div className={styles.mGridItem}>
+            <label className={styles.mLabel03}>당화 온도</label>
+            <input className={styles.mItem03} type="number" name="temperature" value={mashingData.temperature} onChange={handleChange} />
+            </div>
+            
+            <div className={styles.mGridItem}>
+            <label className={styles.mLabel04}>pH값</label>
+            <input className={styles.mItem04} type="number" name="phValue" value={mashingData.phValue} onChange={handleChange} disabled={!isProcessing && timer > 0} />
+            </div>
+            
+            <div className={styles.mGridItem}>
+            <label className={styles.mLabel05}>곡물 비율</label>   
+                <input className={styles.mItem05} type="number" name="grainRatio" value={mashingData.grainRatio} onChange={handleChange} />
+            <label className={styles.mLabel051}>물 비율</label>
+                <input className={styles.mItem05} type="number" name="waterRatio" value={mashingData.waterRatio} onChange={handleChange} />            
+            </div>
+            
+            <div className={styles.mGridItem}>
+            <label className={styles.mLabel06}>물 투입량</label>
+            <input className={styles.mItem06} type="number" name="waterInputVolume" value={mashingData.waterInputVolume} onChange={handleChange} />
+            </div>
+            
+            <div className={styles.mGridItem}>
+            <label className={styles.mLabel07}>공정 상태</label>
+            <input className={styles.mItem07} type="text" value={mashingData.processStatus} readOnly />
+            </div>
+            
+            <div className={styles.mGridItem}>
+            <label className={styles.mLabel08}>메모 사항</label>
+            <input className={styles.mItem08} type="text" name="notes" value={mashingData.notes} onChange={handleChange}/>
+            </div>
+            
             {timer > 0 && <p>남은시간: {Math.floor(timer / 60)}분 {timer % 60}초</p>}
-
-            {/* 버튼 */}
-            <button onClick={handleButtonClick} disabled={buttonLabel === "등록하기" && timer > 0}>
+            
+            
+            <div className={styles.mGridItem}>
+            <button className={styles.mSaveButton} onClick={handleButtonClick} disabled={buttonLabel === "등록하기" && timer > 0}>
                 {buttonLabel}
+            
             </button>
+            
+            </div>
+            
+           
 
-
-
+           
             <ConfirmModal
                 isOpen={showConfirmModal}
                 message="등록하시겠습니까?"
@@ -176,7 +195,9 @@ const MashingProcessControls = ({ workOrder }) => {
                 ]}
                 onClose={() => setShowCompleteModal(false)}
             />
-        </form>
+        
+        </div>
+    </form> 
     );
 };
 

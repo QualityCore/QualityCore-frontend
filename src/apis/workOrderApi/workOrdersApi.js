@@ -1,10 +1,25 @@
 // 작업지시서 전체 조회
-export const findAllWorkOrders = async () => {
+export const findAllWorkOrders = async (page = 0, size = 13, workTeam = '', productName = '', lotNo = '', lineNo = '', startDate = '', endDate = '') => {
     try {
-        const response = await fetch("http://localhost:8080/api/v1/work");
+        const params = new URLSearchParams();
+        params.append('page', page);
+        params.append('size', size);
+        if (workTeam) params.append('workTeam', workTeam);
+        if (productName) params.append('productName', productName);
+        if (lotNo) params.append('lotNo', lotNo);
+        if (lineNo) params.append('lineNo', lineNo); // lineNo가 숫자인데 문자열로 append 되는 문제 해결
+        if (startDate) params.append('startDate', startDate);
+        if (endDate) params.append('endDate', endDate);
+
+        const url = `http://localhost:8080/api/v1/work?${params.toString()}`;
+        console.log("API 요청 URL:", url);
+
+        const response = await fetch(url);
         const data = await response.json();
+
         console.log('전체 작업지시서 조회 data', data);
-        return data.result.work; // 서버에서 반환된 작업지시서 데이터
+        return data.result;
+
     } catch (error) {
         console.error("Error fetching all work orders:", error);
         throw error;
