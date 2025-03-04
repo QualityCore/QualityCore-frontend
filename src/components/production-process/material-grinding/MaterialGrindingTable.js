@@ -15,6 +15,7 @@ const MaterialGrindingTable = ({ grindingDataList }) => {
                     <th>소요시간</th>
                     <th>상태 코드 ID</th>
                     <th>공정 상태</th>
+                    <th>공정 이름</th>
                     <th>소요 시간</th>
                 </tr>
             </thead>
@@ -31,6 +32,7 @@ const MaterialGrindingTable = ({ grindingDataList }) => {
                         <td>{data.grindDuration}분</td>
                         <td>{data.statusCode}</td>
                         <td>{data.processStatus}</td>
+                        <td>{data.processName}</td>
                         <td>{data.notes}</td>
                     </tr>
                 ))}
