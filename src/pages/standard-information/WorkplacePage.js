@@ -7,7 +7,7 @@ import "../../styles/standard-information/workplace-table.css";
 
 
 
-const WorkplacePage =() => {
+const WorkplacePage = () => {
   const [workplaces,setWorkplaces] = useState([]);
 
   const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8080/standardinformation";

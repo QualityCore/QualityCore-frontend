@@ -1,0 +1,88 @@
+.cardContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 50px;
+    row-gap: 70px;
+    justify-content: center;
+    position: relative;
+    top: 25px;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.card {
+    width: 100%;
+    max-width: 250px;
+    height: 350px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.cardImg {
+    width: 99%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0px;
+}
+
+.cardText {
+    margin-top: 10px;
+    /* ✅ 이미지랑 글씨 사이 여백 */
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.firstText {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.secondText {
+    margin-top: 0px;
+}
+
+.cardImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* ✅ 이미지 크기 고정 */
+    display: block;
+    border-radius: 8px;
+    /* ✅ 카드랑 동일한 둥근 모서리 */
+}
+
+/* ✅ 반응형 처리 */
+@media (max-width: 1024px) {
+    .cardContainer {
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 40px;
+        row-gap: 70px;
+        /* ✅ 줄 간격 유지 */
+    }
+}
+
+@media (max-width: 768px) {
+    .cardContainer {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 35px;
+        row-gap: 60px;
+        /* ✅ 줄 간격 줄이기 */
+    }
+}
+
+@media (max-width: 480px) {
+    .cardContainer {
+        grid-template-columns: repeat(1, 1fr);
+        row-gap: 50px;
+        /* ✅ 작은 화면에서도 줄 간격 확보 */
+    }
+}

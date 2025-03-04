@@ -4,6 +4,9 @@ import { getBeerRecipes, getPlanInfo, createWorkOrder } from "../../apis/workOrd
 import SuccessAnimation from "../../lottie/SuccessNotification";
 import WarningAnimation from "../../lottie/WarningNotification";
 import Modal from "react-modal";
+import JSConfetti from "js-confetti"; // 추가
+
+const jsConfetti = new JSConfetti(); // 인스턴스 한 번만 생성
 
 function WorkCreate() {
     const [beerRecipes, setBeerRecipes] = useState({});
@@ -12,7 +15,7 @@ function WorkCreate() {
     const [isSuccessModal, setIsSuccessModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [isWarningModal, setIsWarningModal] = useState(false);
-    const [warningMessage, setWarningMessage] = useState('');
+    const [warningMessage, setWarningMessage] = useState("");
 
     const etcRef = useRef();
 
@@ -78,11 +81,18 @@ function WorkCreate() {
             if (response && response.status === 201) {
                 setIsSuccessModal(true);
                 setModalMessage("작업 지시서가 성공적으로 생성되었습니다.");
+                console.log("🎉 Confetti 실행!");
+                jsConfetti.addConfetti({
+                    emojis: ["🍺", "🍻"],
+                    emojiSize: 100,
+                    confettiNumber: 150,
+                });
                 setWorkOrders((prevOrders) => prevOrders.filter(order =>
                     order.planId !== planId || order.planLineId !== planLineId || order.planProductId !== planProductId
                 ));
                 setSelectedWorkOrder(null);
                 await fetchWorkOrders(); // 새로 고침
+                // Confetti 실행 후 3초 뒤 비활성화
             } else {
                 alert("작업 지시서 생성에 실패했습니다.");
             }
