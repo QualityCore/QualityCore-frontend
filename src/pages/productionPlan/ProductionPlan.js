@@ -132,8 +132,13 @@ const ProductionPlan = () => {
                       <button 
                           className="action-btn"
                           onClick={() => handleProductionInstruction(plan.planId)}
+                          disabled={plan.status === "확정"} // 상태가 확정이면 버튼 비활성화
+                          style={{
+                              backgroundColor: plan.status === "확정" ? "#cccccc" : "", // 확정 시 회색으로
+                              cursor: plan.status === "확정" ? "not-allowed" : "pointer"
+                          }}
                       >
-                          생산지시
+                          {plan.status === "확정" ? "완료" : "생산지시"}
                       </button>
                   </td>
                     </tr>

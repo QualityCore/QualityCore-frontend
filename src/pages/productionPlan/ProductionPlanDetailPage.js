@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import PremiumBreweryCalendar from '../../components/productionPlan/PremiumBreweryCalendar';
 import ProductionPlanDetailAccordion from '../../components/productionPlan/ProductionPlanDetailAccordion';
 import { fetchProductionPlanDetail } from '../../apis/productionPlanApi/ProductionPlanDetailApi';
-import "../../styles/productionPlan/ProductionPlanDetailPage.css";
+import styles from '../../styles/productionPlan/ProductionPlanDetailPage.module.css';
 
 const ProductionPlanDetailPage = () => {
   const { planId } = useParams();
@@ -37,21 +37,21 @@ const ProductionPlanDetailPage = () => {
   // 로딩 중일 때 표시할 내용
   if (isLoading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p className="loading-text">생산 계획 정보를 불러오는 중입니다...</p>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner}></div>
+        <p className={styles.loadingText}>생산 계획 정보를 불러오는 중입니다...</p>
       </div>
     );
   }
   
-  // 에러가 있을 때 표시할 내용
+  // 에러가 있을 때 표시할 내용  
   if (error) {
     return (
-      <div className="error-container">
-        <div className="error-message">{error}</div>
+      <div className={styles.errorContainer}>
+        <div className={styles.errorMessage}>{error}</div>
         <button 
           onClick={() => window.location.reload()}
-          className="retry-button"
+          className={styles.retryButton}
         >
           다시 시도
         </button>
@@ -62,11 +62,12 @@ const ProductionPlanDetailPage = () => {
   // planDetail이 null일 때 표시할 내용
   if (!planDetail) {
     return (
-      <div className="no-data-container">
-        <p className="no-data-message">생산 계획 정보가 없습니다.</p>
+      <div className={styles.noDataContainer}>
+        <p className={styles.noDataMessage}>생산 계획 정보가 없습니다.</p>
       </div>
     );
   }
+  
   
   // 캘린더 이벤트 생성 - 여기가 중요한 부분입니다
   const calendarEvents = [];
@@ -154,18 +155,18 @@ const ProductionPlanDetailPage = () => {
   }
   
   return (
-    <div className="plan-detail-page">
-      <h1 className="page-title">생산 계획 상세</h1>
+    <div className={styles.planDetailPage}>
+      <h1 className={styles.pageTitle}>생산 계획 상세</h1>
       
       {/* 캘린더 뷰 */}
-      <section className="calendar-section">
-        <h2 className="section-title">생산 일정</h2>
+      <section className={styles.calendarSection}>
+        <h2 className={styles.sectionTitle}>생산 일정</h2>
         <PremiumBreweryCalendar events={calendarEvents} />
       </section>
       
       {/* STEP별 아코디언 섹션 */}
-      <section className="detail-section">
-        <h2 className="section-title">생산 계획 정보</h2>
+      <section className={styles.detailSection}>  
+        <h2 className={styles.sectionTitle}>생산 계획 정보</h2>
         <ProductionPlanDetailAccordion planDetail={planDetail} />
       </section>
     </div>
