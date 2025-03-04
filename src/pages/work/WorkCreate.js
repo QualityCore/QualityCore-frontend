@@ -67,21 +67,21 @@ function WorkCreate() {
 
 
         const workOrderData = {
-            workProgress: "0%",  // 기본값
-            workEtc: document.querySelector(".etc").value, // 특이사항 입력값
-            empId: "EMP001", // 하드코딩된 직원 ID
+            workProgress: "0%",
+            workEtc: document.querySelector(".etc").value,
+            empId: "EMP001",
             status: "생산지시완료",
-            planId: selectedWorkOrder.planId, // 선택된 생산 계획 ID
-            planLineId: selectedWorkOrder.planLineId,  // 안전하게 가져온 생산라인 ID
-            planProductId: selectedWorkOrder.planProductId, // planProduct의 ID만 사용
-            trackingId: "PT00001", // 하드코딩된 추적 ID
+            planId: selectedWorkOrder.planId,
+            planLineId: selectedWorkOrder.planLineId,
+            planProductId: selectedWorkOrder.planProductId,
+            trackingId: "PT00001",
             lineMaterials: mergedRecipe.map((material) => ({
                 materialName: material.materialName,
                 materialType: material.materialType,
                 unit: material.unit,
-                requiredQtyPerUnit: material.quantity, // 개당 투입량
+                requiredQtyPerUnit: material.quantity,
                 processStep: material.processStep,
-                totalQty: Math.round(material.quantity * selectedWorkOrder.planQty) // 총 투입량
+                totalQty: Math.round(material.quantity * selectedWorkOrder.planQty)
             }))
         };
 
