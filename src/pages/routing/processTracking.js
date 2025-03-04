@@ -16,9 +16,9 @@ const ProcessTrackingPage = () => {
     { name: '냉각', title: '냉각 공정' },
     { name: '발효', title: '발효 공정' },
     { name: '숙성', title: '숙성 공정' },
-    { name: '숙성후여과', title: '숙성 후 여과 공정' },
+    { name: '숙성 후 여과', title: '숙성 후 여과 공정' },
     { name: '탄산 조정', title: '탄산 조정 공정' },
-    { name: '패키징', title: '패키징 및 출하 공정' }
+    { name: '패키징 및 출하', title: '패키징 및 출하 공정' }
   ];
 
   // 공정 상태 옵션
