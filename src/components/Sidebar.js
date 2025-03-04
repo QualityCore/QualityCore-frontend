@@ -81,7 +81,7 @@ const Sidebar = () => {
             <ul className="submenu">
               <li><Link to="/plan-overview">생산계획 조회</Link></li>
               <li><Link to="/plan-generate">생산계획 생성</Link></li>
-              <li><Link to="/plan-material">자재 구매신청</Link></li>
+              <li><Link to="/material">자재 관리</Link></li>
             </ul>
           )}
         </li>
@@ -132,7 +132,7 @@ const Sidebar = () => {
           {openCategory === "Routing" && (
             <ul className="submenu">
               <li><Link to="/routing-input">공정별 생산투입</Link></li>
-              <li><Link to="/routing-progress">공정 진행 현황</Link></li>
+              <li><Link to="/processTracking">공정 진행 현황</Link></li>
             </ul>
           )}
         </li>

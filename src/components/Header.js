@@ -25,7 +25,7 @@ const Header = () => {
       // 생산계획
       '/plan-overview': { main: '생산계획', sub: '생산계획 조회' },
       '/plan-generate': { main: '생산계획', sub: '생산계획 생성' },
-      '/plan-material': { main: '생산계획', sub: '자재 구매신청' },
+      '/material': { main: '생산계획', sub: '자재 관리' },
 
       // 작업지시
       '/work/orders': { main: '작업지시', sub: '작업지시서 관리' },
@@ -48,7 +48,7 @@ const Header = () => {
 
       // Routing 관리
       '/routing-input': { main: 'Routing 관리', sub: '공정별 생산투입' },
-      '/routing-progress': { main: 'Routing 관리', sub: '공정 진행 현황' },
+      '/processTracking': { main: 'Routing 관리', sub: '공정 진행 현황' },
 
       // 생산실적 관리
       '/performance-summary': { main: '생산실적 관리', sub: '기간별 생산실적' },
