@@ -153,30 +153,30 @@ const MaterialGrindingForm = ({ grindingData,setGrindingData }) => {
         });
     };
 
-    const handleRegister = async () => {
-        try {
-            console.log("📌 등록 요청 데이터:", formData);
+    // const handleRegister = async () => {
+    //     try {
+    //         console.log("📌 등록 요청 데이터:", formData);
             
-            // ✅ 서버로 데이터 전송 (등록 요청)
-            const response = await materialGrindingApi.saveGrindingData(formData);
+    //         // ✅ 서버로 데이터 전송 (등록 요청)
+    //         const response = await materialGrindingApi.saveGrindingData(formData);
             
-            console.log("📌 등록 응답 데이터:", response);
+    //         console.log("📌 등록 응답 데이터:", response);
     
-            if (response.code === 200) {
-                alert("✅ 등록이 완료되었습니다!");
-                setFormData(prev => ({
-                    ...prev,
-                    processStatus: "등록 완료"
-                }));
-            } else {
-                console.error("❌ 등록 실패:", response.message);
-                alert(`등록 실패: ${response.message}`);
-            }
-        } catch (error) {
-            console.error("❌ 등록 요청 중 오류 발생:", error);
-            alert("등록 요청 중 오류가 발생했습니다.");
-        }
-    };
+    //         if (response.code === 200) {
+    //             alert("✅ 등록이 완료되었습니다!");
+    //             setFormData(prev => ({
+    //                 ...prev,
+    //                 processStatus: "등록 완료"
+    //             }));
+    //         } else {
+    //             console.error("❌ 등록 실패:", response.message);
+    //             alert(`등록 실패: ${response.message}`);
+    //         }
+    //     } catch (error) {
+    //         console.error("❌ 등록 요청 중 오류 발생:", error);
+    //         alert("등록 요청 중 오류가 발생했습니다.");
+    //     }
+    // };
     
 
     return (

@@ -40,10 +40,10 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
     };                            
    
     
-      const formatDate = (date) => {              
-        if (!date) return "N/A";              
-        return new Date(date).toISOString().replace("T", " ").split(".")[0];       
-      };
+      // const formatDate = (date) => {              
+      //   if (!date) return "N/A";              
+      //   return new Date(date).toISOString().replace("T", " ").split(".")[0];       
+      // };
        
     
       const handleSave = async () => {                        

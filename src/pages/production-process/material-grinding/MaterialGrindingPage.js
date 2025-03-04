@@ -15,6 +15,7 @@ const MaterialGrindingPage = () => {
         grindDuration: "1",   
         statusCode : "SC001",
         processStatus: "대기중",
+        processName: "분쇄",
         notes: "",
     });
 
