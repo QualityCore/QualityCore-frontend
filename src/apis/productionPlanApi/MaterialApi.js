@@ -25,8 +25,24 @@ export const getMaterialRequests = async () => {
 
 export const requestMaterial = async (requestData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/request`, requestData);
-    return response.data;
+    // ✅ 기존 자재 요청 (planMaterialId가 있는 경우)
+    if (requestData.planMaterialId) {
+      const response = await axios.post(`${BASE_URL}/request`, requestData);
+      return response.data;
+    } 
+    // ✅ 신규 자재 요청 (planMaterialId가 없는 경우)
+    else {
+      const newRequestData = {
+        materialId: requestData.materialId, // 신규 자재 ID
+        materialName: requestData.materialName, // 신규 자재명
+        requestQty: requestData.requestQty,
+        deliveryDate: requestData.deliveryDate,
+        reason: requestData.reason,
+        note: requestData.note,
+      };
+      const response = await axios.post(`${BASE_URL}/request`, newRequestData);
+      return response.data;
+    }
   } catch (error) {
     console.error('자재 구매 신청 실패:', error);
     throw error;
