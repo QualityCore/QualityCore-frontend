@@ -36,12 +36,12 @@
 .mainbar {
     background-color: white;
     width: 1435px;
-    height: 720px;
+    height: 680px;
     margin-left: 55px;
     margin-top: 25px;
-    padding-left: 15px;
+    padding-left: 10px;
     border-radius: 10px;
-    padding-top: 20px;
+    padding-top: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -50,6 +50,7 @@
     margin-top: 5px;
     border-collapse: collapse;
     margin-left: 15px;
+    cursor: pointer;
 }
 
 .workOrderTable th,
@@ -114,77 +115,38 @@
     width: 100px;
 }
 
-/* 진행률 */
-.progress_container {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    height: 20px;
-    /* 높이 설정 */
+.searchBar {
+    display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 20px;
+        margin-left: 400px;
 }
 
-/* 진행률 바 */
-.progress_bar {
-    height: 100%;
-    background-color: rgb(145, 100, 148);
-    /* 기본 색상 */
-    text-align: center;
-    line-height: 20px;
-    /* 텍스트 세로 정렬 */
-    color: white;
-    font-size: 12px;
+.noResults{
+    margin-left: 650px;
     font-weight: bold;
-    transition: width 0.3s ease-in-out;
-    /* 부드러운 애니메이션 */
-}
-
-/* 진행률 값에 따라 너비를 동적으로 설정 */
-.progress_bar[data-progress="100"] {
-    width: 100%;
-}
-
-.progress_bar[data-progress="87.5"] {
-    width: 87.5%;
-}
-
-.progress_bar[data-progress="75"] {
-    width: 75%;
-}
-
-.progress_bar[data-progress="62.5"] {
-    width: 62.5%;
-}
-
-.progress_bar[data-progress="30"] {
-    width: 50%;
-}
-
-.progress_bar[data-progress="15"] {
-    width: 37.5%;
-}
-
-.progress_bar[data-progress="15"] {
-    width: 25%;
-}
-
-.progress_bar[data-progress="12.5"] {
-    width: 12.5%;
-}
-
-.progress_bar[data-progress="0"] {
-    width: 0%;
 }
 
 .searchInput {
-    margin-left: 1225px;
     width: 200px;
     height: 25px;
-    margin-top: 25px;
     padding: 2px;
+    font-family: 'Paperlogy';
+    font-weight: bold;
 }
 
-/* 검색버튼 */
+/* workOrders.module.css */
+.selectSearch {
+    width: 100px;
+    height: 32px;
+    padding: 5px;
+    font-size: 14px;
+    font-family: 'Paperlogy';
+    font-weight: bold;
+}
+
 .searchButton {
     padding: 7px 9px;
     height: 35px;
@@ -196,6 +158,22 @@
     border-radius: 5px;
 }
 
+.searchRefresh {
+    padding: 7px 9px;
+    height: 35px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 15px;
+    border: 1px solid;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.searchRefresh:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
 .searchButton:hover {
     background-color: #45a049;
     transform: scale(1.05);
@@ -205,4 +183,290 @@
 .searchButton:active {
     background-color: #3e8e41;
     transform: scale(0.95);
+}
+
+/* 모달 오버레이 */
+.modalOverlay {
+    position: fixed; /* 화면 전체에 고정 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    z-index: 9999; /* 다른 요소들 위에 표시 */
+}
+
+/* 모달 콘텐츠 */
+.modal {
+    position: relative;
+    background: rgb(255, 255, 255);
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 1005px;
+    width: 80%;
+    height: 600px;
+    overflow: auto;
+    outline: none;
+}
+
+/* 닫기 버튼 */
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    padding: 10px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.detailTable,
+.dateTable,
+.productTable,
+.materialTable {
+    width: 98%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    margin-left: 10px;
+}
+
+.detailTable td,
+.dateTable td,
+.productTable td,
+.materialTable td {
+    padding: 10px;
+    border: 1px solid #ddd; /* 셀 테두리 */
+}
+
+.productTable th,
+.detailTable th,
+.dateTable th,
+.materialTable th {
+    padding: 10px;
+    background-color: #f0f0f0; /* 회색 배경 */
+    text-align: left;
+    border: 1px solid #ddd; /* 셀 테두리 */
+}
+
+.modalContent {
+    position: absolute;
+    inset: 40px;
+    background: rgb(255, 255, 255);
+    overflow: auto;
+    border-radius: 4px;
+    outline: none;
+    padding: 20px;
+    width: 500px;
+    height: 500px;
+}
+
+.detailTable, .dateTable {
+    margin: 10px;
+    border-collapse: collapse;
+}
+
+.dateTable {
+    width: 450px;
+    text-align: center;
+}
+
+.detailTable {
+    width: 450px;
+    text-align: center;
+}
+
+.productTable, .materialTable {
+    text-align: center;
+}
+
+.detailTable td, .dateTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.productTable th, .materialTable th {
+    padding: 10px;
+    background-color: #c4c3c3; /* 회색 배경 */
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 25px;
+    margin-left: 10px;
+}
+
+.tableWrapper {
+    display: flex;
+    justify-content: space-between; /* 두 테이블을 양옆으로 배치 */
+}
+
+.etc {
+    margin-left: 10px;
+    width: 975px;
+    height: 180px;
+}
+
+.oneTd{
+    padding: 10px;
+    background-color: #c4c3c3; /* 회색 배경 */
+    border: 1px solid #ddd;
+    text-align: center;
+    font-weight: bold;
+}
+
+.twoTd{
+    padding: 10px;
+    background-color: #c4c3c3; /* 회색 배경 */
+    border: 1px solid #ddd;
+    text-align: center;
+    font-weight: bold;
+}
+
+.threeTd{
+    padding: 10px;
+    background-color: #c4c3c3; /* 회색 배경 */
+    border: 1px solid #ddd;
+    text-align: center;
+    font-weight: bold;
+}
+
+.fourTd{
+    padding: 10px;
+    background-color: #c4c3c3; /* 회색 배경 */
+    border: 1px solid #ddd;
+    text-align: center;
+    font-weight: bold;
+}
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 왼쪽과 오른쪽을 공간에 맞춰 배치 */
+    width: 100%;
+}
+
+.title {
+    text-align: left;
+    margin: 0;
+    margin-left: 430px;
+}
+
+.pdfButton{
+    background: #FF6567;
+    color: white;
+    border: none;
+    margin-right: 55px;
+    width: 150px;
+    height: 33px;
+    border-radius: 10px;
+    font-family: 'Castoro Titling';
+    font: caption;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.pdfButton:hover {
+    background-color: #e05053;
+    transform: scale(1.05);
+}
+
+.deleteButton{
+    padding: 7px 9px;
+    width: 74px;
+    height: 35px;
+    background-color: #f44336;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 920px;
+    margin-top: 5px
+}
+
+.deleteButton:hover {
+    background-color: #e53935;
+} 
+
+/* 성공 알림 모달 */
+.successModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 37%;
+    left: 52%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+}
+
+
+.successModalOverlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.successModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.successCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.successModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.successModalContent {
+    padding: 20px;
+}
+
+.successCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 375px;
+}
+
+.successMessage {
+    margin-left: 35px;
+    font-size: large;
+    font-family: emoji;
+    font-weight: bold;
 }
