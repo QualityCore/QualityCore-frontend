@@ -1,0 +1,117 @@
+/* MaterialManagementPage.module.css */
+.container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 190px);
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  color: #2B3674;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  border-bottom: 2px solid #E2E8F0;
+  padding-bottom: 0.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 2rem;
+}
+
+.table th {
+  background-color: #F4F7FE;
+  color: #2D3748;
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #E2E8F0;
+  font-weight: 600;
+}
+
+.table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #E2E8F0;
+  font-size: 0.9rem;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.requestForm {
+  background-color: #F4F7FE;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-size: 0.9rem;
+  color: #2D3748;
+  font-weight: 600;
+}
+
+.formGroup input {
+  background-color: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.submitButton {
+  background-color: #5687F2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.submitButton:hover {
+  background-color: #4176E0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+}
+
+/* 애니메이션 추가 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.table, .requestForm {
+  animation: fadeIn 0.5s ease-out;
+}

@@ -280,9 +280,9 @@ button:disabled {
 .process-stage.냉각.active .process-tracking-card[data-status="진행 중"] { background-color: #6366F1; }
 .process-stage.발효.active .process-tracking-card[data-status="진행 중"] { background-color: #8B5CF6; }
 .process-stage.숙성.active .process-tracking-card[data-status="진행 중"] { background-color: #14B8A6; }
-.process-stage.숙성후여과.active .process-tracking-card[data-status="진행 중"] { background-color: #EC4899; }
+.process-stage.숙성-후-여과.active .process-tracking-card[data-status="진행 중"] { background-color: #EC4899; }
 .process-stage.탄산-조정.active .process-tracking-card[data-status="진행 중"] { background-color: #22D3EE; }
-.process-stage.패키징.active .process-tracking-card[data-status="진행 중"] { background-color: #64748B; }
+.process-stage.패키징-및-출하.active .process-tracking-card[data-status="진행 중"] { background-color: #64748B; }
 
 /* 진행 중인 카드의 텍스트 색상 조정 */
 .process-tracking-card[data-status="진행 중"] .card-header,

@@ -12,7 +12,10 @@ import ProductionPlanSteps from "./pages/productionPlan/ProductionPlanSteps"
 import ProductionPlanDetailPage from "./pages/productionPlan/ProductionPlanDetailPage";
 import MaterialGrindingPage from "./pages/production-process/material-grinding/MaterialGrindingPage";
 import MashingProcessPage from "./pages/production-process/mashing-process/MashingProcessPage";
+import ProcessTrackingPage from "./pages/routing/processTracking";
+import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
+
 
 
 const App = () => {
@@ -33,6 +36,8 @@ const App = () => {
               <Route path="/plan-overview" element={<ProductionPlan />} />
               <Route path="/detail/:planId" element={<ProductionPlanDetailPage />} />
               <Route path="/plan-generate" element={<ProductionPlanSteps />} />
+              <Route path="/processTracking" element={<ProcessTrackingPage />} />
+              <Route path="/material" element={<MaterialManagementPage />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/work/orders" element={<WorkOrder />} />
               <Route path="/work/create" element={<WorkCreate />} />
@@ -40,6 +45,7 @@ const App = () => {
               <Route path="/material-grinding" element={<MaterialGrindingPage />} />
               <Route path="/mashing-process" element={<MashingProcessPage />} />
               <Route path="/process-stage" element={<ProcessStage />} />
+
             </Routes>
           </div>
         </div>
