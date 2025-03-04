@@ -14,6 +14,9 @@ import MaterialGrindingPage from "./pages/production-process/material-grinding/M
 import MashingProcessPage from "./pages/production-process/mashing-process/MashingProcessPage";
 import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
+import ProcessStage from "./components/standard-information/ProcessStage";
+
+
 
 const App = () => {
   return (
@@ -41,6 +44,8 @@ const App = () => {
               <Route path="/workplace" element={<WorkplacePage />} />
               <Route path="/material-grinding" element={<MaterialGrindingPage />} />
               <Route path="/mashing-process" element={<MashingProcessPage />} />
+              <Route path="/process-stage" element={<ProcessStage />} />
+
             </Routes>
           </div>
         </div>
