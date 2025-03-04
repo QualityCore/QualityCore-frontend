@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, ChevronLeft, ChevronRight, Filter, AlertCircle } from 'lucide-react';
-import "../../styles/productionPlan/BreweryCalendar.css";
+import styles from "../../styles/productionPlan/BreweryCalendar.module.css";
 
 const PremiumBreweryCalendar = ({ events = [] }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -95,57 +95,57 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
   };
   
   return (
-    <div className="calendar-container">
+    <div className={styles.calendarContainer}>
       {/* 캘린더 헤더 */}
-      <div className="calendar-header">
-        <div className="calendar-header-top">
-          <div className="calendar-title">
-            <Calendar className="calendar-icon" />
+      <div className={styles.calendarHeader}>
+        <div className={styles.calendarHeaderTop}>
+          <div className={styles.calendarTitle}>
+            <Calendar className={styles.calendarIcon} />
             <h3>생산 공정 일정</h3>
           </div>
           
-          <div className="calendar-controls">
+          <div className={styles.calendarControls}>
             <button 
               onClick={navigatePrevious}
-              className="calendar-button"
+              className={styles.calendarButton}
             >
               <ChevronLeft />
             </button>
             
             <button
               onClick={() => setCurrentDate(new Date())}
-              className="today-button"
+              className={styles.todayButton}
             >
               오늘
             </button>
             
             <button 
               onClick={navigateNext}
-              className="calendar-button"
+              className={styles.calendarButton}
             >
               <ChevronRight />
             </button>
           </div>
         </div>
         
-        <div className="calendar-header-bottom">
-          <div className="view-buttons">
+        <div className={styles.calendarHeaderBottom}>
+          <div className={styles.viewButtons}>
             <button 
               onClick={() => setCalendarView('day')}
-              className={`view-button ${calendarView === 'day' ? 'active' : ''}`}
+              className={`${styles.viewButton} ${calendarView === 'day' ? styles.active : ''}`}
             >
               일간
             </button>
             <button 
               onClick={() => setCalendarView('week')}
-              className={`view-button ${calendarView === 'week' ? 'active' : ''}`}
+              className={`${styles.viewButton} ${calendarView === 'week' ? styles.active : ''}`}
             >
               주간
             </button>
           </div>
           
           <div>
-            <span className="date-range">
+            <span className={styles.dateRange}>
               {calendarView === 'week'
                 ? `${weekDays[0]} ~ ${weekDays[6]}`
                 : formatDate(currentDate)
@@ -157,13 +157,13 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
       
       {/* 주간 뷰 */}
       {calendarView === 'week' && (
-        <div className="calendar-content">
-          <div className="calendar-grid">
+        <div className={styles.calendarContent}>
+          <div className={styles.calendarGrid}>
             {/* 요일 헤더 */}
-            <div className="calendar-day-header">
-              <div className="day-header-cell">시간</div>
+            <div className={styles.calendarDayHeader}>
+              <div className={styles.dayHeaderCell}>시간</div>
               {weekDays.map(day => (
-                <div key={day} className="day-header-cell">
+                <div key={day} className={styles.dayHeaderCell}>
                   {day.split('-')[2]}일 ({getDayName(day)})
                 </div>
               ))}
@@ -171,9 +171,9 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
             
             {/* 시간 행 */}
             {hourRange.map(hour => (
-              <div key={hour} className="time-row">
+              <div key={hour} className={styles.timeRow}>
                 {/* 시간 셀 */}
-                <div className="time-cell">
+                <div className={styles.timeCell}>
                   {hour}:00
                 </div>
                 
@@ -182,21 +182,21 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
                   const timeSlotEvents = getEventsForTimeSlot(day, hour);
                   
                   return (
-                    <div key={`${day}-${hour}`} className="day-cell">
+                    <div key={`${day}-${hour}`} className={styles.dayCell}>
                       {timeSlotEvents.length > 0 && (
-                        <div className="event-list">
+                        <div className={styles.eventList}>
                           {timeSlotEvents.map(event => (
                             <div 
                               key={event.id}
-                              className="event"
+                              className={styles.event}
                               style={{ 
                                 backgroundColor: event.backgroundColor || '#E3F2FD',
                                 color: event.textColor || '#1E40AF'
                               }}
                               onClick={() => handleEventClick(event)}
                             >
-                              <div className="event-title">{event.productName} - {event.process}</div>
-                              <div className="event-info">
+                              <div className={styles.eventTitle}>{event.productName} - {event.process}</div>
+                              <div className={styles.eventInfo}>
                                 라인 {event.lineNo} | 배치 {event.batchNo}
                               </div>
                             </div>
@@ -214,46 +214,46 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
       
       {/* 일간 뷰 */}
       {calendarView === 'day' && (
-        <div className="day-view">
-          <div className="day-container">
-            <div className="day-header">
+        <div className={styles.dayView}>
+          <div className={styles.dayContainer}>
+            <div className={styles.dayHeader}>
               {formatDate(currentDate)} ({getDayName(currentDate)})
             </div>
             
-            <div className="day-content">
+            <div className={styles.dayContent}>
               {hourRange.map(hour => {
                 const timeSlotEvents = getEventsForTimeSlot(formatDate(currentDate), hour);
                 
                 return (
-                  <div key={hour} className="time-slot">
-                    <div className="time-label">
+                  <div key={hour} className={styles.timeSlot}>
+                    <div className={styles.timeLabel}>
                       {hour}:00
                     </div>
-                    <div className="time-content">
+                    <div className={styles.timeContent}>
                       {timeSlotEvents.length > 0 ? (
-                        <div className="time-event-list">
+                        <div className={styles.timeEventList}>
                           {timeSlotEvents.map(event => (
                             <div 
                               key={event.id}
-                              className="time-event"
+                              className={styles.timeEvent}
                               style={{ 
                                 backgroundColor: event.backgroundColor || '#E3F2FD',
                                 color: event.textColor || '#1E40AF'
                               }}
                               onClick={() => handleEventClick(event)}
                             >
-                              <div className="time-event-title">{event.productName} - {event.process}</div>
-                              <div className="time-event-time">
+                              <div className={styles.timeEventTitle}>{event.productName} - {event.process}</div>
+                              <div className={styles.timeEventTime}>
                                 {formatTimeDisplay(event.start)} - {formatTimeDisplay(event.end)}
                               </div>
-                              <div className="time-event-info">
+                              <div className={styles.timeEventInfo}>
                                 라인 {event.lineNo} | 배치 {event.batchNo}
                               </div>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="time-slot-empty"></div>
+                        <div className={styles.timeSlotEmpty}></div>
                       )}
                     </div>
                   </div>
@@ -265,30 +265,30 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
       )}
       
       {/* 범례 */}
-      <div className="legend">
-        <div className="legend-header">
-          <AlertCircle className="legend-icon" />
-          <h4 className="legend-title">공정 범례</h4>
+      <div className={styles.legend}>
+        <div className={styles.legendHeader}>
+          <AlertCircle className={styles.legendIcon} />
+          <h4 className={styles.legendTitle}>공정 범례</h4>
         </div>
-        <div className="legend-items">
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#E3F2FD' }}></div>
+        <div className={styles.legendItems}>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: '#E3F2FD' }}></div>
             <span>분쇄</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#FFEBEE' }}></div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: '#FFEBEE' }}></div>
             <span>당화</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#E8F5E9' }}></div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: '#E8F5E9' }}></div>
             <span>여과</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#FFF8E1' }}></div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: '#FFF8E1' }}></div>
             <span>발효</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#F3E5F5' }}></div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: '#F3E5F5' }}></div>
             <span>숙성</span>
           </div>
         </div>
@@ -298,20 +298,20 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
       {showDetailModal && selectedEvent && (
         <>
           <div 
-            className="modal-backdrop"
+            className={styles.modalBackdrop}
             onClick={() => setShowDetailModal(false)}
           ></div>
-          <div className="modal">
-            <h3 className="modal-title">{selectedEvent.productName} - {selectedEvent.process}</h3>
-            <div className="modal-content">
-              <p><span className="modal-label">맥주 타입:</span> {selectedEvent.beerType}</p>
-              <p><span className="modal-label">라인 번호:</span> {selectedEvent.lineNo}</p>
-              <p><span className="modal-label">배치 번호:</span> {selectedEvent.batchNo}</p>
-              <p><span className="modal-label">시작:</span> {new Date(selectedEvent.start).toLocaleString()}</p>
-              <p><span className="modal-label">종료:</span> {new Date(selectedEvent.end).toLocaleString()}</p>
+          <div className={styles.modal}>
+            <h3 className={styles.modalTitle}>{selectedEvent.productName} - {selectedEvent.process}</h3>
+            <div className={styles.modalContent}>
+              <p><span className={styles.modalLabel}>맥주 타입:</span> {selectedEvent.beerType}</p>
+              <p><span className={styles.modalLabel}>라인 번호:</span> {selectedEvent.lineNo}</p>
+              <p><span className={styles.modalLabel}>배치 번호:</span> {selectedEvent.batchNo}</p>
+              <p><span className={styles.modalLabel}>시작:</span> {new Date(selectedEvent.start).toLocaleString()}</p>
+              <p><span className={styles.modalLabel}>종료:</span> {new Date(selectedEvent.end).toLocaleString()}</p>
             </div>
             <button 
-              className="modal-button"
+              className={styles.modalButton}
               onClick={() => setShowDetailModal(false)}
             >
               닫기
