@@ -12,15 +12,15 @@
     z-index: 9999;
 }
   
-.modal-content {
+.modalContent {
     background: white;
     padding: 12px;
     border-radius: 15px;
     text-align: center;
-    min-width: 350px;
+    min-width: 200px;
 }
   
-.m-confirm-btn {
+.mConfirmBtn {
     background: green;
     color: white;
     padding: 10px 20px;
@@ -30,7 +30,7 @@
     border-radius: 5px;
 }
   
-.m-cancel-btn {
+.mCancelBtn {
     background: red;
     color: white;
     padding: 10px 20px;
@@ -40,53 +40,54 @@
     border-radius: 5px;
 }
   
-.modal-f-message{
+.modalFMessage{
     color: red;  
 }
 
-.modal-s-message{
-    color: orange;  
+.modalSMessage{
+    color: orange;
+      
 }
 
-.caution-animation {
+.cautionAnimation {
     width: 150px; /* 크기 조절 */
     height: 150px;
     margin: 0 auto 20px; /* 중앙 정렬 */
 }
 
-.deleteMdal{
+.deleteModal{
     width: 200px; /* 크기 조절 */
-    height: 30px;
-    margin: 0 auto 20px; /* 중앙 정렬 */
+    height: 40px;
+    margin: 0 auto 10px; /* 중앙 정렬 */
     text-align: center;
     
 }
   
-.success-animation{
-  width: 150px;
-  height: 150px;
+.successAnimation{
+  width: 400px;
+  height: 200px;
   margin: 0 auto 20px;
 }
 
-.warning-animation{
- width: 200px;
+.warningAnimation{
+ width: 400px;
  height: 200px;
  margin: 0 auto 20px; 
 }
 
-.confirm-animation{
- width: 200px;
+.confirmAnimation{
+ width: 400px;
  height: 200px;
  margin: 0 auto 20px; 
 }
 
-.complete-animation{
-    width: 200px;
+.completeAnimation{
+    width: 400px;
     height: 200px;
     margin: 0 auto 20px;
 }
 
-.beer-container {
+.beerContainer {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -94,6 +95,9 @@
     background-color: #f8f8f8;
   }
   
-  #beer-liquid {
+  #beerLiquid {
     transition: height 3s ease-in-out;
   }
+
+   
+   
