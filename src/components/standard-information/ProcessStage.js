@@ -5,7 +5,7 @@ function ProcessStage() {
 
     return (
         <div className={processStage.mainContainer}>
-            <button className={processStage.createButton}>dd</button>
+            <button className={processStage.createButton}>등록</button>
             <div className={processStage.cardContainer}>
                 <div className={processStage.card}>
                     <img src="/images/11.webp" alt="분쇄 및 원재료 투입" className={processStage.cardImg} />

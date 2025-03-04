@@ -41,6 +41,25 @@
     color: #333;
 }
 
+.createButton {
+    margin-left: 1458px;
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: -8px 16px;
+    width: 60px;
+    height: 40px;
+}
+
+.createButton:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
 .firstText {
     font-weight: bold;
     font-size: larger;
