@@ -13,11 +13,11 @@ const MashingProcessControls = ({ workOrder }) => {
     const { mashingId } = useParams(); // URL에서 ID 가져오기
     const [mashingData, setMashingData] = useState({
         lotNo: workOrder?.lotNo || "", // 작업지시 ID 자동 불러오기
-        mashingTime: "",
-        temperature: "",
+        mashingTime: "50",
+        temperature: "65",
         phValue: "",
-        grainRatio: "",
-        waterRatio: "",
+        grainRatio: "", // 곡물 비율
+        waterRatio: "", // 물 비율
         waterInputVolume: "",
         processStatus: "대기중", // 초기 상태값
         statusCode: "SC002", // 고정값
@@ -43,7 +43,7 @@ const MashingProcessControls = ({ workOrder }) => {
     const startTimer = () => {
         console.log("⏳ 타이머 시작됨, mashingTime:", mashingData.mashingTime);
 
-        const totalTime = process.env.NODE_ENV === "development" ? 10 : Number(mashingData.mashingTime) * 60;
+        const totalTime = process.env.NODE_ENV === "development" ? 5 : Number(mashingData.mashingTime) * 60;
         setTimer(totalTime);
         setIsProcessing(true);
         setMashingData((prev) => ({ ...prev, processStatus: "진행중" }));
@@ -143,7 +143,7 @@ const MashingProcessControls = ({ workOrder }) => {
             
             <div className={styles.mGridItem}>
             <label className={styles.mLabel07}>공정 상태</label>
-            <input className={styles.mItem07} type="text" value={mashingData.processStatus} readOnly />
+            <input className={styles.mItem07} type="text" value={mashingData.processStatus} disabled />
             </div>
             
             <div className={styles.mGridItem}>

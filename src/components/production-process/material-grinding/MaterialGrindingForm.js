@@ -278,7 +278,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           분
         </div>
 
-        <div className={styles.gGridItem}>
+        {/* <div className={styles.gGridItem}>
           <label className={styles.gLabel09}>상태 코드</label>
           <input
             className={styles.gItem09}
@@ -287,7 +287,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
             value="SC001"
             disabled
           />
-        </div>
+        </div> */}
 
         <div className={styles.gGridItem}>
           <label className={styles.gLabel10}>공정 상태</label>

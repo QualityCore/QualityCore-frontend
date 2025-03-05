@@ -16,7 +16,7 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
   const [timer, setTimer] = useState(0);
   const navigate = useNavigate();
   const [buttonLabel, setButtonLabel] = useState("등록하기");
-  const [processStatus, setProcessStatus] = useState( grindingData.processStatus || "대기 중");
+  const [processStatus, setProcessStatus] = useState( grindingData.processStatus || "대기 중"); 
   
 
 
@@ -32,8 +32,8 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
       setTimerStarted(false); // 모달이 뜬 후 타이머 상태 리셋
 
       // ✅ 타이머 완료 후 "완료" 상태 변경
-      setProcessStatus("완료");
-      setGrindingData((prev) => ({ ...prev, processStatus: "완료" }));
+      setProcessStatus("진행중");
+      setGrindingData((prev) => ({ ...prev, processStatus: "진행중" }));
     }
   }, [timer, timerStarted]); // 상태체크
 
@@ -103,7 +103,7 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
     } else if (buttonLabel === "다음공정 이동") {
       setGrindingData((prev) => ({
         ...prev,
-        processStatus: "완료",
+        processStatus: "대기중",
       }));
       navigate("/mashing-process");
     }
