@@ -5,16 +5,17 @@ import styles from "../../../styles/production-process/MaterialGrindingControls.
 
 const MaterialGrindingPage = () => {
     const [grindingData, setGrindingData] = useState({
-        lotNo : "LOT",
-        mainMaterial: "보리",
+        lotNo : "",
+        mainMaterial: "",
         mainMaterialInputVolume: "",
-        maltType: "페일 몰트",
+        maltType: "",
         maltInputVolume: "",
         grindIntervalSetting: "",
         grindSpeedSetting: "",
-        grindDuration: "1",   
+        grindDuration: "40",   
         statusCode : "SC001",
         processStatus: "대기중",
+        processName: "분쇄",
         notes: "",
     });
 
