@@ -1,0 +1,198 @@
+
+
+.materialGrindingContainer {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    min-height: calc(100vh - 190px);
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+  }
+  
+  .pageTitle {
+    font-size: 1.5rem;
+    color: #2B3674;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .pageDescription {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-bottom: 1.5rem;
+  }
+  
+  .searchBar {
+    display: flex;
+    margin-bottom: 1.5rem;
+    background-color: #F4F7FE;
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+  
+  .searchForm {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .searchFilter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+  }
+  
+  .searchFilter label {
+    font-size: 0.8rem;
+    color: #2D3748;
+    font-weight: 600;
+  }
+  
+  .searchFilter input, .searchFilter select {
+    background-color: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .searchBar button {
+    background-color: #2B6CB0;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 40px;
+  }
+  
+  .searchBar button:hover {
+    background-color: #2C5282;
+    transform: translateY(-2px);
+  }
+  
+  .clearButton {
+    background-color: #E2E8F0 !important;
+    color: #4A5568 !important;
+  }
+  
+  .clearButton:hover {
+    background-color: #CBD5E0 !important;
+  }
+  
+  .tableContainer {
+    overflow-x: auto;
+  }
+  
+  .materialGrindingTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+  }
+  
+  .materialGrindingTable th {
+    background-color: #F4F7FE;
+    color: #2D3748;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #E2E8F0;
+    font-weight: 600;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  
+  .materialGrindingTable td {
+    padding: 12px;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 0.9rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .materialGrindingTable tr:hover {
+    background-color: #F7FAFC;
+  }
+  
+  .status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .대기중 {
+    background-color: #E2E8F0;
+    color: #4A5568;
+  }
+  
+  .진행중 {
+    background-color: #4299E1;
+    color: white;
+  }
+  
+  .완료 {
+    background-color: #48BB78;
+    color: white;
+  }
+  
+  .등록완료 {
+    background-color: #F6AD55;
+    color: white;
+  }
+  
+  .noDataMessage {
+    text-align: center;
+    padding: 2rem;
+    background-color: #F4F7FE;
+    border-radius: 8px;
+    margin: 1rem 0;
+    color: #718096;
+  }
+  
+  .loadingMessage {
+    text-align: center;
+    padding: 2rem;
+    margin: 1rem 0;
+    color: #4A5568;
+  }
+  
+  /* 설정 항목별 강조 스타일 */
+  .paramHighlight {
+    font-weight: 600;
+    color: #2B6CB0;
+  }
+  
+  .quantityHighlight {
+    font-weight: 600;
+    color: #48BB78;
+  }
+  
+  @media (max-width: 1200px) {
+    .materialGrindingTable {
+      font-size: 0.85rem;
+    }
+    
+    .materialGrindingTable th,
+    .materialGrindingTable td {
+      padding: 10px 8px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .searchForm {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .searchBar button {
+      width: 100%;
+      margin-top: 8px;
+    }
+  }

@@ -15,6 +15,7 @@ import MashingProcessPage from "./pages/production-process/mashing-process/Mashi
 import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
+import WortVolumePage from "./pages/routing/WortVolumePage";
 
 
 
@@ -37,6 +38,7 @@ const App = () => {
               <Route path="/detail/:planId" element={<ProductionPlanDetailPage />} />
               <Route path="/plan-generate" element={<ProductionPlanSteps />} />
               <Route path="/processTracking" element={<ProcessTrackingPage />} />
+              <Route path="/wort" element={<WortVolumePage />} />
               <Route path="/material" element={<MaterialManagementPage />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/work/orders" element={<WorkOrder />} />

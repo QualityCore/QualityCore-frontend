@@ -46,7 +46,7 @@ const Header = () => {
 
 
       // Routing 관리
-      '/routing-input': { main: 'Routing 관리', sub: '공정별 생산투입' },
+      '/wort': { main: 'Routing 관리', sub: '끓임 공정 워트 품질 모니터링' },
       '/processTracking': { main: 'Routing 관리', sub: '공정 진행 현황' },
 
       // 생산실적 관리

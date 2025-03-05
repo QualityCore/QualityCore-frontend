@@ -130,7 +130,7 @@ const Sidebar = () => {
           </button>
           {openCategory === "Routing" && (
             <ul className="submenu">
-              <li><Link to="/routing-input">공정별 생산투입</Link></li>
+              <li><Link to="/wort">끓임 공정 워트 품질 모니터링</Link></li>
               <li><Link to="/processTracking">공정 진행 현황</Link></li>
             </ul>
           )}

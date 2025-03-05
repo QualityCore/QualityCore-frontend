@@ -7,6 +7,7 @@ import {
 import styles from '../../styles/productionPlan/ProductionPlanStep3.module.css';
 import { aggregateMaterialsByBeer, aggregateMaterials } from '../../utils/materialUtils';
 import MaterialRequestModal from './MaterialRequestModal';
+import { useNavigate } from "react-router-dom";
 
 const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 }) => {
     const [rawMaterials, setRawMaterials] = useState([]);
@@ -15,6 +16,7 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
     const [packagingMaterialsByBeer, setPackagingMaterialsByBeer] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [selectedBeer, setSelectedBeer] = useState(null);
+    const navigate = useNavigate(); 
 
     console.log("formData : ",formData);
     
@@ -137,6 +139,7 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
         try {
           await saveMaterialPlan(preparedData);
           alert('생산 계획이 성공적으로 저장되었습니다!');
+          navigate('/plan-overview');
         } catch (error) {
           console.error("저장 중 오류 발생:", error.response?.data);
           alert('저장 중 오류가 발생했습니다.');
