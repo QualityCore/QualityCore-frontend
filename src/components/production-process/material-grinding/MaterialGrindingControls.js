@@ -16,6 +16,17 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
   const [timer, setTimer] = useState(0);
   const navigate = useNavigate();
   const [buttonLabel, setButtonLabel] = useState("등록하기");
+  
+  
+  
+  useEffect(() => {
+    if (grindingData?.lotNo) {
+      localStorage.setItem("selectedLotNo", grindingData.lotNo);
+    }
+  }, [grindingData?.lotNo]);
+
+
+
 
   // 🔹 타이머 설정: 공정 완료까지 남은 시간 카운트다운
   useEffect(() => {
