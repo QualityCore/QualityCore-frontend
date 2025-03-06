@@ -105,3 +105,8 @@ height: 100%; /* 높이를 동일하게 설정 */
     color: #d9534f;
     margin-top: 10px;
 }
+
+
+.mashingProcessTableThead {
+    display: none;
+}
