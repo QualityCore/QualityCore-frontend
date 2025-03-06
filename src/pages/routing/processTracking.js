@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { routingApi } from '../../apis/routingApi/ProcessTrackingApi';
-import '../../styles/routing/ProcessTracking.css'
+import styles from '../../styles/routing/ProcessTracking.module.css';
 
 const ProcessTrackingPage = () => {
   const [lotNo, setLotNo] = useState('');
@@ -99,36 +99,7 @@ const ProcessTrackingPage = () => {
       return '미정';
     }
   };
-
   
-  // 공정 카드 렌더링
-  const renderProcessCard = (tracking) => {
-    // 여기서는 클래스 이름 통일을 위해 원래 이름 그대로 처리 (공백 유지)
-    // CSS에서 다양한 선택자로 처리하므로 여기서는 변환하지 않음
-    return (
-      <div 
-        key={tracking.lotNo} 
-        className={`process-tracking-card`}
-        data-status={tracking.processStatus}
-        data-process={tracking.processName.replace(/ /g, '-')} // 공백을 하이픈으로 변환
-      >
-        <div className="card-header">
-          <span className="lot-no">{tracking.lotNo}</span>
-          <span className="status-badge">
-            {tracking.processStatus}
-          </span>
-        </div>
-        <div className="card-content">
-          <h3>{tracking.processName}</h3>
-          <div className="time-info">
-            <p>시작: {formatDate(tracking.startTime)}</p>
-            <p>예상 종료: {formatDate(tracking.expectedEndTime)}</p>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       fetchProcessTracking();
@@ -136,11 +107,11 @@ const ProcessTrackingPage = () => {
   };
 
   return (
-    <div className="productionPlan-container">
-      <h1 className="page-title">공정 현황 추적</h1>
+    <div className={styles.productionPlanContainer}>
+      <h1 className={styles.pageTitle}>공정 현황 추적</h1>
       
-      <div className="search-bar">
-        <div className="search-filter">
+      <div className={styles.searchBar}>
+        <div className={styles.searchFilter}>
           <label>LOT 번호</label>
           <input 
             type="text" 
@@ -151,7 +122,7 @@ const ProcessTrackingPage = () => {
           />
         </div>
         
-        <div className="search-filter">
+        <div className={styles.searchFilter}>
           <label>진행 상태</label>
           <select 
             value={processStatus}
@@ -166,6 +137,7 @@ const ProcessTrackingPage = () => {
         </div>
         
         <button 
+          className={styles.searchButton}
           onClick={fetchProcessTracking} 
           disabled={loading}
         >
@@ -173,52 +145,59 @@ const ProcessTrackingPage = () => {
         </button>
       </div>
   
-      <div className="process-tracking-stages">
+      <div className={styles.processTrackingStages}>
       {processStages.map((stage, index) => {
         // 해당 공정의 모든 트래킹 정보 필터링
         const stageTrackings = trackingList
           .filter(t => t.processName === stage.name);
 
         const isAnyProcessRunning = stageTrackings.some(t => t.processStatus === '진행 중');
+        
+        // 공정 이름에서 공백 제거하고 클래스 이름 생성
+        const processNameClass = `process${stage.name.replace(/ /g, '')}`;
 
         return (
           <div 
             key={stage.name} 
-            className={`process-stage 
-              ${stage.name.replace(/ /g, '-')}  
-              ${isAnyProcessRunning ? 'active' : ''}`}
+            className={`${styles.processStage} 
+              ${processNameClass}  
+              ${isAnyProcessRunning ? styles.active : ''} 
+              ${isAnyProcessRunning ? styles[`${processNameClass}Active`] : ''}`}
           >
-            <div className="stage-header">
-              <div className="stage-title-wrapper">
-                <div className="stage-number">{index + 1}</div>
-                <div className="stage-title">{stage.title}</div>
+            <div className={styles.stageHeader}>
+              <div className={styles.stageTitleWrapper}>
+                <div className={styles.stageNumber}>{index + 1}</div>
+                <div className={styles.stageTitle}>{stage.title}</div>
               </div>
             </div>
-            <div className="stage-content">
+            <div className={styles.stageContent}>
               {stageTrackings.length > 0 ? (
-                stageTrackings.map(tracking => (
-                  <div 
-                    key={tracking.lotNo} 
-                    className="process-tracking-card"
-                    data-status={tracking.processStatus}
-                    data-process={tracking.processName.replace(/ /g, '-')}
-                  >
-                    <div className="card-header">
-                      <span className="lot-no">{tracking.lotNo}</span>
-                      <span className="status-badge">
-                        {tracking.processStatus}
-                      </span>
-                    </div>
-                    <div className="card-content">
-                      <div className="time-info">
-                        <p>시작: {formatDate(tracking.startTime)}</p>
-                        <p>예상 종료: {formatDate(tracking.expectedEndTime)}</p>
+                stageTrackings.map(tracking => {
+                  // 상태에 따른 클래스 이름 생성
+                  const statusClass = `processTrackingCardStatus${tracking.processStatus.replace(/ /g, '')}`;
+                  
+                  return (
+                    <div 
+                      key={tracking.lotNo} 
+                      className={`${styles.processTrackingCard} ${styles[statusClass]}`}
+                    >
+                      <div className={styles.cardHeader}>
+                        <span className={styles.lotNo}>{tracking.lotNo}</span>
+                        <span className={`${styles.statusBadge} ${styles[`statusBadge${tracking.processStatus.replace(/ /g, '')}`]}`}>
+                          {tracking.processStatus}
+                        </span>
+                      </div>
+                      <div className={styles.cardContent}>
+                        <div className={styles.timeInfo}>
+                          <p>시작: {formatDate(tracking.startTime)}</p>
+                          <p>예상 종료: {formatDate(tracking.expectedEndTime)}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
-                <div className="no-tracking-data">
+                <div className={styles.noTrackingData}>
                   해당 공정의 진행 정보가 없습니다.
                 </div>
               )}
@@ -229,7 +208,7 @@ const ProcessTrackingPage = () => {
     </div>
 
     {trackingList.length === 0 && !loading && (
-      <div className="no-data">
+      <div className={styles.noData}>
         조회된 공정 현황이 없습니다.
       </div>
     )}
