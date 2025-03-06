@@ -62,8 +62,7 @@ const Sidebar = () => {
           {openCategory === "기준정보관리" && (
             <ul className="submenu">
               <li><Link to="/workplace">작업장 등록</Link></li>
-              <li><Link to="/process-stage">공정 정보 등록</Link></li>
-              <li><Link to="/label-routing">공정 순서 관리</Link></li>
+              <li><Link to="/process-stage">공정 정보</Link></li>
               <li><Link to="/equipment-info">설비 정보 등록</Link></li>
               <li><Link to="/label-info">LABEL 정보 등록</Link></li>
               <li><Link to="/downtime-cause">비가동 원인 코드 관리</Link></li>
