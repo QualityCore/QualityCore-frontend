@@ -108,28 +108,36 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
       navigate("/mashing-process");
     }
   };
-
   return (
     <form
       className={styles.materialGrindingForm}
       onSubmit={(event) => event.preventDefault()}
     >
-      {timer > 0 && (
-        <p className={styles.timerDisplay}>
-          남은시간: {Math.floor(timer / 60)}분 {timer % 60}초
-        </p>
-      )}
-
-      <div className={styles.grindingButtonContainer}>
-        <button
-          onClick={handleButtonClick}
-          className={` ${styles.grindingSaveButton} ${
-            buttonLabel === "다음공정 이동" ? `${styles.nextProcessButton}` : ""
-          }`}
-        >
-          {buttonLabel}
-        </button>
-      </div>
+ {timer > 0 && (
+  <div className={styles.timerContainer}>
+    <img 
+      src="/images/clock-un.gif" 
+      alt="타이머 시계" 
+      className={styles.timerGif}
+    />
+    <p className={styles.timerDisplay}>
+      남은시간: <strong>{Math.floor(timer / 60)}</strong>분 <strong>{timer % 60}</strong>초
+    </p>
+  </div>
+)}
+  
+  <div className={styles.grindingButtonContainer}>
+  <button
+    onClick={handleButtonClick}
+    className={
+      buttonLabel === "다음공정 이동" 
+        ? styles.nextProcessButton 
+        : styles.grindingSaveButton
+    }
+  >
+    {buttonLabel}
+  </button>
+</div>
 
       <ConfirmModal
         isOpen={showConfirmModal}

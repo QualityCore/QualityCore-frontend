@@ -20,11 +20,13 @@ const MaterialGrindingPage = () => {
     });
 
     return (
-        <div className={styles.grindingButtonContainer}>
-            <MaterialGrindingForm  grindingData={grindingData} setGrindingData={setGrindingData} />
-            <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData}/>
+        <div className={styles["productionPlan-container"]}>
+            <h1 className={styles["page-title"]}>분쇄 공정 관리</h1>
+            <MaterialGrindingForm grindingData={grindingData} setGrindingData={setGrindingData} />
+            <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData} />
         </div>
     );
 };
+
 
 export default MaterialGrindingPage;

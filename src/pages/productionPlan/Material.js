@@ -1,13 +1,11 @@
-
+// MaterialManagementPage.js
 import React, { useState, useEffect } from 'react';
-import { getStockStatus, getMaterialRequests, requestMaterial } from '../../apis/productionPlanApi/MaterialApi';
+import { getStockStatus, getMaterialRequests, updateMaterialRequestStatus } from '../../apis/productionPlanApi/MaterialApi';
 import styles from '../../styles/productionPlan/MaterialManagementPage.module.css';
 
 const MaterialManagementPage = () => {
   const [stockStatus, setStockStatus] = useState([]);
   const [materialRequests, setMaterialRequests] = useState([]);
-  const [selectedMaterialId, setSelectedMaterialId] = useState(""); 
-  const [materialName, setMaterialName] = useState("");
 
   useEffect(() => {
     fetchStockStatus();
@@ -25,62 +23,93 @@ const MaterialManagementPage = () => {
   
   const fetchMaterialRequests = async () => {
     try {
-      const response = await getMaterialRequests();
-      
-      if (response.result && Array.isArray(response.result.requests)) {
-        setMaterialRequests(response.result.requests);
-      } else {
-        console.error('자재 구매 신청 내역 데이터 형식이 올바르지 않습니다.');
+        const response = await getMaterialRequests();
+        console.log("📌 API 응답 데이터:", response);
+
+        if (response && response.result && Array.isArray(response.result.requests)) {
+            setMaterialRequests(response.result.requests);  
+        } else {
+            console.error('❌ 응답 데이터가 예상한 형식이 아닙니다:', response);
+            setMaterialRequests([]);  
+        }
+    } catch (error) {
+        console.error('❌ 자재 구매 신청 내역 조회 실패:', error);
         setMaterialRequests([]);
-      }
-    } catch (error) {
-      console.error('자재 구매 신청 내역 조회 실패:', error);
-      setMaterialRequests([]);
-    }
-  };
-  
-  const handleMaterialRequest = async (event) => {
-    event.preventDefault();
-    
-    const formData = new FormData(event.target);
-   // 기존 코드
-const requestData = {
-  materialId: selectedMaterialId || null,  // 기존 자재 선택 시 ID 전송, 없으면 null
-  materialName: selectedMaterialId ? null : formData.get("materialName"), // 기존 자재 선택 시 materialName 전송 안함
-};
-
-
-    console.log("🔍 requestData 확인:", requestData);
-
-    try {
-        await requestMaterial(requestData); 
-        alert("자재 구매 신청이 완료되었습니다.");
-        setSelectedMaterialId(""); // 선택 초기화
-        setMaterialName(""); // 신규 자재 입력값 초기화
-    } catch (error) {
-        console.error("자재 구매 신청 실패:", error);
     }
 };
-
-  
-
-  
-  
-  
-  
 
 
 const formatDate = (dateString) => {
-  if (!dateString) return ''; // 날짜 값이 없을 경우 빈 값 반환
+  if (!dateString) return "";
   const date = new Date(dateString);
-  return date.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형태로 변환
+  return date.toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" });
 };
 
 
+  const handleOrder = async (requestId) => {
+    try {
+      await updateMaterialRequestStatus(requestId, '발주완료');
+      fetchMaterialRequests(); // 변경 후 새로고침
+    } catch (error) {
+      console.error('자재 구매 신청 발주 실패:', error);
+    }
+  };
+  
+
   return (
     <div className={styles.container}>
-       <h2 className={styles.sectionTitle}>자재 재고 현황</h2>
-      {/* 자재 재고 현황 테이블 */}
+      <h2 className={styles.title}>자재 구매 신청 내역</h2>
+
+      <div className={styles.dashboard}>
+        <div className={styles.card}>
+          <h3>총 신청 건수</h3>
+          <p>{materialRequests.length}</p>
+        </div>
+
+        <div className={styles.card}>
+          <h3>발주 완료 건수</h3>
+          <p>{materialRequests.filter(request => request.status === '발주완료').length}</p>
+        </div>
+
+        <div className={styles.card}>
+          <h3>미발주 건수</h3>
+          <p>{materialRequests.filter(request => request.status !== '발주완료').length}</p>
+        </div>
+      </div>
+
+      <h3 className={styles.subtitle}>최근 신청 내역</h3>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>신청일</th>
+            <th>자재명</th>
+            <th>수량</th>
+            <th>납기 요청일</th>
+            <th>상태</th>
+            <th>발주</th>
+          </tr>
+        </thead>
+        <tbody>
+          {materialRequests.slice(0, 5).map(request => (
+            <tr key={request.requestId}>
+              <td>{formatDate(request.requestDate)}</td>
+              <td>{request.materialName}</td>
+              <td>{request.requestQty}</td>
+              <td>{formatDate(request.deliveryDate)}</td>
+              <td>{request.status}</td>
+              <td>
+                {request.status !== '발주완료' && (
+                  <button className={styles.orderButton} onClick={() => handleOrder(request.requestId)}>
+                    발주하기
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3 className={styles.subtitle}>자재별 재고 현황</h3>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -90,93 +119,15 @@ const formatDate = (dateString) => {
           </tr>
         </thead>
         <tbody>
-        {Array.isArray(stockStatus) && stockStatus.map((stock) => (
-          <tr key={stock.materialId}>
-            <td>{stock.materialName}</td>
-            <td>{stock.currentStock}</td>
-            <td>{stock.unit}</td>
-          </tr>
-        ))}
-      </tbody>
+          {stockStatus.map(stock => (
+            <tr key={stock.materialId}>
+              <td>{stock.materialName}</td>
+              <td>{stock.currentStock}</td>
+              <td>{stock.unit}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
-
-      <h2 className={styles.sectionTitle}>자재 구매 신청 내역</h2>
-      {/* 자재 구매 신청 내역 테이블 */}
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>신청일</th>
-            <th>자재명</th>
-            <th>수량</th>
-            <th>납기 요청일</th>
-          </tr>
-        </thead>
-       
-      <tbody>
-        {Array.isArray(materialRequests) && materialRequests.map((request) => (
-          <tr key={request.requestId}>
-             <td>{formatDate(request.requestDate)}</td>
-            <td>{request.materialName}</td>
-            <td>{request.requestQty}</td>
-            <td>{formatDate(request.deliveryDate)}</td> 
-          </tr>
-        ))}
-      </tbody>  
-      </table>
-
-      <h2 className={styles.sectionTitle}>자재 구매 신청</h2>
-      {/* 자재 구매 신청 폼 */}
-      <form onSubmit={handleMaterialRequest} className={styles.requestForm}>
-        
-        {/* 기존 자재 선택 (드롭다운) */}
-        <div className={styles.formGroup}>
-          <label htmlFor="materialId">기존 자재 선택</label>
-          <select
-            id="materialId"
-            name="materialId"
-            value={selectedMaterialId}
-            onChange={(e) => setSelectedMaterialId(e.target.value)}
-          >
-            <option value="">신규 자재 신청</option>
-            {stockStatus.map((material) => (
-              <option key={material.materialId} value={material.materialId}>
-                {material.materialName}
-              </option>
-            ))}
-          </select>
-        </div>
-
-      
-
-        {/* 신청 수량 */}
-        <div className={styles.formGroup}>
-          <label htmlFor="requestQty">수량</label>
-          <input type="number" id="requestQty" name="requestQty" min="0" step="0.01" required />
-        </div>
-
-        {/* 납기 요청일 */}
-        <div className={styles.formGroup}>
-          <label htmlFor="deliveryDate">납기 요청일</label>
-          <input type="date" id="deliveryDate" name="deliveryDate" required />
-        </div>
-
-        {/* 신청 사유 */}
-        <div className={styles.formGroup}>
-          <label htmlFor="reason">신청 사유</label>
-          <input type="text" id="reason" name="reason" required />
-        </div>
-
-        {/* 추가 메모 */}
-        <div className={styles.formGroup}>
-          <label htmlFor="note">추가 메모</label>
-          <textarea id="note" name="note"></textarea>
-        </div>
-
-        {/* 제출 버튼 */}
-        <button type="submit" className={styles.submitButton}>
-          신청
-        </button>
-      </form>
     </div>
   );
 };

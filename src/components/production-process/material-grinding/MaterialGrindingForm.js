@@ -176,7 +176,10 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
   };
 
   return (
-    <div className={styles.materialGrindingForm}>
+
+
+    
+    <div className={styles.materialGrindingTableContainer}>
       <h2 className={styles.grindingTitle}>분쇄 공정</h2>
       <div className={styles.gFormGrid}>
         <div className={styles.gGridItem}>
