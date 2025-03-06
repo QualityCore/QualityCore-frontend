@@ -8,9 +8,6 @@ import ErrorModal from "../../standard-information/common/ErrorModal";
 import CompleteModal from "../../standard-information/common/CompleteModal";
 import styles from "../../../styles/production-process/MashingProcessControls.module.css";
 
-
-
-
 const MashingProcessControls = ({ workOrder }) => {
   const { mashingId } = useParams(); // URL에서 ID 가져오기
   const [mashingData, setMashingData] = useState({
@@ -33,6 +30,45 @@ const MashingProcessControls = ({ workOrder }) => {
   const [buttonLabel, setButtonLabel] = useState("등록하기");
   const navigate = useNavigate(); // ✅ 페이지 이동을 위한 함수!
 
+    // ✅ workOrder가 변경될 때 lotNo를 업데이트
+    useEffect(() => {
+      if (workOrder?.lotNo) {
+        setMashingData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
+      }
+    }, [workOrder]);
+  
+    // ✅ LOT_NO가 변경될 때 API 호출하여 "물" 데이터 가져오기
+    useEffect(() => {
+      if (!mashingData.lotNo) return; // ✅ LOT_NO가 없으면 실행하지 않음
+  
+      const fetchWaterInputVolume = async () => {
+        try {
+          console.log(`📌 LOT_NO=${mashingData.lotNo}의 자재 목록 조회 요청`);
+  
+          const materialsList = await mashingProcessApi.getMaterialsByLotNo(mashingData.lotNo);
+  
+          console.log("✅ 자재 목록:", materialsList);
+  
+          const waterMaterial = materialsList.find((item) => item.materialName === "물");
+  
+          if (waterMaterial) {
+            console.log(`🔍 물 데이터 찾음: ${waterMaterial.totalQty} L`);
+            setMashingData((prev) => ({
+              ...prev,
+              waterInputVolume: waterMaterial.totalQty, // ✅ 물 투입량 설정
+            }));
+          } else {
+            console.warn("⚠️ 물 데이터가 없음");
+          }
+        } catch (error) {
+          console.error("❌ 물 투입량 데이터를 가져오는 데 실패했습니다.", error);
+        }
+      };
+  
+      fetchWaterInputVolume();
+    }, [mashingData.lotNo]);
+
+
 
 
   useEffect(() => {
@@ -41,6 +77,9 @@ const MashingProcessControls = ({ workOrder }) => {
       setMashingData((prev) => ({ ...prev, lotNo: savedLotNo }));
     }
   }, []);
+
+
+
 
   // 입력값 변경 핸들러
   const handleChange = (e) => {
@@ -74,15 +113,19 @@ const MashingProcessControls = ({ workOrder }) => {
     }, 1000);
   };
 
-   // 데이터 저장 (등록하기 버튼 클릭 시)
-   const handleSave = async () => {
-    if (!mashingData.temperature || !mashingData.grainRatio || !mashingData.waterRatio) {
+  // 데이터 저장 (등록하기 버튼 클릭 시)
+  const handleSave = async () => {
+    if (
+      !mashingData.temperature ||
+      !mashingData.grainRatio ||
+      !mashingData.waterRatio
+    ) {
       alert("⚠️ 필수 입력값을 입력해주세요!");
       return;
     }
 
     try {
-      const saveData = { 
+      const mashingProcessPayload  = {
         ...mashingData,
         processStatus: "진행 중", // 공정 상태 변경
         statusCode: "SC002", // 상태 코드 업데이트
@@ -90,10 +133,10 @@ const MashingProcessControls = ({ workOrder }) => {
       };
 
       // 1️⃣ 당화공정 데이터 저장 (saveMashingData API 호출)
-      await mashingProcessApi.saveMashingData(saveData);
+      await mashingProcessApi.saveMashingData(mashingProcessPayload );
 
       // 2️⃣ processTracking 업데이트 (updateMashingProcess API 호출)
-      await mashingProcessApi.updateMashingProcess(mashingId, saveData);
+      await mashingProcessApi.updateMashingProcess(mashingId, mashingProcessPayload );
 
       setShowSuccessModal(true);
       setButtonLabel("다음 공정 이동");
@@ -106,12 +149,12 @@ const MashingProcessControls = ({ workOrder }) => {
   // 다음 공정으로 이동 (phValue와 actualEndTime 업데이트)
   const handleNextProcess = async () => {
     try {
-      const updateData = {
+      const mashingUpdatePayload  = {
         phValue: mashingData.phValue,
         actualEndTime: new Date().toISOString(), // 현재 시간 저장
       };
 
-      await mashingProcessApi.updateMashingProcess(mashingId, updateData);
+      await mashingProcessApi.updateMashingProcess(mashingId, mashingUpdatePayload );
 
       navigate("/fermentation");
     } catch (error) {
@@ -119,8 +162,7 @@ const MashingProcessControls = ({ workOrder }) => {
     }
   };
 
-
-   // 버튼 클릭 핸들러
+  // 버튼 클릭 핸들러
   const handleButtonClick = () => {
     if (buttonLabel === "등록하기") {
       handleSave();
