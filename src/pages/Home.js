@@ -1,16 +1,15 @@
 import React from "react";
-// import "./Home.css"; 
+import styles from "../styles/Home.module.css"; 
+
 const Home = () => {
   return (
-    <div className="home-container">
-      <h1 className="title">아자아자</h1>
-      <img src="/토끼.gif" alt="귀여운 토끼" className="rabbit-img" />
-
-      <div className="grid-container">
-        <div className="grid-item">공정 1</div>
-        <div className="grid-item">공정 2</div>
-        <div className="grid-item">공정 3</div>
-        <div className="grid-item">공정 4</div>
+    <div className={styles.homeContainer}> 
+      <h1 className={styles.title}>생산 관리 시스템</h1>
+      <div className={styles.gridContainer}>
+        <div className={styles.gridItem}>🌈 생산 계획</div>
+        <div className={styles.gridItem}>🌈 공정 관리</div>
+        <div className={styles.gridItem}>🌈 자재 관리</div>
+        <div className={styles.gridItem}>🌈 통계 및 분석</div>
       </div>
     </div>
   );
