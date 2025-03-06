@@ -28,7 +28,6 @@ function EquipmentInfo() {
             try {
                 const equipmentData = await fetchAllEquipment();
                 setEquipmentList(equipmentData);
-                console.log("설비데이터확인:", equipmentData);
             } catch (error) {
                 console.error('Error loading equipment data:', error);
             }
@@ -38,7 +37,6 @@ function EquipmentInfo() {
             try {
                 const workplaceData = await fetchWorkplaces();
                 setWorkplaces(workplaceData);
-                console.log('작업장데이터 확인', workplaceData)
             } catch (error) {
                 console.error('Error loading workplace data:', error);
             }
@@ -106,7 +104,6 @@ function EquipmentInfo() {
 
     const handleWorkplaceChange = (event) => {
         const selectedWorkplaceId = event.target.value;
-        console.log('Selected Workplace ID:', selectedWorkplaceId);
 
         setNewEquipment(prev => ({
             ...prev,
@@ -144,7 +141,6 @@ function EquipmentInfo() {
 
         try {
             const response = await createEquipment(formData);
-            console.log("Equipment created successfully:", response);
             // 성공적으로 생성되었을 때의 처리
         } catch (error) {
             console.error("Error creating equipment:", error);
