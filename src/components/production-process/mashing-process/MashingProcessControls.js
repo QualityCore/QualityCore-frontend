@@ -18,6 +18,9 @@ const MashingProcessControls = ({ workOrder }) => {
     grainRatio: "",
     waterRatio: "",
     waterInputVolume: "",
+    processStatus: "대기 중",  
+    statusCode: "SC002",  
+    processName: "당화", 
     notes: "",
   });
 
@@ -37,6 +40,7 @@ const MashingProcessControls = ({ workOrder }) => {
       }
     }, [workOrder]);
   
+    
     // ✅ LOT_NO가 변경될 때 API 호출하여 "물" 데이터 가져오기
     useEffect(() => {
       if (!mashingData.lotNo) return; // ✅ LOT_NO가 없으면 실행하지 않음
@@ -77,6 +81,56 @@ const MashingProcessControls = ({ workOrder }) => {
       setMashingData((prev) => ({ ...prev, lotNo: savedLotNo }));
     }
   }, []);
+
+
+  // ✅ LOT_NO가 변경될 때 API 호출하여 자재 목록 조회 & 물 데이터 설정
+  useEffect(() => {
+    if (!mashingData.lotNo) return;
+
+    const fetchMaterialData = async () => {
+      try {
+        console.log(`📌 LOT_NO=${mashingData.lotNo}의 자재 목록 조회 요청`);
+
+        const materialsList = await mashingProcessApi.getMaterialsByLotNo(mashingData.lotNo);
+        console.log("✅ 불러온 자재 목록:", materialsList);
+
+          // ✅ "물" 데이터 찾기
+      const waterMaterial = materialsList.find((item) => item.materialName === "물");
+      const waterInputVolume = waterMaterial ? Number(waterMaterial.totalQty) : 0;
+
+
+         // ✅ 곡물 비율 계산 (숫자로 변환 후 합산)
+      const maltInputVolume = materialsList
+      .filter((item) => ["페일 몰트", "필스너 몰트", "초콜릿 몰트"].includes(item.materialName))
+      .reduce((sum, item) => sum + Number(item.totalQty), 0);
+
+    const mainMaterialInputVolume = materialsList
+      .filter((item) => ["보리", "밀", "쌀"].includes(item.materialName))
+      .reduce((sum, item) => sum + Number(item.totalQty), 0);
+
+        const grainRatio = maltInputVolume + mainMaterialInputVolume;
+        const waterRatio = waterInputVolume;
+ 
+        // ✅ 비율 계산: 곡물비율을 1로 맞추고, 물 비율을 반올림
+        const waterRatioAdjusted = grainRatio > 0 ? Math.round(waterRatio / grainRatio) : 0;
+        console.log(`📌 자동 계산된 비율 -> 곡물: 1, 물: ${waterRatioAdjusted}`);
+ 
+
+        setMashingData((prev) => ({
+          ...prev,
+          waterInputVolume,
+          grainRatio: 1, // 곡물 비율은 항상 1
+          waterRatio: waterRatioAdjusted, // 반올림된 물 비율
+        }));
+      } catch (error) {
+        console.error("❌ 물 투입량 데이터를 가져오는 데 실패했습니다.", error);
+      }
+    };
+
+    fetchMaterialData();
+  }, [mashingData.lotNo]);
+
+
 
 
 
@@ -146,6 +200,10 @@ const MashingProcessControls = ({ workOrder }) => {
     }
   };
 
+
+
+
+
   // 다음 공정으로 이동 (phValue와 actualEndTime 업데이트)
   const handleNextProcess = async () => {
     try {
@@ -162,6 +220,9 @@ const MashingProcessControls = ({ workOrder }) => {
     }
   };
 
+
+
+
   // 버튼 클릭 핸들러
   const handleButtonClick = () => {
     if (buttonLabel === "등록하기") {
@@ -170,6 +231,9 @@ const MashingProcessControls = ({ workOrder }) => {
       handleNextProcess();
     }
   };
+
+
+
 
   return (
     <form
@@ -230,7 +294,7 @@ const MashingProcessControls = ({ workOrder }) => {
             type="number"
             name="grainRatio"
             value={mashingData.grainRatio}
-            onChange={handleChange}
+            readOnly 
           />
           <label className={styles.mLabel051}>물 비율</label>
           <input
@@ -238,7 +302,7 @@ const MashingProcessControls = ({ workOrder }) => {
             type="number"
             name="waterRatio"
             value={mashingData.waterRatio}
-            onChange={handleChange}
+            readOnly 
           />
         </div>
 
@@ -249,7 +313,7 @@ const MashingProcessControls = ({ workOrder }) => {
             type="number"
             name="waterInputVolume"
             value={mashingData.waterInputVolume}
-            onChange={handleChange}
+            readOnly 
           />
         </div>
 
