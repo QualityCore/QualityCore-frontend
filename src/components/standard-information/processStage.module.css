@@ -5,7 +5,7 @@
     row-gap: 70px;
     justify-content: center;
     position: relative;
-    top: 25px;
+    top: 50px;
     max-width: 1500px;
     margin: 0 auto;
 }
@@ -39,20 +39,6 @@
     font-size: 16px;
     font-weight: bold;
     color: #333;
-}
-
-.createButton {
-    margin-left: 1458px;
-    margin-top: 10px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    padding: -8px 16px;
-    width: 60px;
-    height: 40px;
 }
 
 .createButton:hover {
@@ -104,4 +90,79 @@
         row-gap: 50px;
         /* ✅ 작은 화면에서도 줄 간격 확보 */
     }
+}
+
+/* 모달 오버레이 스타일 */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* 반투명 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* 모달 내용 컨테이너 스타일 */
+.modal {
+    position: relative;
+    background-color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 20px;
+    max-width: 570px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+/* 모달 헤더 스타일 */
+.modal h2 {
+    margin-top: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 모달 서브헤더 스타일 */
+.modal p {
+    font-size: 20px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* 상세 설명 스타일 */
+.modal .description {
+    font-size: 16px;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* 닫기 버튼 스타일 */
+.modal button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+    margin-left: 465px;
+}
+
+.modal button:hover {
+    background-color: #0056b3;
+}
+
+/* 스크롤을 추가할 수 있도록 설정 (긴 내용에 대해) */
+.modal .description {
+    max-height: 400px;
+    overflow-y: auto;
 }
