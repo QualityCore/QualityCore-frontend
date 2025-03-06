@@ -1,0 +1,288 @@
+/* src/pages/routing/WortVolumePage.module.css */
+
+.productionPlanContainer {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    min-height: calc(100vh - 190px);
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+  }
+  
+  .pageTitle {
+    font-size: 1.5rem;
+    color: #2B3674;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .searchBar {
+    display: flex;
+    margin-bottom: 1.5rem;
+    background-color: #F4F7FE;
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+  
+  .searchForm {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .searchFilter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+  }
+  
+  .searchFilter label {
+    font-size: 0.8rem;
+    color: #2D3748;
+    font-weight: 600;
+  }
+  
+  .searchFilter input {
+    background-color: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .searchFilter input::placeholder {
+    color: #A0AEC0;
+  }
+  
+  .searchBar button {
+    background-color: #2B6CB0;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 40px;
+  }
+  
+  .searchBar button:hover {
+    background-color: #2C5282;
+    transform: translateY(-2px);
+  }
+  
+  .clearButton {
+    background-color: #E2E8F0 !important;
+    color: #4A5568 !important;
+  }
+  
+  .clearButton:hover {
+    background-color: #CBD5E0 !important;
+  }
+  
+  .contentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex-grow: 1;
+  }
+  
+  .planTable {
+    width: calc(100% - 0px);
+    margin-left: -0.8rem;
+    margin-right: 1.5rem;
+    overflow-x: auto;
+  }
+  
+  .planTable table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    flex-grow: 1; 
+    overflow-y: auto; 
+  }
+  
+  .planTable th {
+    background-color: #F4F7FE;
+    color: #2D3748;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #E2E8F0;
+    font-weight: 600;
+    text-align: center; 
+    vertical-align: middle; 
+  }
+  
+  .planTable td {
+    padding: 12px;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 0.9rem;
+    text-align: center;
+    vertical-align: middle; 
+  }
+  
+  .status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .대기중 {
+    background-color: #E2E8F0;
+    color: #4A5568;
+  }
+  
+  .진행중 {
+    background-color: #4299E1;
+    color: white;
+  }
+  
+  .완료 {
+    background-color: #48BB78;
+    color: white;
+  }
+  
+  .오류 {
+    background-color: #F56565;
+    color: white;
+  }
+  
+  .loadingMessage, .errorMessage, .noDataMessage {
+    text-align: center;
+    padding: 40px;
+    background-color: #F4F7FE;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  
+  .errorMessage {
+    color: #E53E3E;
+    background-color: #FED7D7;
+  }
+  
+  .noDataMessage {
+    color: #718096;
+  }
+  
+  .chartSection {
+    margin-top: 20px;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    height: 400px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.2rem;
+    color: #2B3674;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .searchForm {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .searchBar button {
+      width: 100%;
+      margin-top: 8px;
+    }
+    
+    .planTable {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  .efficiency {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  
+  .efficiencyHigh {
+    background-color: #C6F6D5;
+    color: #276749;
+  }
+  
+  .efficiencyGood {
+    background-color: #FEFCBF;
+    color: #975A16;
+  }
+  
+  .efficiencyMedium {
+    background-color: #FED7D7;
+    color: #C53030;
+  }
+  
+  .efficiencyLow {
+    background-color: #FEB2B2;
+    color: #9B2C2C;
+  }
+
+  /* WortVolumePage.module.css에 추가 */
+
+.efficiencyLegend {
+    background-color: #F9FAFB;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1px solid #E2E8F0;
+  }
+  
+  .legendTitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2D3748;
+    margin-bottom: 8px;
+  }
+  
+  .legendItems {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .legendItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .legendColor {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  
+  .legendText {
+    font-size: 0.8rem;
+    color: #4A5568;
+  }
+  
+  /* 기존 효율 색상 스타일 활용 */
+  .efficiencyHigh {
+    background-color: #C6F6D5;
+  }
+  
+  .efficiencyGood {
+    background-color: #FEFCBF;
+  }
+  
+  .efficiencyMedium {
+    background-color: #FED7D7;
+  }
+  
+  .efficiencyLow {
+    background-color: #FEB2B2;
+  }

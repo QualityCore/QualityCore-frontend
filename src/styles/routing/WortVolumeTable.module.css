@@ -1,0 +1,66 @@
+.tableContainer {
+    overflow-x: auto;
+  }
+  
+  .wortTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+  }
+  
+  .wortTable th {
+    background-color: #f5f5f5;
+    padding: 12px 8px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .wortTable td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+  }
+  
+  .tableRow:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .statusBadge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .대기중 {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+  
+  .진행중 {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .완료 {
+    background-color: #e0f2f1;
+    color: #00695c;
+  }
+  
+  .오류 {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+  
+  @media (max-width: 768px) {
+    .wortTable {
+      font-size: 12px;
+    }
+    
+    .wortTable th, .wortTable td {
+      padding: 8px 6px;
+    }
+  }

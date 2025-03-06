@@ -16,6 +16,11 @@ import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
 
+import EquipmentInfo from "./components/standard-information/EquipmentInfo";
+
+import WortVolumePage from "./pages/routing/WortVolumePage";
+
+
 
 
 const App = () => {
@@ -37,6 +42,7 @@ const App = () => {
               <Route path="/detail/:planId" element={<ProductionPlanDetailPage />} />
               <Route path="/plan-generate" element={<ProductionPlanSteps />} />
               <Route path="/processTracking" element={<ProcessTrackingPage />} />
+              <Route path="/wort" element={<WortVolumePage />} />
               <Route path="/material" element={<MaterialManagementPage />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/work/orders" element={<WorkOrder />} />
@@ -45,7 +51,7 @@ const App = () => {
               <Route path="/material-grinding" element={<MaterialGrindingPage />} />
               <Route path="/mashing-process" element={<MashingProcessPage />} />
               <Route path="/process-stage" element={<ProcessStage />} />
-
+              <Route path="/equipment-info" element={<EquipmentInfo />} />
             </Routes>
           </div>
         </div>

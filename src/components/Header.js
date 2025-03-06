@@ -15,8 +15,7 @@ const Header = () => {
 
       // 기준정보 관리
       '/workplace': { main: '기준정보 관리', sub: '작업장 등록' },
-      '/process-stage': { main: '기준정보 관리', sub: '공정 정보 등록' },
-      '/label-routing': { main: '기준정보 관리', sub: '공정 순서 관리' },
+      '/process-stage': { main: '기준정보 관리', sub: '공정 정보' },
       '/equipment-info': { main: '기준정보 관리', sub: '설비 정보 등록' },
       '/label-info': { main: '기준정보 관리', sub: 'LABEL 정보 등록' },
       '/downtime-cause': { main: '기준정보 관리', sub: '비가동 원인 코드 관리' },
@@ -46,7 +45,7 @@ const Header = () => {
 
 
       // Routing 관리
-      '/routing-input': { main: 'Routing 관리', sub: '공정별 생산투입' },
+      '/wort': { main: 'Routing 관리', sub: '끓임 공정 워트 품질 모니터링' },
       '/processTracking': { main: 'Routing 관리', sub: '공정 진행 현황' },
 
       // 생산실적 관리

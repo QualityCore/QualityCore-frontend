@@ -83,9 +83,9 @@ function WorkCreate() {
                 setModalMessage("작업 지시서가 성공적으로 생성되었습니다.");
                 console.log("🎉 Confetti 실행!");
                 jsConfetti.addConfetti({
-                    emojis: ["🍺", "🍻"],
-                    emojiSize: 100,
-                    confettiNumber: 150,
+                    emojis: ["🍺", "🍻", "🥂"],
+                    emojiSize: 50,
+                    confettiNumber: 7,
                 });
                 setWorkOrders((prevOrders) => prevOrders.filter(order =>
                     order.planId !== planId || order.planLineId !== planLineId || order.planProductId !== planProductId

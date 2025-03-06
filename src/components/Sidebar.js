@@ -62,8 +62,7 @@ const Sidebar = () => {
           {openCategory === "기준정보관리" && (
             <ul className="submenu">
               <li><Link to="/workplace">작업장 등록</Link></li>
-              <li><Link to="/process-stage">공정 정보 등록</Link></li>
-              <li><Link to="/label-routing">공정 순서 관리</Link></li>
+              <li><Link to="/process-stage">공정 정보</Link></li>
               <li><Link to="/equipment-info">설비 정보 등록</Link></li>
               <li><Link to="/label-info">LABEL 정보 등록</Link></li>
               <li><Link to="/downtime-cause">비가동 원인 코드 관리</Link></li>
@@ -130,7 +129,7 @@ const Sidebar = () => {
           </button>
           {openCategory === "Routing" && (
             <ul className="submenu">
-              <li><Link to="/routing-input">공정별 생산투입</Link></li>
+              <li><Link to="/wort">끓임 공정 워트 품질 모니터링</Link></li>
               <li><Link to="/processTracking">공정 진행 현황</Link></li>
             </ul>
           )}
