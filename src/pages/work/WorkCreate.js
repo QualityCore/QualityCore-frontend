@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import workCreate from "./workCreate.module.css";
+import workCreate from "../../styles/work/workCreate.module.css";
 import { getBeerRecipes, getPlanInfo, createWorkOrder } from "../../apis/workOrderApi/workOrdersApi";
 import SuccessAnimation from "../../lottie/SuccessNotification";
 import WarningAnimation from "../../lottie/WarningNotification";

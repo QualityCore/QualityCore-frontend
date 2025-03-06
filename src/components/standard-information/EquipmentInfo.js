@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Equipment from "../standard-information/Equipment.module.css";
+import Equipment from "../../styles/standard-information/Equipment.module.css";
 import { fetchAllEquipment, fetchEquipmentById, createEquipment } from "../../apis/standard-information/EquipmentApi";
 import Modal from "react-modal";
 import { fetchWorkplaces } from "../../apis/standard-information/WorkplaceApi";  // 작업장 API import
