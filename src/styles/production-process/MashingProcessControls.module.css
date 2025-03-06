@@ -1,107 +1,106 @@
-.mashingProcessForm {
-margin: inherit;
-grid-template-columns: repeat(4, 1fr);
-padding: 5px;
-align-items: center;
-justify-content: center;
-position: relative; /* 부모 기준점 */  
-}
-
-
-.mGridItem {
-display: flex;
-justify-content: column;
-align-items: center;
-padding: 5px;
-height: 100%; /* 높이를 동일하게 설정 */
-}
-
-.mashingTitle {
-    text-align: left; /* 텍스트 우측 정렬 */
-    margin-bottom: 40px;
-    margin-left: 30px;
-}
-
-.mFormGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; 
-    gap : 20px;
-    align-items: center; 
-    justify-content: center;
-  }
-
-.mLabel01 {
-    width: 80px !important; /* 너비 통일 */   
-}
-
-.mLabel02{
-    width: 100px !important; /* 너비 통일 */
-}
-
-.mLabel03{
-    width: 70px !important; /* 너비 통일 */
-}
-
-.mLabel04{
-    width: 50px !important; /* 너비 통일 */
-}
-
-.mLabel05{
-    width: 70px !important; /* 너비 통일 */
-}
-.mLabel051{
-    width: 50px !important; /* 너비 통일 */
-}
-
-.mLabel06, .mLabel07, .mLabel08{
-    width: 70px !important; /* 너비 통일 */
-}
-
-.mItem01, .mItem02, .mItem03, .mItem04, .mItem05, .mItem06, .mItem07, .mItem08{
-    width: 80px;
-    padding: 5px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.mItem01{width: 160px !important;}
-.mItem08{width: 300px !important;}
-
-.mItem05Container {
+.materialGrindingForm {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-}
-
-/* 버튼 스타일 */
-.mSaveButton {
-    background-color:  #9370db;;
+    padding: 1rem;
+  }
+  
+  /* 타이머 표시 */
+  .timerDisplay {
+    background-color: #2D3748;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    margin: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: pulse 1.5s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+      transform: scale(1.03);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .grindingButtonContainer {
+    display: flex;
+    justify-content: flex-end; /* 가운데 정렬에서 오른쪽 정렬로 변경 */
+    width: 100%;
+    margin-top: 2rem;
+    padding-right: 2rem; /* 오른쪽 여백 추가 */
+    box-sizing: border-box;
+  }
+  
+  /* 등록하기 버튼 */
+  .grindingSaveButton {
+    background-color: #9370DB;
     color: white;
     border: none;
-    padding: 12px 20px;
-    font-size: 15px;
-    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-}
 
-.mSaveButton:hover {
-    background-color: #7b68ee;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    box-shadow: 0 2px 5px rgba(147, 112, 219, 0.4);
+  }
+  
+  .grindingSaveButton:hover {
+    background-color: #7B68EE;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(147, 112, 219, 0.5);
+  }
+  
+  /* 다음 공정으로 이동 버튼 */
+  .nextProcessButton {
+    background: linear-gradient(135deg, #1CC88A, #169970);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 600;
+  min-width: 160px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(28, 200, 138, 0.25);
 }
+  
+.nextProcessButton:hover {
+  background: linear-gradient(135deg, #169970, #10715B);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(28, 200, 138, 0.35);
+}
+  /* 반응형 스타일 */
+  @media (max-width: 768px) {
+    .timerDisplay {
+      font-size: 1rem;
+      padding: 0.6rem 1rem;
+    }
+    
+    .grindingSaveButton,
+    .nextProcessButton {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+    }
+  }
 
-.mSaveButton{
-    position: absolute;
-    bottom: 50px; /* 폼 아래로 이동 */
-    right: 150px; 
-    width: 120px;
-    padding: 12px 20px;
-}
-
-.mTimerDisplay {
-    font-size: 18px;
-    font-weight: bold;
-    color: #d9534f;
-    margin-top: 10px;
-}
