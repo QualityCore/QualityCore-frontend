@@ -4,20 +4,21 @@ import MaterialGrindingControls from "../../../components/production-process/mat
 import styles from "../../../styles/production-process/MaterialGrindingControls.module.css";
 
 const MaterialGrindingPage = () => {
-    const [grindingData, setGrindingData] = useState({
-        lotNo : "",
-        mainMaterial: "",
-        mainMaterialInputVolume: "",
-        maltType: "",
-        maltInputVolume: "",
-        grindIntervalSetting: "",
-        grindSpeedSetting: "",
-        grindDuration: "40",   
-        statusCode : "SC001",
-        processStatus: "대기중",
-        processName: "분쇄",
-        notes: "",
-    });
+  const [grindingData, setGrindingData] = useState({
+    lotNo: "",
+    mainMaterial: "",
+    mainMaterialInputVolume: "",
+    maltType: "",
+    maltInputVolume: "",
+    grindIntervalSetting: "",
+    grindSpeedSetting: "", 
+    grindDuration: "40",
+    statusCode: "SC001",
+    processStatus: "대기 중",
+    processName: "분쇄 및 원재료 투입",
+    notes: "",
+  });
+
 
     return (
         <div className={styles["productionPlan-container"]}>
@@ -26,6 +27,7 @@ const MaterialGrindingPage = () => {
             <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData} />
         </div>
     );
+
 };
 
 

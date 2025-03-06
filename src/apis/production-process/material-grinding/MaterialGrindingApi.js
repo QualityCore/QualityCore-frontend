@@ -17,6 +17,21 @@ const materialGrindingApi = {
     },
 
 
+     // ✅ 분쇄 공정 상태 업데이트 (UPDATE)
+     updateProcessStatus: async (data) => {
+        try {
+            const response = await axios.put(`${BASE_URL}/update`, data, {
+                headers: { "Content-Type": "application/json" }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("❌ 공정 상태 업데이트 실패:", error);
+            throw error;
+        }
+    },
+
+
+    // ✅ 주원료 데이터 가져오기 (Lot No 기반)
     getLineMaterial: async () => {
         try {
             const response = await axios.get(`${BASE_URL}/linematerial`); 
