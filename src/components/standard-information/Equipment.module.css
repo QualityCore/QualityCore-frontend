@@ -1,0 +1,536 @@
+.mainBar {
+    border: none;
+    width: 1450px;
+    height: 710px;
+    margin-left: 55px;
+    margin-top: 40px;
+    margin-bottom: 0px;
+    border-radius: 10px;
+    background: white;
+    padding-top: 10px;
+}
+
+.equipmentTable {
+    width: 95%;
+    max-width: 1300px;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: center;
+    margin: 20px auto;
+    background: #f5f5f5;
+    /* ERP 느낌의 배경 */
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid black;
+    /* 더 두꺼운 외곽선 */
+}
+
+.equipmentTable th,
+.equipmentTable td {
+    border: 2px solid #b0b0b0;
+    /* 더 두꺼운 셀 경계선 */
+    padding: 6px 10px;
+}
+
+.equipmentTable th {
+    background-color: #f0f0f0;
+    /* 연한 회색으로 변경 */
+    color: #333;
+    font-weight: 600;
+    padding: 12px 10px;
+    letter-spacing: 0.5px;
+}
+
+.equipmentTable tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.equipmentTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+    /* 더 부드러운 회색 */
+}
+
+.equipmentTable tr:hover {
+    background-color: #e6e6e6;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.equipmentTable td {
+    color: #333;
+    font-size: 12.5px;
+}
+
+.equipmentTable thead {
+    border-bottom: 3px solid #b0b0b0;
+    /* 헤더 아래에 두꺼운 선 */
+}
+
+.equipmentTable tfoot {
+    border-top: 3px solid #b0b0b0;
+    /* 하단에 두꺼운 선 */
+}
+
+.searchBarInput {
+    margin-bottom: 10px;
+    padding: 8px;
+    width: 200px;
+    margin-left: 1050px;
+    border-radius: 4px;
+    border: 1px solid #d1d1d1;
+}
+
+.searchButton,
+.createButton {
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    /* 기본 ERP 버튼 색상 */
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    /* 효과 추가 */
+}
+
+.searchButton:hover,
+.createButton:hover {
+    background-color: #45a049;
+    /* hover시 색상 변경 */
+    transform: translateY(-2px);
+    /* 마우스 올렸을 때 살짝 올라오는 효과 */
+}
+
+.searchButton:active,
+.createButton:active {
+    background-color: #388e3c;
+    /* 클릭했을 때 색상 변경 */
+    transform: translateY(1px);
+    /* 클릭시 눌리는 느낌 추가 */
+}
+
+.titleBar {
+    margin-top: 25px;
+}
+
+.createButton {
+    margin-left: 55px;
+}
+
+/* 전체 모달 오버레이 */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    /* 반투명 배경 */
+    display: flex;
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+    z-index: 9999;
+    /* 다른 요소들 위에 표시 */
+}
+
+/* 모달 헤더 */
+.modalHeader {
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    margin-top: -25px;
+    margin-right: -35px;
+}
+
+.closeButton {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.modal {
+    width: 900px;
+    /* 명확하게 너비를 900px로 설정 */
+    height: 600px;
+    /* 높이를 600px로 설정 */
+    margin: 50px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+/* 모달 내용 */
+.modalContent {
+    margin-top: 20px;
+    padding-bottom: 20px;
+    /* 하단 여백을 좀 더 추가 */
+}
+
+/* 타이틀 */
+h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 작은 화면에 대응하는 반응형 디자인 */
+@media (max-width: 768px) {
+    .modal {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .detailLabel {
+        font-size: 14px;
+    }
+
+    .detailValue {
+        font-size: 14px;
+    }
+}
+
+/* titleContainer에 flexbox 적용 */
+.titleContainer {
+    display: flex;
+    justify-content: flex-start;
+    gap: 30px;
+    margin-bottom: 35px;
+    margin-top: 38px;
+}
+
+.imageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 5px;
+    width: 900px;
+    /* 고정된 너비 */
+    height: 250px;
+    /* 고정된 높이 */
+}
+
+.equipmentImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 부모 컨테이너를 완전히 채우기 위해 크기 조정 */
+    object-position: center;
+    /* 이미지를 중앙에 배치하여 잘리는 부분을 조정 */
+}
+
+
+/* 공통 테이블 스타일 */
+.leftTable,
+.rightTable,
+.centerTable {
+    width: 100%;
+    border-spacing: 0;
+    /* 테이블 셀 간격 제거 */
+}
+
+/* 테이블 헤더 스타일링 */
+.leftTable th,
+.rightTable th,
+.centerTable th {
+    padding: 12px 15px;
+    /* 셀 안의 여백 */
+    text-align: center;
+    /* 텍스트 왼쪽 정렬 */
+    font-size: 16px;
+    /* 폰트 크기 */
+    font-weight: bold;
+    /* 두꺼운 글씨 */
+    color: #333;
+    /* 어두운 회색 글씨 */
+    border: 1px solid #ddd;
+    /* 얇은 회색 테두리 */
+}
+
+/* 테이블 셀 스타일링 */
+.leftTable td,
+.rightTable td,
+.centerTable td {
+    padding: 12px 15px;
+    /* 셀 안의 여백 */
+    text-align: center;
+    /* 텍스트 왼쪽 정렬 */
+    border: 1px solid #ddd;
+    /* 얇은 회색 테두리 */
+    background-color: #fff;
+    /* 흰색 배경 추가 */
+}
+
+/* 셀 상단과 하단에 구분선 추가 */
+.leftTable td,
+.rightTable td,
+.centerTable td {
+    border-top: 1px solid #e0e0e0;
+    /* 셀 상단 구분선 */
+    border-bottom: 1px solid #e0e0e0;
+    /* 셀 하단 구분선 */
+}
+
+/* 호버 효과 */
+.leftTable tr:hover,
+.rightTable tr:hover,
+.centerTable tr:hover {
+    background-color: #f1f1f1;
+    /* 마우스 오버 시 배경색 */
+}
+
+/* 첫 번째 열에 텍스트 볼드 처리 */
+.leftTable td:first-child,
+.rightTable td:first-child,
+.centerTable td:first-child {
+    font-weight: bold;
+    color: #555;
+}
+
+/* 테이블 간격 및 구분선 */
+.leftTable tr,
+.rightTable tr,
+.centerTable tr {
+    border-bottom: 1px solid #f5f5f5;
+    /* 각 행의 구분선 */
+}
+
+/* 추가적인 공간 설정 */
+.rightTable,
+.centerTable {
+    margin-bottom: 15px;
+    /* 테이블의 아래 여백 */
+}
+
+/* 오른쪽 테이블을 왼쪽 테이블과 맞춰서 정렬 */
+.titleContainer {
+    gap: 30px;
+    /* 테이블 사이에 여백 추가 */
+}
+
+/* centerTable 테이블 스타일링 */
+.centerTable {
+    width: 100%;
+    /* 테이블 너비 */
+    border-spacing: 0;
+    /* 테이블 셀 간격 제거 */
+    margin-top: 20px;
+}
+
+/* 테이블 데이터 셀 스타일 */
+.centerTable td {
+    padding: 12px 15px;
+    /* 셀 안의 여백 */
+    text-align: center;
+    /* 텍스트 왼쪽 정렬 */
+    border-top: 1px solid #e0e0e0;
+    /* 상단 테두리 */
+    border-bottom: 1px solid #e0e0e0;
+    /* 하단 테두리 */
+}
+
+/* 호버 효과 */
+.centerTable tr:hover {
+    background-color: #f1f1f1;
+    /* 마우스 오버 시 배경색 */
+}
+
+/* 첫 번째 열에 대해 텍스트를 볼드 처리 */
+.centerTable td:first-child {
+    font-weight: bold;
+    color: #555;
+}
+
+/* 텍스트 영역 컨테이너 */
+.textareaContainer {
+    margin-bottom: 20px;
+    /* 여백 추가 */
+}
+
+/* 행 레이아웃 */
+.textareaRow {
+    display: flex;
+    gap: 15px;
+    /* 항목 사이의 여백 */
+    align-items: center;
+}
+
+/* 레이블 스타일 */
+.detailLabel {
+    font-size: 16px;
+    /* 폰트 크기 */
+    font-weight: bold;
+    /* 글씨 두께 */
+    color: #333;
+    /* 텍스트 색상 */
+    width: 100px;
+    /* 고정 너비 */
+    text-align: center;
+}
+
+/* 텍스트 영역 셀 */
+.textareaCell {
+    flex: 1;
+    /* 가용 공간을 모두 차지 */
+}
+
+/* 텍스트 영역 스타일 */
+.textarea {
+    width: 97.5%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: none;
+}
+
+/* 호버 시 배경색 변화 */
+.textareaCell textarea:focus {
+    background-color: #f1f1f1;
+    /* 포커스 시 배경 색 */
+}
+
+.detailLabelText {
+    margin-bottom: 25px;
+}
+
+/* Modal 배경 */
+.createModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow: auto;
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+}
+
+/* Modal 내부 */
+.createModalContent {
+    background-color: #fff;
+    padding: 20px;
+    width: 400px;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+/* Modal Header (닫기 버튼) */
+.createModalHeader {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.createCloseButton {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* 폼 레이아웃 */
+.createInputContainer {
+    margin-bottom: 15px;
+}
+
+.createInputLabel {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.createInputField {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.createInputField[type="file"] {
+    padding: 0;
+    border: none;
+}
+
+.createInputField[type="date"] {
+    padding: 6px;
+}
+
+/* 제출 버튼 */
+.createSubmitButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.createSubmitButton:hover {
+    background-color: #45a049;
+}
+
+/* 텍스트영역 스타일 */
+.createInputField[type="textarea"] {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* 폼 제목 */
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.deleteButton {
+    padding: 7px 9px;
+    width: 131px;
+    height: 40px;
+    background-color: #f44336;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 750px;
+    margin-top: 0px;
+}
+
+.deleteButton:hover {
+    background-color: #e53935;
+}

@@ -117,14 +117,14 @@
 
 .searchBar {
     display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 10px;
-        margin-top: 20px;
-        margin-left: 400px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+    margin-left: 400px;
 }
 
-.noResults{
+.noResults {
     margin-left: 650px;
     font-weight: bold;
 }
@@ -187,16 +187,21 @@
 
 /* 모달 오버레이 */
 .modalOverlay {
-    position: fixed; /* 화면 전체에 고정 */
+    position: fixed;
+    /* 화면 전체에 고정 */
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    background: rgba(0, 0, 0, 0.5);
+    /* 반투명 배경 */
     display: flex;
-    justify-content: center; /* 수평 중앙 정렬 */
-    align-items: center; /* 수직 중앙 정렬 */
-    z-index: 9999; /* 다른 요소들 위에 표시 */
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+    z-index: 9999;
+    /* 다른 요소들 위에 표시 */
 }
 
 /* 모달 콘텐츠 */
@@ -246,7 +251,8 @@ h2 {
 .productTable td,
 .materialTable td {
     padding: 10px;
-    border: 1px solid #ddd; /* 셀 테두리 */
+    border: 1px solid #ddd;
+    /* 셀 테두리 */
 }
 
 .productTable th,
@@ -254,9 +260,11 @@ h2 {
 .dateTable th,
 .materialTable th {
     padding: 10px;
-    background-color: #f0f0f0; /* 회색 배경 */
+    background-color: #f0f0f0;
+    /* 회색 배경 */
     text-align: left;
-    border: 1px solid #ddd; /* 셀 테두리 */
+    border: 1px solid #ddd;
+    /* 셀 테두리 */
 }
 
 .modalContent {
@@ -271,7 +279,8 @@ h2 {
     height: 500px;
 }
 
-.detailTable, .dateTable {
+.detailTable,
+.dateTable {
     margin: 10px;
     border-collapse: collapse;
 }
@@ -286,18 +295,22 @@ h2 {
     text-align: center;
 }
 
-.productTable, .materialTable {
+.productTable,
+.materialTable {
     text-align: center;
 }
 
-.detailTable td, .dateTable td {
+.detailTable td,
+.dateTable td {
     padding: 10px;
     border: 1px solid #ddd;
 }
 
-.productTable th, .materialTable th {
+.productTable th,
+.materialTable th {
     padding: 10px;
-    background-color: #c4c3c3; /* 회색 배경 */
+    background-color: #c4c3c3;
+    /* 회색 배경 */
     border: 1px solid #ddd;
     text-align: center;
 }
@@ -310,7 +323,8 @@ h2 {
 
 .tableWrapper {
     display: flex;
-    justify-content: space-between; /* 두 테이블을 양옆으로 배치 */
+    justify-content: space-between;
+    /* 두 테이블을 양옆으로 배치 */
 }
 
 .etc {
@@ -319,33 +333,37 @@ h2 {
     height: 180px;
 }
 
-.oneTd{
+.oneTd {
     padding: 10px;
-    background-color: #c4c3c3; /* 회색 배경 */
+    background-color: #c4c3c3;
+    /* 회색 배경 */
     border: 1px solid #ddd;
     text-align: center;
     font-weight: bold;
 }
 
-.twoTd{
+.twoTd {
     padding: 10px;
-    background-color: #c4c3c3; /* 회색 배경 */
+    background-color: #c4c3c3;
+    /* 회색 배경 */
     border: 1px solid #ddd;
     text-align: center;
     font-weight: bold;
 }
 
-.threeTd{
+.threeTd {
     padding: 10px;
-    background-color: #c4c3c3; /* 회색 배경 */
+    background-color: #c4c3c3;
+    /* 회색 배경 */
     border: 1px solid #ddd;
     text-align: center;
     font-weight: bold;
 }
 
-.fourTd{
+.fourTd {
     padding: 10px;
-    background-color: #c4c3c3; /* 회색 배경 */
+    background-color: #c4c3c3;
+    /* 회색 배경 */
     border: 1px solid #ddd;
     text-align: center;
     font-weight: bold;
@@ -354,7 +372,8 @@ h2 {
 .headerContainer {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 왼쪽과 오른쪽을 공간에 맞춰 배치 */
+    justify-content: space-between;
+    /* 왼쪽과 오른쪽을 공간에 맞춰 배치 */
     width: 100%;
 }
 
@@ -364,13 +383,13 @@ h2 {
     margin-left: 430px;
 }
 
-.pdfButton{
+.pdfButton {
     background: #FF6567;
     color: white;
     border: none;
-    margin-right: 55px;
+    margin-right: 56px;
     width: 150px;
-    height: 33px;
+    height: 46px;
     border-radius: 10px;
     font-family: 'Castoro Titling';
     font: caption;
@@ -383,7 +402,7 @@ h2 {
     transform: scale(1.05);
 }
 
-.deleteButton{
+.deleteButton {
     padding: 7px 9px;
     width: 74px;
     height: 35px;
@@ -399,7 +418,7 @@ h2 {
 
 .deleteButton:hover {
     background-color: #e53935;
-} 
+}
 
 /* 성공 알림 모달 */
 .successModal {
