@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Calendar, ChevronLeft, ChevronRight, Filter, AlertCircle } from 'lucide-react';
 import styles from "../../styles/productionPlan/BreweryCalendar.module.css";
 
@@ -37,9 +37,9 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
   
   // 주간 뷰 일자 생성
   const weekDays = generateWeekDays(currentDate);
-  
-  // 주간 뷰의 시간 범위 (7:00 ~ 20:00)
-  const hourRange = Array.from({ length: 14 }, (_, i) => i + 7);
+
+  // 주간 뷰의 시간 범위 (0:00 ~ 23:00)로 확장
+  const hourRange = Array.from({ length: 24 }, (_, i) => i);
   
   // 이벤트 클릭 핸들러
   const handleEventClick = (event) => {
@@ -67,6 +67,21 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     }
     setCurrentDate(newDate);
   };
+
+  const parseEventDate = (dateString) => {
+    try {
+      // 기본 Date 객체 생성
+      const date = new Date(dateString);
+      
+      // 모든 날짜를 하루 뒤로 조정 (시간대 문제 일괄 해결)
+      date.setDate(date.getDate() + 1);
+      
+      return date;
+    } catch (error) {
+      console.error('날짜 파싱 오류:', error);
+      return new Date();
+    }
+  };
   
   // 특정 날짜/시간에 해당하는 이벤트 찾기
   const getEventsForTimeSlot = (date, hour) => {
@@ -74,10 +89,36 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     const slotEnd = new Date(`${date}T${hour.toString().padStart(2, '0')}:59:59`);
     
     return events.filter(event => {
-      const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
+      const eventStart = parseEventDate(event.start);
+      const eventEnd = parseEventDate(event.end);
       
-      // 이벤트가 시간 슬롯에 걸쳐 있는지 확인
+      // 날짜만 비교 (시간은 무시)
+      const eventDate = eventStart.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식
+      const slotDate = date;
+      
+      // 짧은 공정(분쇄, 당화 등)은 날짜만 일치하면 표시
+      if (['분쇄', '당화', '여과', '끓임', '냉각', '숙성후여과', '탄산조정'].includes(event.process)) {
+        const isCorrectDay = eventDate === slotDate
+        
+        // 날짜가 일치하면 특정 시간대에 표시
+        if (isCorrectDay) {
+          // 분쇄: 8-9시, 당화: 9-10시 등으로 할당
+          const processHourMap = {
+            '분쇄': 8,
+            '당화': 9,
+            '여과': 10,
+            '끓임': 11,
+            '냉각': 12,
+            '숙성후여과': 14,
+            '탄산조정': 16
+          };
+          
+          return processHourMap[event.process] === hour;
+        }
+        return false;
+      }
+      
+      // 발효, 숙성 등 장기 공정은 기존 방식대로 처리
       return (
         (eventStart >= slotStart && eventStart < slotEnd) ||
         (eventEnd > slotStart && eventEnd <= slotEnd) ||
@@ -92,6 +133,19 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     const hours = d.getHours();
     const minutes = d.getMinutes();
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  };
+  
+  // 공정별 색상 매핑
+  const processColors = {
+    '분쇄': '#E3F2FD',
+    '당화': '#FFEBEE',
+    '여과': '#E8F5E9',
+    '끓임': '#FFF8E1',
+    '냉각': '#F3E5F5',
+    '발효': '#DCEDC8',
+    '숙성': '#B3E5FC',
+    '숙성후여과': '#FFE0B2',
+    '탄산조정': '#D1C4E9'
   };
   
   return (
@@ -185,22 +239,30 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
                     <div key={`${day}-${hour}`} className={styles.dayCell}>
                       {timeSlotEvents.length > 0 && (
                         <div className={styles.eventList}>
-                          {timeSlotEvents.map(event => (
-                            <div 
-                              key={event.id}
-                              className={styles.event}
-                              style={{ 
-                                backgroundColor: event.backgroundColor || '#E3F2FD',
-                                color: event.textColor || '#1E40AF'
-                              }}
-                              onClick={() => handleEventClick(event)}
-                            >
-                              <div className={styles.eventTitle}>{event.productName} - {event.process}</div>
-                              <div className={styles.eventInfo}>
-                                라인 {event.lineNo} | 배치 {event.batchNo}
+                          {timeSlotEvents.map(event => {
+                            // 짧은 공정에 대해 더 두드러진 스타일 적용
+                            const isShortProcess = ['분쇄', '당화', '여과', '끓임', '냉각', '숙성후여과', '탄산조정'].includes(event.process);
+                            const bgColor = processColors[event.process] || '#E3F2FD';
+                            
+                            return (
+                              <div 
+                                key={event.id}
+                                className={`${styles.event} ${isShortProcess ? styles.shortProcess : ''}`}
+                                style={{ 
+                                  backgroundColor: bgColor,
+                                  color: event.textColor || '#1E40AF',
+                                  border: isShortProcess ? '2px solid #000' : 'none',
+                                  fontWeight: isShortProcess ? 'bold' : 'normal'
+                                }}
+                                onClick={() => handleEventClick(event)}
+                              >
+                                <div className={styles.eventTitle}>{event.productName} - {event.process}</div>
+                                <div className={styles.eventInfo}>
+                                  라인 {event.lineNo} | 배치 {event.batchNo}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -232,25 +294,29 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
                     <div className={styles.timeContent}>
                       {timeSlotEvents.length > 0 ? (
                         <div className={styles.timeEventList}>
-                          {timeSlotEvents.map(event => (
-                            <div 
-                              key={event.id}
-                              className={styles.timeEvent}
-                              style={{ 
-                                backgroundColor: event.backgroundColor || '#E3F2FD',
-                                color: event.textColor || '#1E40AF'
-                              }}
-                              onClick={() => handleEventClick(event)}
-                            >
-                              <div className={styles.timeEventTitle}>{event.productName} - {event.process}</div>
-                              <div className={styles.timeEventTime}>
-                                {formatTimeDisplay(event.start)} - {formatTimeDisplay(event.end)}
+                          {timeSlotEvents.map(event => {
+                            const bgColor = processColors[event.process] || '#E3F2FD';
+                            
+                            return (
+                              <div 
+                                key={event.id}
+                                className={styles.timeEvent}
+                                style={{ 
+                                  backgroundColor: bgColor,
+                                  color: event.textColor || '#1E40AF'
+                                }}
+                                onClick={() => handleEventClick(event)}
+                              >
+                                <div className={styles.timeEventTitle}>{event.productName} - {event.process}</div>
+                                <div className={styles.timeEventTime}>
+                                  {formatTimeDisplay(event.start)} - {formatTimeDisplay(event.end)}
+                                </div>
+                                <div className={styles.timeEventInfo}>
+                                  라인 {event.lineNo} | 배치 {event.batchNo}
+                                </div>
                               </div>
-                              <div className={styles.timeEventInfo}>
-                                라인 {event.lineNo} | 배치 {event.batchNo}
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       ) : (
                         <div className={styles.timeSlotEmpty}></div>
@@ -272,24 +338,40 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
         </div>
         <div className={styles.legendItems}>
           <div className={styles.legendItem}>
-            <div className={styles.legendColor} style={{ backgroundColor: '#E3F2FD' }}></div>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['분쇄'] }}></div>
             <span>분쇄</span>
           </div>
           <div className={styles.legendItem}>
-            <div className={styles.legendColor} style={{ backgroundColor: '#FFEBEE' }}></div>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['당화'] }}></div>
             <span>당화</span>
           </div>
           <div className={styles.legendItem}>
-            <div className={styles.legendColor} style={{ backgroundColor: '#E8F5E9' }}></div>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['여과'] }}></div>
             <span>여과</span>
           </div>
           <div className={styles.legendItem}>
-            <div className={styles.legendColor} style={{ backgroundColor: '#FFF8E1' }}></div>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['끓임'] }}></div>
+            <span>끓임</span>
+          </div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['냉각'] }}></div>
+            <span>냉각</span>
+          </div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['발효'] }}></div>
             <span>발효</span>
           </div>
           <div className={styles.legendItem}>
-            <div className={styles.legendColor} style={{ backgroundColor: '#F3E5F5' }}></div>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['숙성'] }}></div>
             <span>숙성</span>
+          </div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['숙성후여과'] }}></div>
+            <span>숙성후여과</span>
+          </div>
+          <div className={styles.legendItem}>
+            <div className={styles.legendColor} style={{ backgroundColor: processColors['탄산조정'] }}></div>
+            <span>탄산조정</span>
           </div>
         </div>
       </div>
