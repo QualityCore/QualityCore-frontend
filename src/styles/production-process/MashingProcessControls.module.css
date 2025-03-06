@@ -104,3 +104,16 @@
     }
   }
 
+
+.mTimerDisplay {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d9534f;
+    margin-top: 10px;
+}
+
+
+.mashingProcessTableThead {
+    display: none;
+}
+
