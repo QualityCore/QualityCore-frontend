@@ -177,7 +177,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
 
   return (
     <div className={styles.materialGrindingForm}>
-      <h2 className={styles.grindingTitle}>분쇄 공정</h2>
+      <h2 className={styles.grindingTitle}>분쇄 및 원재료 투입 공정</h2>
       <div className={styles.gFormGrid}>
         <div className={styles.gGridItem}>
           <label className={styles.gLabel01}>작업지시 ID </label>
@@ -278,7 +278,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           분
         </div>
 
-        <div className={styles.gGridItem}>
+        {/* <div className={styles.gGridItem}>
           <label className={styles.gLabel09}>상태 코드</label>
           <input
             className={styles.gItem09}
@@ -287,7 +287,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
             value="SC001"
             disabled
           />
-        </div>
+        </div> */}
 
         <div className={styles.gGridItem}>
           <label className={styles.gLabel10}>공정 상태</label>

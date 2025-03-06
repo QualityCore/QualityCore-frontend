@@ -94,7 +94,7 @@ height: 100%; /* 높이를 동일하게 설정 */
 .mSaveButton{
     position: absolute;
     bottom: 50px; /* 폼 아래로 이동 */
-    left: 1150px; 
+    right: 150px; 
     width: 120px;
     padding: 12px 20px;
 }

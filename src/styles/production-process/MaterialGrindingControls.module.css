@@ -15,7 +15,7 @@
   
   .gFormGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr; /* 첫 번째 열을 넓게 설정하여 정렬 */
+    grid-template-columns: 1fr 1fr 1fr ; /* 첫 번째 열을 넓게 설정하여 정렬 */
     gap: 20px;
     align-items: center; 
     justify-content: center;
@@ -177,4 +177,8 @@
 
 .gLabel11{
   width: 80px !important; /* 너비 통일 */
+}
+
+.gLabel02{
+  width: 50px !important; /* 너비 통일 */
 }

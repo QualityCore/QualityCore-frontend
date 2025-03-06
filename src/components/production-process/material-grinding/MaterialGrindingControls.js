@@ -16,9 +16,6 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
   const [timer, setTimer] = useState(0);
   const navigate = useNavigate();
   const [buttonLabel, setButtonLabel] = useState("등록하기");
-  const [processStatus, setProcessStatus] = useState( grindingData.processStatus || "대기 중");
-  
-
 
   // 🔹 타이머 설정: 공정 완료까지 남은 시간 카운트다운
   useEffect(() => {
@@ -30,10 +27,6 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
     } else if (timer === 0 && timerStarted) {
       setShowCompleteModal(true);
       setTimerStarted(false); // 모달이 뜬 후 타이머 상태 리셋
-
-      // ✅ 타이머 완료 후 "완료" 상태 변경
-      setProcessStatus("완료");
-      setGrindingData((prev) => ({ ...prev, processStatus: "완료" }));
     }
   }, [timer, timerStarted]); // 상태체크
 
@@ -51,45 +44,45 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
 
   const handleSave = async () => {
     console.log("🔍 grindingData 전체 데이터:", grindingData);
-    console.log("🔍 grindingData.maltType 값:", grindingData.maltType);
-    
-    // ✅ `maltType` 값이 없는 경우 체크 (undefined, null, 빈 문자열, 공백 포함)
-     if (!grindingData || !grindingData.maltType || grindingData.maltType.trim() === "") {
-      alert("⚠️ 맥아 종류를 선택해야 합니다!");
+
+    if (!grindingData || !grindingData.lotNo) {
+      alert("⚠️ LOT_NO를 입력해야 합니다!");
       return;
     }
-    try {
-      const saveData = { ...grindingData }; // 기존 데이터 복사
-      console.log("✅ 저장할 데이터:", saveData);
 
-      const response = await materialGrindingApi.saveGrindingData(saveData);
+    try {
+      // ✅ LOT_NO가 이미 DB에 있는지 확인하는 API 호출
+      const checkLotResponse = await materialGrindingApi.getMaterialByLotNo(
+        grindingData.lotNo
+      );
+      const savedData = { ...grindingData}; // 상태 변경
+      console.log("✅ 저장할 데이터:", savedData);
+
+
+      console.log("🔍 LOT_NO 확인 API 응답:", checkLotResponse);
+
+      await materialGrindingApi.saveGrindingData(savedData);
+
+      // ✅ 상태 업데이트 (UPDATE)
+      const updatedData = {
+        lotNo: grindingData.lotNo,
+        processTracking: { processStatus: "진행 중" },
+      };
+      console.log("✅ 상태 업데이트 요청:", updatedData);
+      const response = await materialGrindingApi.updateProcessStatus(
+        updatedData
+      );
 
       if (response.status === 200 || response.status === 201) {
-        console.log("✅ 데이터 저장 성공:", response);
-
-        const savedData = response.data?.result?.savedMaterialGrinding;
-
-        if (!savedData) {
-          console.warn(
-            "⚠️ 응답 데이터에 savedMaterialGrinding 없음:",
-            response.data
-          );
-          setShowErrorModal(true);
-          return;
-        }
-        setGrindingData((prev) => ({
-          ...prev,
-          ...savedData, // ✅ savedData의 모든 필드를 업데이트
-        }));
-        startTimer(); // ✅ 저장 후 타이머 시작
+        console.log("✅ 데이터 저장 & 상태 업데이트 성공:", response);
+        setGrindingData((prev) => ({ ...prev, processStatus: "진행 중" }));
+        setShowSuccessModal(true);
       }
     } catch (error) {
-      console.error("저장 실패:", error);
+      console.error("❌ 저장 실패:", error);
       setShowErrorModal(true);
     }
   };
-
-  
 
   const handleConfirmClick = () => {
     setShowConfirmModal(false);
@@ -103,7 +96,7 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
     } else if (buttonLabel === "다음공정 이동") {
       setGrindingData((prev) => ({
         ...prev,
-        processStatus: "완료",
+        processStatus: "대기 중",
       }));
       navigate("/mashing-process");
     }
