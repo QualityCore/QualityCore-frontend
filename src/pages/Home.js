@@ -1,15 +1,28 @@
 import React from "react";
-import styles from "../styles/Home.module.css"; 
+import styles from "../styles/Home.module.css";
+
+import ProductionPlanCard from "../components/home/ProductionPlanCard";
+
 
 const Home = () => {
   return (
-    <div className={styles.homeContainer}> 
-      <h1 className={styles.title}>생산 관리 시스템</h1>
+    <div className={styles.homeContainer}>
       <div className={styles.gridContainer}>
-        <div className={styles.gridItem}>🌈 생산 계획</div>
-        <div className={styles.gridItem}>🌈 공정 관리</div>
-        <div className={styles.gridItem}>🌈 자재 관리</div>
-        <div className={styles.gridItem}>🌈 통계 및 분석</div>
+        <div className={`${styles.gridItem} ${styles.workOrderCard}`}>
+         
+        </div>
+        
+        <div className={`${styles.gridItem} ${styles.processManagementCard}`}>
+    
+        </div>
+        
+        <div className={`${styles.gridItem} ${styles.productionPlanCard}`}>
+          <ProductionPlanCard />
+        </div>
+        
+        <div className={`${styles.gridItem} ${styles.performanceCard}`}>
+    
+        </div>
       </div>
     </div>
   );
