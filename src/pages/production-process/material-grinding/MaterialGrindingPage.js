@@ -4,26 +4,31 @@ import MaterialGrindingControls from "../../../components/production-process/mat
 import styles from "../../../styles/production-process/MaterialGrindingControls.module.css";
 
 const MaterialGrindingPage = () => {
-    const [grindingData, setGrindingData] = useState({
-        lotNo : "LOT",
-        mainMaterial: "보리",
-        mainMaterialInputVolume: "",
-        maltType: "페일 몰트",
-        maltInputVolume: "",
-        grindIntervalSetting: "",
-        grindSpeedSetting: "",
-        grindDuration: "1",   
-        statusCode : "SC001",
-        processStatus: "대기중",
-        notes: "",
-    });
+  const [grindingData, setGrindingData] = useState({
+    lotNo: "",
+    mainMaterial: "",
+    mainMaterialInputVolume: "",
+    maltType: "",
+    maltInputVolume: "",
+    grindIntervalSetting: "",
+    grindSpeedSetting: "", 
+    grindDuration: "40",
+    statusCode: "SC001",
+    processStatus: "대기 중",
+    processName: "분쇄 및 원재료 투입",
+    notes: "",
+  });
+
 
     return (
-        <div className={styles.grindingButtonContainer}>
-            <MaterialGrindingForm  grindingData={grindingData} setGrindingData={setGrindingData} />
-            <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData}/>
+        <div className={styles["productionPlan-container"]}>
+            <h1 className={styles["page-title"]}>분쇄 공정 관리</h1>
+            <MaterialGrindingForm grindingData={grindingData} setGrindingData={setGrindingData} />
+            <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData} />
         </div>
     );
+
 };
+
 
 export default MaterialGrindingPage;

@@ -107,7 +107,7 @@ const Sidebar = () => {
           </button>
           {openCategory === "생산공정" && (
             <ul className="submenu">
-              <li><Link to="/material-grinding">분쇄공정</Link></li>
+              <li><Link to="/material-grinding">분쇄 및 원재료 투입 공정</Link></li>
               <li><Link to="/mashing-process">당화공정</Link></li>
               <li><Link to="/filtration-process">여과공정</Link></li>
               <li><Link to="/boiling-process">끓임공정</Link></li>
@@ -129,7 +129,7 @@ const Sidebar = () => {
           </button>
           {openCategory === "Routing" && (
             <ul className="submenu">
-              <li><Link to="/routing-input">공정별 생산투입</Link></li>
+              <li><Link to="/wort">끓임 공정 워트 품질 모니터링</Link></li>
               <li><Link to="/processTracking">공정 진행 현황</Link></li>
             </ul>
           )}
