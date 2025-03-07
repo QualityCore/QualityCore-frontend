@@ -14,12 +14,10 @@ const Header = () => {
       '/menu': { main: '시스템 관리', sub: '메뉴 관리' },
 
       // 기준정보 관리
-      '/workplace': { main: '기준정보 관리', sub: '작업장 등록' },
+      '/workplace': { main: '기준정보 관리', sub: '작업장 정보' },
       '/process-stage': { main: '기준정보 관리', sub: '공정 정보' },
-      '/equipment-info': { main: '기준정보 관리', sub: '설비 정보 등록' },
-      '/label-info': { main: '기준정보 관리', sub: 'LABEL 정보 등록' },
-      '/downtime-cause': { main: '기준정보 관리', sub: '비가동 원인 코드 관리' },
-
+      '/equipment-info': { main: '기준정보 관리', sub: '설비 정보' },
+      '/label-info': { main: '기준정보 관리', sub: 'LABEL 정보' },
 
       // 생산계획
       '/plan-overview': { main: '생산계획', sub: '생산계획 조회' },
