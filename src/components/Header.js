@@ -57,7 +57,7 @@ const Header = () => {
       '/attendance': { main: '스케줄관리', sub: '스케줄표' },
 
       // 기본 페이지
-      '/': { main: '', sub: '메인화면' }
+      '/home': { main: '', sub: '메인화면' }
     };
 
     return pageCategories[pathname] || { main: '', sub: '' };
