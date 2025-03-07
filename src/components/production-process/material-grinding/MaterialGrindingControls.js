@@ -41,6 +41,9 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
     }
   }, [timer, timerStarted]); // 상태체크
 
+
+
+  
   const startTimer = () => {
     setTimerStarted(true); // ✅ 타이머 실행됨을 명확히 설정
     const totalTime =
@@ -52,6 +55,9 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
     // ✅ 부모 상태 업데이트
     setGrindingData((prev) => ({ ...prev, processStatus: "진행 중" }));
   };
+
+
+
 
   const handleSave = async () => {
     console.log("🔍 grindingData 전체 데이터:", grindingData);
