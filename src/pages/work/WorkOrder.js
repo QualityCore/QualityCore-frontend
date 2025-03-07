@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { findAllWorkOrders, fetchWorkOrderByLotNo, workOrderDelete } from "../../apis/workOrderApi/workOrdersApi";
-import workOrder from "./workOrders.module.css";
+import workOrder from "../../styles/work/workOrders.module.css";
 import Pagination from "../../Pagination/Pagination";
 import Modal from "react-modal";
 import SuccessAnimation from "../../lottie/SuccessNotification";
@@ -48,12 +48,12 @@ function WorkOrder() {
     const fetchData = async (page = 0, filterParams = {}) => {
         console.log(`✅ fetchData 호출됨, 페이지 번호: ${page}, 필터:`, filterParams);
         try {
-            const { workTeam, productName, lotNo, lineNo, startDate , endDate } = filterParams;
+            const { workTeam, productName, lotNo, lineNo, startDate, endDate } = filterParams;
             let lineNoParam = lineNo ? parseInt(lineNo, 10) : undefined; // 숫자로 변환
-    
-            const data = await findAllWorkOrders(page, 13, workTeam, productName, lotNo, lineNoParam, startDate , endDate);
+
+            const data = await findAllWorkOrders(page, 13, workTeam, productName, lotNo, lineNoParam, startDate, endDate);
             console.log("✅ API 응답 데이터:", data);
-    
+
             if (data && data.work && Array.isArray(data.work.content)) {
                 const updatedWorkOrders = data.work.content.map((work) => ({
                     ...work,
@@ -65,7 +65,7 @@ function WorkOrder() {
                 } else {
                     setNoResults(false);
                 }
-    
+
                 setWorkOrders(updatedWorkOrders);
                 setPageInfo({
                     page: data.work.number,
@@ -83,7 +83,7 @@ function WorkOrder() {
             setWorkOrders([]);
             setNoResults(true); // 오류 발생 시 검색 결과 없음 상태로 설정
         }
-    };    
+    };
 
     // 페이지 핸들러
     const handlePageChange = (newPage) => {
@@ -377,7 +377,7 @@ function WorkOrder() {
                         ) : (
                             <p>자재 정보가 없습니다.</p>
                         )}
-    
+
                         <h2>특이사항</h2>
                         <textarea value={selectedWorkOrder.workEtc} className={workOrder.etc}></textarea>
                         <button className={workOrder.deleteButton} onClick={() => handleDelete(selectedWorkOrder.lotNo)}>🚫삭제</button>

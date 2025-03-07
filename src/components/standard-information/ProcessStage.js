@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import processStage from "./processStage.module.css";
+import ProcessStages from "../../styles/standard-information/processStage.module.css";
 import Modal from "react-modal";
 import { marked } from 'marked';
 
@@ -29,12 +29,12 @@ function ProcessStage() {
     };
 
     return (
-        <div className={processStage.mainContainer}>
-            <div className={processStage.cardContainer}>
+        <div className={ProcessStages.mainContainer}>
+            <div className={ProcessStages.cardContainer}>
                 {processData.map((process) => (
-                    <div className={processStage.card} key={process.id} onClick={() => handleCardClick(process)}>
-                        <img src={process.imgSrc} alt={process.title} className={processStage.cardImg} />
-                        <p className={processStage.firstText}>{process.title}</p>
+                    <div className={ProcessStages.card} key={process.id} onClick={() => handleCardClick(process)}>
+                        <img src={process.imgSrc} alt={process.title} className={ProcessStages.cardImg} />
+                        <p className={ProcessStages.firstText}>{process.title}</p>
                     </div>
                 ))}
             </div>
@@ -44,8 +44,8 @@ function ProcessStage() {
                 isOpen={isModalOpen}
                 onRequestClose={handleCloseModal}
                 contentLabel="Process Details"
-                className={processStage.modal}
-                overlayClassName={processStage.overlay}
+                className={ProcessStages.modal}
+                overlayClassName={ProcessStages.overlay}
             >
                 <h2>{modalContent.title}</h2>
                 {modalContent.description && (
