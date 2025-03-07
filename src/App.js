@@ -17,6 +17,8 @@ import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
 import EquipmentInfo from "./components/standard-information/EquipmentInfo";
+import LabelInfo from "./components/standard-information/LabelInfo";
+
 import WortVolumePage from "./pages/routing/WortVolumePage";
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함
@@ -37,6 +39,38 @@ const Layout = ({ children }) => {
 const App = () => {
   return (
     <Router>
+
+      <div className="app-container">
+        {/* 사이드바 */}
+        <Sidebar />
+
+        <div className="main-wrapper">
+
+          <Header />
+
+          {/* 메인 컨텐츠 */}
+          <div className="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/plan-overview" element={<ProductionPlan />} />
+              <Route path="/detail/:planId" element={<ProductionPlanDetailPage />} />
+              <Route path="/plan-generate" element={<ProductionPlanSteps />} />
+              <Route path="/processTracking" element={<ProcessTrackingPage />} />
+              <Route path="/wort" element={<WortVolumePage />} />
+              <Route path="/material" element={<MaterialManagementPage />} />
+              <Route path="/attendance" element={<Attendance />} />
+              <Route path="/work/orders" element={<WorkOrder />} />
+              <Route path="/work/create" element={<WorkCreate />} />
+              <Route path="/workplace" element={<WorkplacePage />} />
+              <Route path="/material-grinding" element={<MaterialGrindingPage />} />
+              <Route path="/mashing-process" element={<MashingProcessPage />} />
+              <Route path="/process-stage" element={<ProcessStage />} />
+              <Route path="/equipment-info" element={<EquipmentInfo />} />
+              <Route path="/label-info" element={<LabelInfo />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
       <Routes>
         {/* 로그인 페이지 - 레이아웃 없이 전체 화면 */}
         <Route path="/login" element={<Login />} />
