@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import workCreate from "./workCreate.module.css";
+import workCreate from "../../styles/work/workCreate.module.css";
 import { getBeerRecipes, getPlanInfo, createWorkOrder } from "../../apis/workOrderApi/workOrdersApi";
 import SuccessAnimation from "../../lottie/SuccessNotification";
 import WarningAnimation from "../../lottie/WarningNotification";
@@ -208,15 +208,15 @@ function WorkCreate() {
                 </table>
             )}
             {/* 성공모달 */}
-            <Modal isOpen={isSuccessModal} onRequestClose={closeSuccessModal} className={workCreate.successModal} overlayClassName="modal-overlay">
-                <div className={workCreate.successModalHeader}>
-                    <button className={workCreate.successCloseButton} onClick={closeSuccessModal}>X</button>
-                </div>
-                <div className={workCreate.successModalContent}>
-                    <SuccessAnimation />
-                    <p className={workCreate.successMessage}>{modalMessage}</p>
-                </div>
-            </Modal>
+                <Modal isOpen={isSuccessModal} onRequestClose={closeSuccessModal} className={workCreate.successModal} overlayClassName="modal-overlay">
+                    <div className={workCreate.successModalHeader}>
+                        <button className={workCreate.successCloseButton} onClick={closeSuccessModal}>X</button>
+                    </div>
+                    <div className={workCreate.successModalContent}>
+                        <SuccessAnimation />
+                        <p className={workCreate.successMessage}>{modalMessage}</p>
+                    </div>
+                </Modal>
             {/* 경고모달 */}
             <Modal isOpen={isWarningModal} onRequestClose={closeWarningModal} className={workCreate.warningModal} overlayClassName={workCreate.warningModalOverlay}>
                 <div className={workCreate.warningModalHeader}>

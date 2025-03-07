@@ -30,6 +30,7 @@
     border: 2px solid #b0b0b0;
     /* 더 두꺼운 셀 경계선 */
     padding: 6px 10px;
+    cursor: pointer;
 }
 
 .equipmentTable th {
@@ -71,10 +72,9 @@
 }
 
 .searchBarInput {
-    margin-bottom: 10px;
+    margin-bottom: 9px;
     padding: 8px;
     width: 200px;
-    margin-left: 1050px;
     border-radius: 4px;
     border: 1px solid #d1d1d1;
 }
@@ -82,8 +82,8 @@
 .searchButton,
 .createButton {
     padding: 8px 20px;
+    height: 35px;
     background-color: #4CAF50;
-    /* 기본 ERP 버튼 색상 */
     color: white;
     font-size: 14px;
     font-weight: 600;
@@ -91,8 +91,7 @@
     cursor: pointer;
     border-radius: 5px;
     margin-left: 20px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    /* 효과 추가 */
+    transition: background-color 0.3sease, transform 0.2sease;
 }
 
 .searchButton:hover,
@@ -113,10 +112,24 @@
 
 .titleBar {
     margin-top: 25px;
+    display: flex;
 }
 
 .createButton {
     margin-left: 55px;
+}
+
+.createButton1 {
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 325px;
+    transition: background-color 0.3sease, transform 0.2sease;
 }
 
 /* 전체 모달 오버레이 */
@@ -442,18 +455,19 @@ h1 {
     z-index: 9999;
 }
 
-/* Modal Header (닫기 버튼) */
-.createModalHeader {
-    display: flex;
-    justify-content: flex-end;
-}
-
 .createCloseButton {
-    background: none;
-    border: none;
     font-size: 24px;
+    /* Increase the size */
+    font-weight: bold;
+    background: transparent;
+    border: none;
     cursor: pointer;
+    padding: 8px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
     color: #333;
+    /* Adjust color */
 }
 
 /* 폼 레이아웃 */
@@ -527,10 +541,110 @@ h1 {
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 750px;
-    margin-top: 0px;
 }
 
 .deleteButton:hover {
     background-color: #e53935;
+}
+
+.editButton {
+    padding: 7px 9px;
+    width: 131px;
+    height: 40px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.editButton:hover {
+    background-color: #45a049;
+}
+
+.buttonLayout {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 0 10px;
+
+}
+
+/* 성공 알림 모달 */
+.successModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+
+.successModalOverlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.successModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.successCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.successModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.successModalContent {
+    padding: 20px;
+}
+
+.successCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 375px;
+}
+
+.successMessage {
+    margin-left: 67px;
+    font-size: large;
+    font-family: emoji;
+    font-weight: bold;
+}
+
+.createSelect {
+    margin-left: 948px;
+    width: 80px;
+    height: 33px;
+    margin-right: 20px;
 }
