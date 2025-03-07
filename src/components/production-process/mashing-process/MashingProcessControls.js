@@ -9,7 +9,6 @@ import CompleteModal from "../../standard-information/common/CompleteModal";
 import styles from "../../../styles/production-process/MashingProcessControls.module.css";
 
 const MashingProcessControls = ({ workOrder }) => {
-  const { mashingId } = useParams(); // URL에서 ID 가져오기
   const [mashingData, setMashingData] = useState({
     lotNo: workOrder?.lotNo || "", // 작업지시 ID 자동 불러오기
     mashingTime: "50",
@@ -18,9 +17,9 @@ const MashingProcessControls = ({ workOrder }) => {
     grainRatio: "",
     waterRatio: "",
     waterInputVolume: "",
-    processStatus: "대기 중",  
-    statusCode: "SC002",  
-    processName: "당화", 
+    processStatus: "진행 중",
+    statusCode: "SC002",
+    processName: "당화",
     notes: "",
   });
 
@@ -30,50 +29,51 @@ const MashingProcessControls = ({ workOrder }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [mashingId, setMashingId] = useState(null);
   const [buttonLabel, setButtonLabel] = useState("등록하기");
   const navigate = useNavigate(); // ✅ 페이지 이동을 위한 함수!
 
-    // ✅ workOrder가 변경될 때 lotNo를 업데이트
-    useEffect(() => {
-      if (workOrder?.lotNo) {
-        setMashingData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
-      }
-    }, [workOrder]);
-  
-    
-    // ✅ LOT_NO가 변경될 때 API 호출하여 "물" 데이터 가져오기
-    useEffect(() => {
-      if (!mashingData.lotNo) return; // ✅ LOT_NO가 없으면 실행하지 않음
-  
-      const fetchWaterInputVolume = async () => {
-        try {
-          console.log(`📌 LOT_NO=${mashingData.lotNo}의 자재 목록 조회 요청`);
-  
-          const materialsList = await mashingProcessApi.getMaterialsByLotNo(mashingData.lotNo);
-  
-          console.log("✅ 자재 목록:", materialsList);
-  
-          const waterMaterial = materialsList.find((item) => item.materialName === "물");
-  
-          if (waterMaterial) {
-            console.log(`🔍 물 데이터 찾음: ${waterMaterial.totalQty} L`);
-            setMashingData((prev) => ({
-              ...prev,
-              waterInputVolume: waterMaterial.totalQty, // ✅ 물 투입량 설정
-            }));
-          } else {
-            console.warn("⚠️ 물 데이터가 없음");
-          }
-        } catch (error) {
-          console.error("❌ 물 투입량 데이터를 가져오는 데 실패했습니다.", error);
+  // ✅ workOrder가 변경될 때 lotNo를 업데이트
+  useEffect(() => {
+    if (workOrder?.lotNo) {
+      setMashingData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
+    }
+  }, [workOrder]);
+
+  // ✅ LOT_NO가 변경될 때 API 호출하여 "물" 데이터 가져오기
+  useEffect(() => {
+    if (!mashingData.lotNo) return; // ✅ LOT_NO가 없으면 실행하지 않음
+
+    const fetchWaterInputVolume = async () => {
+      try {
+        console.log(`📌 LOT_NO=${mashingData.lotNo}의 자재 목록 조회 요청`);
+
+        const materialsList = await mashingProcessApi.getMaterialsByLotNo(
+          mashingData.lotNo
+        );
+
+        console.log("✅ 자재 목록:", materialsList);
+
+        const waterMaterial = materialsList.find(
+          (item) => item.materialName === "물"
+        );
+
+        if (waterMaterial) {
+          console.log(`🔍 물 데이터 찾음: ${waterMaterial.totalQty} L`);
+          setMashingData((prev) => ({
+            ...prev,
+            waterInputVolume: waterMaterial.totalQty, // ✅ 물 투입량 설정
+          }));
+        } else {
+          console.warn("⚠️ 물 데이터가 없음");
         }
-      };
-  
-      fetchWaterInputVolume();
-    }, [mashingData.lotNo]);
+      } catch (error) {
+        console.error("❌ 물 투입량 데이터를 가져오는 데 실패했습니다.", error);
+      }
+    };
 
-
-
+    fetchWaterInputVolume();
+  }, [mashingData.lotNo]);
 
   useEffect(() => {
     const savedLotNo = localStorage.getItem("selectedLotNo");
@@ -81,7 +81,6 @@ const MashingProcessControls = ({ workOrder }) => {
       setMashingData((prev) => ({ ...prev, lotNo: savedLotNo }));
     }
   }, []);
-
 
   // ✅ LOT_NO가 변경될 때 API 호출하여 자재 목록 조회 & 물 데이터 설정
   useEffect(() => {
@@ -91,30 +90,41 @@ const MashingProcessControls = ({ workOrder }) => {
       try {
         console.log(`📌 LOT_NO=${mashingData.lotNo}의 자재 목록 조회 요청`);
 
-        const materialsList = await mashingProcessApi.getMaterialsByLotNo(mashingData.lotNo);
+        const materialsList = await mashingProcessApi.getMaterialsByLotNo(
+          mashingData.lotNo
+        );
         console.log("✅ 불러온 자재 목록:", materialsList);
 
-          // ✅ "물" 데이터 찾기
-      const waterMaterial = materialsList.find((item) => item.materialName === "물");
-      const waterInputVolume = waterMaterial ? Number(waterMaterial.totalQty) : 0;
+        // ✅ "물" 데이터 찾기
+        const waterMaterial = materialsList.find(
+          (item) => item.materialName === "물"
+        );
+        const waterInputVolume = waterMaterial
+          ? Number(waterMaterial.totalQty)
+          : 0;
 
+        // ✅ 곡물 비율 계산 (숫자로 변환 후 합산)
+        const maltInputVolume = materialsList
+          .filter((item) =>
+            ["페일 몰트", "필스너 몰트", "초콜릿 몰트"].includes(
+              item.materialName
+            )
+          )
+          .reduce((sum, item) => sum + Number(item.totalQty), 0);
 
-         // ✅ 곡물 비율 계산 (숫자로 변환 후 합산)
-      const maltInputVolume = materialsList
-      .filter((item) => ["페일 몰트", "필스너 몰트", "초콜릿 몰트"].includes(item.materialName))
-      .reduce((sum, item) => sum + Number(item.totalQty), 0);
-
-    const mainMaterialInputVolume = materialsList
-      .filter((item) => ["보리", "밀", "쌀"].includes(item.materialName))
-      .reduce((sum, item) => sum + Number(item.totalQty), 0);
+        const mainMaterialInputVolume = materialsList
+          .filter((item) => ["보리", "밀", "쌀"].includes(item.materialName))
+          .reduce((sum, item) => sum + Number(item.totalQty), 0);
 
         const grainRatio = maltInputVolume + mainMaterialInputVolume;
         const waterRatio = waterInputVolume;
- 
+
         // ✅ 비율 계산: 곡물비율을 1로 맞추고, 물 비율을 반올림
-        const waterRatioAdjusted = grainRatio > 0 ? Math.round(waterRatio / grainRatio) : 0;
-        console.log(`📌 자동 계산된 비율 -> 곡물: 1, 물: ${waterRatioAdjusted}`);
- 
+        const waterRatioAdjusted =
+          grainRatio > 0 ? Math.round(waterRatio / grainRatio) : 0;
+        console.log(
+          `📌 자동 계산된 비율 -> 곡물: 1, 물: ${waterRatioAdjusted}`
+        );
 
         setMashingData((prev) => ({
           ...prev,
@@ -130,35 +140,64 @@ const MashingProcessControls = ({ workOrder }) => {
     fetchMaterialData();
   }, [mashingData.lotNo]);
 
-
-
-
-
-
   // 입력값 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
     setMashingData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 타이머 시작 함수
-  const startTimer = () => {
-    console.log("⏳ 타이머 시작됨, mashingTime:", mashingData.mashingTime);
+  // ✅ `등록하기` 버튼 클릭 시 데이터 저장
+  const handleSave = async () => {
+    if (!mashingData.lotNo) {
+      alert("⚠️ LOT_NO가 없습니다!");
+      return;
+    }
 
+    try {
+      const mashingRequestData = {
+        ...mashingData,
+        processStatus: "진행 중", // ✅ 상태 업데이트
+      };
+      console.log("📌 저장할 데이터:", mashingRequestData);
+
+      const response = await mashingProcessApi.saveMashingData(
+        mashingRequestData
+      );
+      console.log("📌 서버 응답:", response); // ✅ 응답 확인
+
+      
+    if (response?.result?.savedMashingProcess?.mashingId) {
+      console.log("📌 저장된 mashingId:", response.result.savedMashingProcess.mashingId);
+      setMashingId(response.result.savedMashingProcess.mashingId);
+    } else {
+      console.warn("⚠️ 서버 응답에 mashingId가 없습니다.");
+    }
+
+      setMashingData((prev) => ({ ...prev, processStatus: "진행 중" }));
+      setShowSuccessModal(true);
+      setButtonLabel("다음 공정 이동");
+    } catch (error) {
+      console.error("❌ 데이터 저장 실패:", error);
+      setShowErrorModal(true);
+    }
+  };
+
+  // ✅ 타이머 시작 (테스트 환경에서는 5초)
+  const startTimer = () => {
+    setIsProcessing(true);
     const totalTime =
       process.env.NODE_ENV === "development"
         ? 5
         : Number(mashingData.mashingTime) * 60;
     setTimer(totalTime);
-    setIsProcessing(true);
 
     const countdown = setInterval(() => {
-      setTimer((prevTime) => {
-        const newTime = prevTime - 1;
+      setTimer((prev) => {
+        const newTime = prev - 1;
         if (newTime <= 0) {
           clearInterval(countdown);
-          setShowCompleteModal(true);
           setIsProcessing(false);
+          setShowCompleteModal(true); // ✅ 완료 모달 표시
           setButtonLabel("다음 공정 이동");
           return 0;
         }
@@ -167,73 +206,41 @@ const MashingProcessControls = ({ workOrder }) => {
     }, 1000);
   };
 
-  // 데이터 저장 (등록하기 버튼 클릭 시)
-  const handleSave = async () => {
-    if (
-      !mashingData.temperature ||
-      !mashingData.grainRatio ||
-      !mashingData.waterRatio
-    ) {
-      alert("⚠️ 필수 입력값을 입력해주세요!");
+  // ✅ 다음 공정으로 이동 (phValue와 actualEndTime 저장)
+  const handleNextProcess = async () => {
+    if (!mashingData.phValue || isNaN(Number(mashingData.phValue))) {
+      console.error("❌ pH 값이 입력되지 않았거나 잘못된 값입니다.");
+      setShowErrorModal(true);
+      return;
+    }
+
+    if (!mashingId) {
+      console.error("❌ MashingID가 없습니다. API 요청을 중단합니다.");
+      setShowErrorModal(true);
       return;
     }
 
     try {
-      const mashingProcessPayload  = {
-        ...mashingData,
-        processStatus: "진행 중", // 공정 상태 변경
-        statusCode: "SC002", // 상태 코드 업데이트
-        processName: "당화", // 공정 이름 업데이트
+      const updatedMashingData = {
+        phValue: Number(mashingData.phValue),
+        actualEndTime: new Date().toISOString(),
       };
 
-      // 1️⃣ 당화공정 데이터 저장 (saveMashingData API 호출)
-      await mashingProcessApi.saveMashingData(mashingProcessPayload );
+      console.log("📌 업데이트할 데이터:", updatedMashingData);
 
-      // 2️⃣ processTracking 업데이트 (updateMashingProcess API 호출)
-      await mashingProcessApi.updateMashingProcess(mashingId, mashingProcessPayload );
-
-      setShowSuccessModal(true);
-      setButtonLabel("다음 공정 이동");
-      startTimer();
-    } catch (error) {
-      setShowErrorModal(true);
-    }
-  };
-
-
-
-
-
-  // 다음 공정으로 이동 (phValue와 actualEndTime 업데이트)
-  const handleNextProcess = async () => {
-    try {
-      const mashingUpdatePayload  = {
-        phValue: mashingData.phValue,
-        actualEndTime: new Date().toISOString(), // 현재 시간 저장
-      };
-
-      await mashingProcessApi.updateMashingProcess(mashingId, mashingUpdatePayload );
-
+      await mashingProcessApi.updateMashingProcess(
+        mashingId,
+        updatedMashingData
+      );
       navigate("/fermentation");
     } catch (error) {
       setShowErrorModal(true);
     }
   };
 
-
-
-
-  // 버튼 클릭 핸들러
-  const handleButtonClick = () => {
-    if (buttonLabel === "등록하기") {
-      handleSave();
-    } else if (buttonLabel === "다음 공정 이동") {
-      handleNextProcess();
-    }
-  };
-
-
-
+  useEffect(() => {
+    console.log("📌 현재 mashingId:", mashingId);
+  }, [mashingId]);
 
   return (
     <form
@@ -294,7 +301,7 @@ const MashingProcessControls = ({ workOrder }) => {
             type="number"
             name="grainRatio"
             value={mashingData.grainRatio}
-            readOnly 
+            readOnly
           />
           <label className={styles.mLabel051}>물 비율</label>
           <input
@@ -302,7 +309,7 @@ const MashingProcessControls = ({ workOrder }) => {
             type="number"
             name="waterRatio"
             value={mashingData.waterRatio}
-            readOnly 
+            readOnly
           />
         </div>
 
@@ -313,7 +320,7 @@ const MashingProcessControls = ({ workOrder }) => {
             type="number"
             name="waterInputVolume"
             value={mashingData.waterInputVolume}
-            readOnly 
+            readOnly
           />
         </div>
 
@@ -347,19 +354,26 @@ const MashingProcessControls = ({ workOrder }) => {
         <div className={styles.mGridItem}>
           <button
             className={styles.mSaveButton}
-            onClick={handleButtonClick}
-            disabled={buttonLabel === "등록하기" && timer > 0}
+            onClick={() => {
+              if (buttonLabel === "등록하기") {
+                setShowConfirmModal(true); // ✅ "등록하기"일 때만 선택 모달창 띄움
+              } else {
+                handleNextProcess(); // ✅ "다음 공정 이동"일 때는 바로 실행
+              }
+            }}
+            disabled={isProcessing}
           >
             {buttonLabel}
           </button>
         </div>
 
+        {/* ✅ "등록하기"일 때만 선택 모달창을 띄움 */}
         <ConfirmModal
           isOpen={showConfirmModal}
           message="등록하시겠습니까?"
           onConfirm={() => {
-            setShowConfirmModal(false);
-            setTimeout(handleSave, 100);
+            setShowConfirmModal(false); // ✅ 모달 먼저 닫기
+            setTimeout(handleSave, 100); // ✅ 100ms 후 실행 (비동기 실행 방지)
           }}
           onClose={() => setShowConfirmModal(false)}
         />
@@ -367,15 +381,21 @@ const MashingProcessControls = ({ workOrder }) => {
         <SuccessfulModal
           isOpen={showSuccessModal}
           message="데이터가 성공적으로 저장되었습니다!"
-          onClose={() => setShowSuccessModal(false)}
+          onClose={() => {
+            setShowSuccessModal(false);
+            startTimer(); // ✅ 타이머 시작
+          }}
         />
 
         <ErrorModal
           isOpen={showErrorModal}
-          message="데이터 저장에 실패했습니다. 다시 시도해주세요."
+          message={
+            mashingData.phValue
+              ? "데이터 저장에 실패했습니다. 다시 시도해주세요."
+              : "입력되지 않는 정보가 있습니다. 확인해주세요."
+          }
           onClose={() => setShowErrorModal(false)}
         />
-
         <CompleteModal
           isOpen={showCompleteModal}
           message={["당화 공정이 완료되었습니다.", "다음 공정으로 이동하세요."]}
