@@ -15,9 +15,8 @@ import MashingProcessPage from "./pages/production-process/mashing-process/Mashi
 import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
-
 import EquipmentInfo from "./components/standard-information/EquipmentInfo";
-
+import LabelInfo from "./components/standard-information/LabelInfo";
 import WortVolumePage from "./pages/routing/WortVolumePage";
 
 
@@ -52,6 +51,7 @@ const App = () => {
               <Route path="/mashing-process" element={<MashingProcessPage />} />
               <Route path="/process-stage" element={<ProcessStage />} />
               <Route path="/equipment-info" element={<EquipmentInfo />} />
+              <Route path="/label-info" element={<LabelInfo />} />
             </Routes>
           </div>
         </div>
