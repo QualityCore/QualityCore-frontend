@@ -47,9 +47,8 @@ const Header = () => {
       '/processTracking': { main: 'Routing 관리', sub: '공정 진행 현황' },
 
       // 생산실적 관리
-      '/performance-summary': { main: '생산실적 관리', sub: '기간별 생산실적' },
-      '/efficiency': { main: '생산실적 관리', sub: '작업효율 분석' },
-      '/rework': { main: '생산실적 관리', sub: '재작업 관리' },
+      '/productionPerformance': { main: '생산실적 관리', sub: '생산실적 관리' },
+      
 
       // 근태관리
       '/attendance': { main: '스케줄관리', sub: '스케줄표' },

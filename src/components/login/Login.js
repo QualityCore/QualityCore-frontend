@@ -32,7 +32,7 @@ const Login = () => {
       url: process.env.PUBLIC_URL + '/images/login002.png',
     },
     {
-      url: process.env.PUBLIC_URL + '/images/login003.png',
+      url: process.env.PUBLIC_URL + '/images/JO.png',
     },
   ];
   
