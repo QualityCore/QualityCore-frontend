@@ -1,5 +1,5 @@
 // 설비 전체조회
-export const fetchAllEquipment = async (page = 0, size = 20, searchType = '', searchKeyword = '') => {
+export const fetchAllEquipment = async (page = 0, size = 14, searchType = '', searchKeyword = '') => {
     try {
         const params = new URLSearchParams();
         params.append('page', page);

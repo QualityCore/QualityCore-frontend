@@ -1,0 +1,165 @@
+/* 게시판 목록 테이블 */
+.mainBar {
+    width: 1450px;
+    height: 670px;
+    margin-left: 50px;
+    border-radius: 20px;
+    background: white;
+    padding: 20px;
+    overflow: auto;
+}
+
+/* 테이블 기본 스타일 */
+.boardTable {
+    width: 100%;
+    border-collapse: collapse; /* 셀의 경계선 겹침 방지 */
+    margin-top: 20px;
+}
+
+/* 테이블 헤더 */
+.boardTable th,
+.boardTable td {
+    padding: 12px;
+    text-align: center;
+    border-top: 2px solid #ddd; /* 헤더의 위 경계선 */
+    border-bottom: 2px solid #ddd; /* 헤더의 아래 경계선 */
+}
+
+/* 테이블 헤더 스타일 */
+.boardTable th {
+    font-weight: normal; /* 글자 두껍게 하지 않음 */
+}
+
+/* 각 행마다 위/아래 경계선만 추가 */
+.boardTable td {
+    cursor: pointer;
+    border-top: 1px solid #ddd; /* 각 행의 위 경계선 */
+    border-bottom: 1px solid #ddd; /* 각 행의 아래 경계선 */
+}
+
+/* 첫 번째/마지막 행에서 중복된 경계선 제거 */
+.boardTable tr:first-child td {
+    border-top: none; /* 첫 번째 행은 위 경계선 없애기 */
+}
+
+
+/* 테이블 반응형 디자인 (모바일을 고려한 스타일) */
+@media (max-width: 768px) {
+    .mainBar {
+        width: 100%;
+        padding: 10px;
+    }
+    .boardTable th, .boardTable td {
+        padding: 10px;
+        font-size: 12px;
+    }
+    .searchSelect {
+        margin-left: 0;
+    }
+}
+
+.boardTable th:nth-child(1),
+.boardTable td:nth-child(1) {
+    width: 100px;
+}
+
+.boardTable th:nth-child(2),
+.boardTable td:nth-child(2) {
+    width: 350px;
+}
+
+.boardTable th:nth-child(3),
+.boardTable td:nth-child(3) {
+    width: 100px;
+}
+
+.boardTable th:nth-child(4),
+.boardTable td:nth-child(4) {
+    width: 100px;
+}
+
+.headerBar{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.leftButton{
+    margin-left: 48px;
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3sease, transform 0.2sease;
+}
+
+.leftButton:hover,
+.searcButton:hover {
+    background-color: #45a049;
+    /* hover시 색상 변경 */
+    transform: translateY(-2px);
+    /* 마우스 올렸을 때 살짝 올라오는 효과 */
+}
+
+.searchSelect{
+    height: 35px;
+    margin-left: 1073px;
+}
+
+.searchInput{
+    height: 29px;
+}
+
+.searchButton{
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3sease, transform 0.2sease;
+    margin-left: 22px;
+}
+
+.categoryTag {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 0px;
+}
+
+/* 중요 게시글 행 배경색 */
+.importantRow {
+    background-color: #ffe5e5; /* 연한 빨간색 배경 */
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.categoryTag.important {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.categoryTag.normal {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.importantTag {
+    background-color: #ff6b6b; /* 빨간색 태그 */
+    color: white;
+}
+
+.normalTag {
+    background-color: #f0f0f0; /* 회색 태그 */
+    color: #666;
+}
+
+.noticeTag {
+    background-color: #007bff; /* 파란색 태그 */
+    color: white;
+}

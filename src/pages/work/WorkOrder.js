@@ -203,7 +203,7 @@ function WorkOrder() {
             </div>
             <div className={workOrder.mainbar}>
                 {noResults ? (
-                    <p className={workOrder.noResults}>검색 결과가 없습니다.</p>
+                    <p className={workOrder.noResults}>작업지시서가 없습니다.</p>
                 ) : (
                     <table className={workOrder.workOrderTable}>
                         <thead>

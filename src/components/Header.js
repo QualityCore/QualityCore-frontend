@@ -6,6 +6,10 @@ const Header = () => {
   const location = useLocation();
 
   const getPageTitle = (pathname) => {
+     // 동적 경로 처리
+     if (pathname.startsWith('/board/') && pathname.split('/').length === 3) {
+      return { main: '게시판', sub: '게시글조회' };
+  }
     const pageCategories = {
       // 시스템 관리
       '/login': { main: '시스템 관리', sub: '로그인/로그아웃' },
@@ -52,7 +56,13 @@ const Header = () => {
       '/rework': { main: '생산실적 관리', sub: '재작업 관리' },
 
       // 근태관리
-      '/attendance': { main: '스케줄관리', sub: '스케줄표' },
+      '/attendance': { main: '생산스케줄', sub: '스케줄관리' },
+
+      // 게시판
+      
+      '/board': { main: '게시판', sub: '전사게시판' },
+      '/board-create': { main: '게시판', sub: '게시글작성' },
+
 
       // 기본 페이지
       '/home': { main: '', sub: '메인화면' }
