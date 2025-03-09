@@ -1,7 +1,7 @@
-// src/pages/NotFound.js
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../styles/NotFound.module.css'; // 스타일 파일을 만들어 사용할 수 있습니다
+import styles from '../styles/NotFound.module.css'; 
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const NotFound = () => {
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          window.location.href = redirectTo; // 이전 페이지로 리다이렉트
+          window.location.href = redirectTo; 
           return 0;
         }
         return prev - 1;

@@ -1,4 +1,4 @@
-// src/pages/ProductionPerformancePage.jsx
+
 import React, { useState, useEffect } from 'react';
 import { getMonthlyPerformance, getPlanVsActual, getProductEfficiency, downloadExcelReport } from '../../apis/productionPerformance/productionPerformanceApi'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
