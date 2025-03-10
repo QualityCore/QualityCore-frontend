@@ -9,16 +9,18 @@
 }
 
 .titleBar {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 35px;
-    margin-right: 75px;
+    display: flex
+    ;
+        justify-content: flex-end;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        margin-right: 75px;
 }
 
 .createButton {
     width: 100px;
     height: 30px;
-    margin-right: 830px;
+    margin-right: 985px;
     background-color: #4CAF50;
     color: white;
     font-size: 16px;
@@ -26,6 +28,19 @@
     cursor: pointer;
     border-radius: 5px;
     font-weight: bold;
+}
+
+.createButton1{
+    width: 100px;
+    height: 30px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 30px;
 }
 
 .createButton:hover {
@@ -40,7 +55,7 @@
 .searchInput {
     width: 220px;
     height: 24px;
-    margin-right: 35px;
+    margin-right: 3px;
 }
 
 .searchButton {
@@ -60,55 +75,47 @@
 }
 
 .cardContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    /* 카드 간격 */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4개의 카드가 한 줄에 배치 */
+    gap: 20px; /* 카드 간격 */
+    justify-items: center; /* 카드들을 가운데 정렬 */
 }
 
 .card {
     margin: 0;
-    /* 여백 제거 */
     padding: 0;
-    /* 패딩 제거 */
     border: none;
-    /* 테두리 제거 */
     border-radius: 5px;
-    /* 모서리 둥글게 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* 약간의 그림자 추가 */
-    width: calc(25% - 20px);
-    /* 한 줄에 4칸씩 표시 */
-    height: calc(25% - 20px);
-    /* 정사각형 크기 */
+    width: 100%;
+    aspect-ratio: 1; /* 정사각형 비율을 유지 */
+    max-width: 240px; /* 카드의 최대 너비 조금 늘리기 */
+    height: auto; /* 높이는 비율에 맞게 자동 조정 */
+    cursor: pointer;
 }
 
 .cardImage {
     width: 100%;
-    height: 80%;
-    /* 이미지 높이 증가 */
-    object-fit: cover;
-    /* 이미지가 카드 안에서 꽉 차게 표시 */
-    border-radius: 5px 5px 0 0;
-    /* 모서리 둥글게 */
+    height: 100%;
+    object-fit: cover; /* 이미지가 잘리면서도 전체를 채우도록 */
+    object-position: center; /* 이미지의 중심을 맞춤 */
+    border-radius: 5px 5px 0 0; /* 상단 모서리 둥글게 */
 }
 
 .cardFooter {
-    padding: 10px;
-    /* 하단 텍스트 영역 패딩 */
-    height: 20%;
-    /* 하단 텍스트 영역 높이 조정 */
+    padding: 8px; /* 하단 텍스트 영역의 패딩 */
+    height: auto;
+    font-size: 12px; /* 글씨 크기 */
+}
+
+.cardFooter p {
+    margin: 4px 0; /* 각 텍스트 간 간격 */
 }
 
 .card:hover {
-    transform: scale(1.05);
-    /* 카드 확대 */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-    /* 호버 시 그림자 효과 증가 */
+    transform: scale(1.05); /* 카드 확대 */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* 호버 시 그림자 효과 증가 */
 }
-
-
 
 
 /* 모달 배경 */
@@ -127,6 +134,7 @@
 }
 
 /* 모달 내부 콘텐츠 */
+/* 모달 내부 콘텐츠 */
 .modalContent {
     background-color: #fff;
     padding: 20px;
@@ -134,21 +142,19 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 9999;
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: 90vh;
-    /* 최대 높이를 화면의 90%로 설정 */
+    width: 800px;
+    height: 650px;
     overflow: hidden;
 }
 
-/* 모달 내용 크기 조정 (이미지에 맞춰 자동 크기 조정) */
+/* 모달 내 이미지 스타일 */
 .modalContent img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     border-radius: 8px;
 }
+
 
 /* 닫기 버튼 */
 .closeButton {
@@ -190,3 +196,174 @@
 .modalForm button:hover {
     background-color: #45a049;
 }
+
+.labelTitle{
+    font-size: large;
+    font-weight: bold;
+    margin-right: 5px;
+    margin-left: 20px;
+}
+
+/* 상세조회 모달 */
+
+/* 상세조회 모달 내부 콘텐츠 */
+.detailModalContent {
+    background-color: #fff;
+    padding: 15px; /* 패딩을 줄여서 크기 축소 */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 9999;
+    width: 80%; /* 너비를 80%로 설정 */
+    max-width: 600px; /* 최대 너비 설정 */
+    height: auto;
+    max-height: 80vh; /* 최대 높이를 80vh로 설정 */
+    overflow: auto; /* 콘텐츠가 넘치면 스크롤 */
+}
+
+/* 상세조회 모달 배경 */
+.detailModalOverlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9998;
+    overflow: auto;
+}
+
+.detailModalContent img {
+    width: 60%; /* 이미지의 크기를 60%로 줄임 */
+    height: auto;
+    display: block;
+    margin-left: auto; /* 이미지의 좌우 중앙 정렬 */
+    margin-right: auto; /* 이미지의 좌우 중앙 정렬 */
+}
+
+/* 모달 제목 스타일 */
+.detailModalContent h2 {
+    font-size: 24px; /* 제목 크기 */
+    font-weight: 600; /* 제목 두께 */
+    color: #333; /* 제목 색상 */
+    margin-bottom: 20px; /* 제목과 내용 사이의 여백 */
+    text-align: center; /* 제목 중앙 정렬 */
+    font-family: 'Arial', sans-serif; /* 깔끔한 폰트 */
+}
+
+/* 텍스트 내용 스타일 */
+.detailModalContent p {
+    font-size: 16px; /* 본문 크기 */
+    line-height: 1.6; /* 줄 간격 */
+    margin: 8px 0; /* 각 항목 사이 간격 */
+    color: #555; /* 본문 색상 */
+    font-family: 'Arial', sans-serif; /* 동일한 폰트 사용 */
+}
+
+/* 배치번호, 제품명 등 강조할 부분 스타일 */
+.detailModalContent p strong {
+    font-weight: 600; /* 강조된 텍스트는 두껍게 */
+    color: #333; /* 강조된 텍스트 색상 */
+}
+
+/* 이미지 스타일 */
+.detailModalContent img {
+    width: 90%; /* 이미지 크기 */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px auto; /* 이미지 중앙 정렬 및 아래 여백 */
+    border-radius: 8px; /* 이미지 모서리 둥글게 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 이미지에 그림자 효과 */
+}
+
+.delete{
+    width: 100px;
+    height: 30px;
+    background-color: #f44336;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 490px;
+}
+
+.delete:hover {
+    background-color: #e53935;
+}
+
+/* labelInfo.module.css */
+
+/* 성공 알림 모달 */
+.successModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.successModalOverlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.successModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.successCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.successModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.successModalContent {
+    padding: 20px;
+}
+
+.successCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 375px;
+}
+
+.successMessage {
+    margin-left: 67px;
+    font-size: large;
+    font-family: emoji;
+    font-weight: bold;
+}
+

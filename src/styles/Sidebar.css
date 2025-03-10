@@ -260,3 +260,74 @@
     font-weight: 400;
     font-style: normal;
   }
+
+.notification-badge {
+    position: absolute;
+    top: 0%;
+    right: -18px;
+    transform: translateY(-50%);
+    background-color: #ff4757;
+    color: white;
+    border-radius: 50%;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+
+    /* 애니메이션 추가 */
+    animation: pop-in 0.3s ease-out; /* 애니메이션 이름, 지속 시간, 타이밍 함수 */
+}
+
+/* @keyframes로 애니메이션 정의 */
+@keyframes pop-in {
+    0% {
+        transform: scale(0); /* 처음 크기를 0으로 설정 */
+        opacity: 0; /* 투명도 0 (안 보임) */
+    }
+    80% {
+        transform: scale(1.2); /* 약간 커졌다가 */
+        opacity: 1; /* 보이기 시작 */
+    }
+    100% {
+        transform: scale(1); /* 원래 크기로 돌아옴 */
+        opacity: 1; /* 완전히 보임 */
+    }
+}
+
+/* Sidebar.css */
+
+.notification-badge-workorder,
+.notification-badge-board {
+  position: absolute;
+  top: 0%;
+  right: -18px;
+  transform: translateY(-50%);
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.notification-badge-workorder {
+  background-color: #ff4757; /* 작업지시 알림 배지 색상 */
+}
+
+.notification-badge-board {
+  background-color: #3498db; /* 전사게시판 알림 배지 색상 */
+}
+
+
+
+.menu-item {
+    position: relative; /* 부모 요소를 기준으로 자식 요소 위치 설정 */
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.menu-item-content {
+    display: flex;
+    align-items: center;
+    position: relative; /* 부모 요소를 기준으로 배지 위치 설정 */
+}

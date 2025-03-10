@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { RiSettings4Line, RiDatabase2Line } from "react-icons/ri";
 import { MdOutlineProductionQuantityLimits, MdOutlineWork } from "react-icons/md";
-
+import {WebsocketContext } from "../common/WebSocket/WebsocketContext";
 import { TbRoute } from "react-icons/tb";
 import { AiOutlineSchedule } from "react-icons/ai";
 import { HiOutlineUserGroup } from "react-icons/hi";
@@ -11,6 +11,12 @@ import "../styles/Sidebar.css";
 
 const Sidebar = () => {
 
+  const { messages, 
+    workOrderMessages, 
+    resetNotifications, 
+    resetWorkOrderNotifications  } = useContext(WebsocketContext);
+  const [openCategory, setOpenCategory] = useState(null);
+  
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Castoro+Titling&display=swap';
@@ -21,14 +27,9 @@ const Sidebar = () => {
     };
   }, []);
 
-  const [openCategory, setOpenCategory] = useState(null);
-
   const toggleCategory = (category) => {
     setOpenCategory(openCategory === category ? null : category);
   };
-
-
-
 
   return (
     <div className="sidebar">
@@ -84,16 +85,41 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* 작업지시 */}
-        <li>
-          <button onClick={() => toggleCategory("작업지시")}>
-            <MdOutlineWork className="mr-2" />
-            작업지시
+         {/* 작업지시 */}
+         <li>
+          <button 
+            onClick={() => toggleCategory("작업지시")} 
+            className="menu-item"
+          >
+            <div className="menu-item-content">
+              <MdOutlineWork className="mr-4" />
+              작업지시
+              {workOrderMessages.length > 0 && (
+                <span className="notification-badge-workorder">
+                  {workOrderMessages.length}
+                </span>
+              )}
+            </div>
           </button>
           {openCategory === "작업지시" && (
             <ul className="submenu">
-              <li><Link to="/work/orders">작업지시서 관리</Link></li>
-              <li><Link to="/work/create">작업지시서 등록</Link></li>
+              <li>
+                <Link 
+                  to="/work/orders" 
+                  onClick={resetWorkOrderNotifications}
+                >
+                  작업지시서 관리
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/work/create" 
+                  onClick={resetWorkOrderNotifications}
+                >
+                  작업지시서 등록
+                </Link>
+              </li>
+              <li><Link to="/attendance">생산스케줄</Link></li>
             </ul>
           )}
         </li>
@@ -148,13 +174,23 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* 근태관리 */}
+        {/* 게시판 */}
         <li>
-          <Link to="/attendance">
-            <HiOutlineUserGroup className="mr-4" />
-            스케줄관리
-          </Link>
-        </li>
+  <Link 
+      to="/board" 
+      onClick={resetNotifications} // 알림 초기화
+      className="menu-item"
+  >
+      <div className="menu-item-content">
+          <HiOutlineUserGroup className="mr-4" />
+          <span>전사게시판</span>
+          {messages.length > 0 && (
+              <span className="notification-badge">{messages.length}</span>
+          )}
+      </div>
+  </Link>
+</li>
+
       </ul>
 
 

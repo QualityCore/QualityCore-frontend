@@ -18,14 +18,17 @@ import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
 import EquipmentInfo from "./components/standard-information/EquipmentInfo";
 import LabelInfo from "./components/standard-information/LabelInfo";
-
+import Board from "./pages/board/Board";
+import BoardCreate from "./pages/board/BoardCreate"
 import WortVolumePage from "./pages/routing/WortVolumePage";
+import BoardDetail from "./pages/board/BoardDetail";
+import { WebsocketProvider } from './common/WebSocket/WebsocketContext';
 import ProductionPerformancePage from "./pages/productionPerformance/ProductionPerformancePage"
 import NotFound from "./pages/NotFound"; 
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함
 const Layout = ({ children }) => {
-  return (
+  return ( 
     <div className="app-container">
       <Sidebar />
       <div className="main-wrapper">
@@ -40,6 +43,7 @@ const Layout = ({ children }) => {
 
 const App = () => {
   return (
+    <WebsocketProvider>
     <Router>
 
       <div className="app-container">
@@ -69,6 +73,9 @@ const App = () => {
               <Route path="/process-stage" element={<ProcessStage />} />
               <Route path="/equipment-info" element={<EquipmentInfo />} />
               <Route path="/label-info" element={<LabelInfo />} />
+              <Route path="/board" element={<Board/>} />
+              <Route path="/board-create" element={<BoardCreate />} />
+              <Route path="/board/:boardId" element={<BoardDetail/>}/>
             </Routes>
           </div>
         </div>
@@ -114,10 +121,11 @@ const App = () => {
         <Route path="/equipment-info" element={<Layout><EquipmentInfo /></Layout>} />
         <Route path="/productionPerformance" element={<Layout><ProductionPerformancePage /></Layout>} />
         <Route path="*" element={<NotFound />} />
-        
+       
 
       </Routes>
     </Router>
+    </WebsocketProvider>
   );
 };
 
