@@ -23,6 +23,8 @@ import BoardCreate from "./pages/board/BoardCreate"
 import WortVolumePage from "./pages/routing/WortVolumePage";
 import BoardDetail from "./pages/board/BoardDetail";
 import { WebsocketProvider } from './common/WebSocket/WebsocketContext';
+import ProductionPerformancePage from "./pages/productionPerformance/ProductionPerformancePage"
+import NotFound from "./pages/NotFound"; 
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함
 const Layout = ({ children }) => {
@@ -103,6 +105,23 @@ const App = () => {
             <ProductionPlanDetailPage />
           </Layout>
         } />
+        
+      
+        <Route path="/plan-generate" element={<Layout><ProductionPlanSteps /></Layout>} />
+        <Route path="/processTracking" element={<Layout><ProcessTrackingPage /></Layout>} />
+        <Route path="/wort" element={<Layout><WortVolumePage /></Layout>} />
+        <Route path="/material" element={<Layout><MaterialManagementPage /></Layout>} />
+        <Route path="/attendance" element={<Layout><Attendance /></Layout>} />
+        <Route path="/work/orders" element={<Layout><WorkOrder /></Layout>} />
+        <Route path="/work/create" element={<Layout><WorkCreate /></Layout>} />
+        <Route path="/workplace" element={<Layout><WorkplacePage /></Layout>} />
+        <Route path="/material-grinding" element={<Layout><MaterialGrindingPage /></Layout>} />
+        <Route path="/mashing-process" element={<Layout><MashingProcessPage /></Layout>} />
+        <Route path="/process-stage" element={<Layout><ProcessStage /></Layout>} />
+        <Route path="/equipment-info" element={<Layout><EquipmentInfo /></Layout>} />
+        <Route path="/productionPerformance" element={<Layout><ProductionPerformancePage /></Layout>} />
+        <Route path="*" element={<NotFound />} />
+       
 
       </Routes>
     </Router>

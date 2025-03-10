@@ -168,9 +168,8 @@ const Sidebar = () => {
           </button>
           {openCategory === "생산실적" && (
             <ul className="submenu">
-              <li><Link to="/performance-summary">기간별 생산실적</Link></li>
-              <li><Link to="/efficiency">작업효율 분석</Link></li>
-              <li><Link to="/rework">재작업 관리</Link></li>
+              <li><Link to="/productionPerformance">생산실적 관리</Link></li>
+             
             </ul>
           )}
         </li>
