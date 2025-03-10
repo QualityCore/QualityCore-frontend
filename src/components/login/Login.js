@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from "../../styles/Login.module.css";
+import PasswordReset from './PasswordReset'; 
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,6 +17,9 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [saveId, setSaveId] = useState(false);
   const [error, setError] = useState('');
+  
+  // 비밀번호 찾기 모달 상태 추가
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   
   // Castoro Titling 폰트 로드
   useEffect(() => {
@@ -75,57 +79,40 @@ const Login = () => {
   };
   
   // 가상 사용자 데이터
-  const mockUsers = [
-    // 관리자
-    { 
-      id: 'admin', 
-      password: '123', 
-      name: '시스템관리자', 
-      role: 'ADMIN',
-      department: '정보시스템부',
-      permissions: ['all'] // 모든 권한
-    },
-    
-    // 생산 관리자
-    { 
-      id: 'plan', 
-      password: '123', 
-      name: '문관리', 
-      role: 'PRODUCTION_MANAGER',
-      department: '생산관리부',
-      permissions: ['production.read', 'production.write', 'production.approve', 'work.read', 'work.write']
-    },
-    
-    // 작업 관리자
-    { 
-      id: 'work', 
-      password: '123', 
-      name: '김작업', 
-      role: 'WORK_MANAGER',
-      department: '작업관리팀',
-      permissions: ['work.read', 'work.write', 'work.approve', 'production.read']
-    },
-    
-    // 일반 사원 - 생산부
-    { 
-      id: 'emp', 
-      password: '123', 
-      name: '이사원', 
-      role: 'EMPLOYEE',
-      department: '생산1팀',
-      permissions: ['production.read', 'work.read']
-    },
-    
-    // 아이유 - 특별 사원
-    { 
-      id: 'iu', 
-      password: '123', 
-      name: '아이유', 
-      role: 'EMPLOYEE',
-      department: '생산2팀',
-      permissions: ['production.read', 'work.read', 'work.execute']
-    }
-  ];
+  const [mockUsers, setMockUsers] = useState(() => {
+    // 로컬 스토리지에서 기존 사용자 데이터 가져오기 (없으면 초기값 설정)
+    const storedUsers = JSON.parse(localStorage.getItem('mockUsers'));
+    return storedUsers || [
+      { id: 'admin', password: '123', name: '시스템관리자', role: 'ADMIN', department: '정보시스템부', permissions: ['all'] },
+      { id: 'plan', password: '123', name: '문관리', role: 'PRODUCTION_MANAGER', department: '생산관리부', permissions: ['production.read', 'production.write', 'production.approve', 'work.read', 'work.write'] },
+      { id: 'work', password: '1234', name: '김작업', role: 'WORK_MANAGER', department: '작업관리팀', permissions: ['work.read', 'work.write', 'work.approve', 'production.read'] },
+      { id: 'emp', password: '123', name: '이사원', role: 'EMPLOYEE', department: '생산1팀', permissions: ['production.read', 'work.read'] },
+      { id: 'iu', password: '123', name: '아이유', role: 'EMPLOYEE', department: '생산2팀', permissions: ['production.read', 'work.read', 'work.execute'] }
+    ];
+  });
+  
+
+  // 비밀번호 업데이트 함수
+
+  const updateUserPassword = (userId, newPassword) => {
+    console.log(`비밀번호 변경 요청: ID=${userId}, 새 비밀번호=${newPassword}`);
+  
+    setMockUsers(prevUsers => {
+      const updatedUsers = prevUsers.map(user => 
+        user.id === userId ? { ...user, password: newPassword } : user
+      );
+  
+      // 변경된 사용자 정보를 localStorage에 저장
+      localStorage.setItem('mockUsers', JSON.stringify(updatedUsers));
+  
+      console.log('업데이트된 사용자 목록:', updatedUsers);
+      return updatedUsers;
+    });
+  };
+  
+
+
+
   
   // 로그인 처리 함수
   const handleLogin = () => {
@@ -133,43 +120,52 @@ const Login = () => {
       setError('사번과 비밀번호를 모두 입력해주세요.');
       return;
     }
-    
-    // 모의 인증 로직
-    const user = mockUsers.find(u => u.id === employeeId && u.password === password);
-    
-    if (user) {
-      // 로그인 성공
-      const userData = {
-        id: user.id,
-        name: user.name,
-        role: user.role,
-        department: user.department,
-        permissions: user.permissions,
-        isLoggedIn: true
-      };
-      
-      // 컨텍스트에 사용자 정보 저장
-      login(userData);
-      
-      // 사번 저장 설정
-      if (saveId) {
-        secureLocalStorage.setItem('savedEmployeeId', employeeId);
-      } else {
-        secureLocalStorage.removeItem('savedEmployeeId');
-      }
-      
-      // 로그인 성공 후 홈으로 이동
-      navigate('/home');
-    } else {
-      // 로그인 실패
-      setError('사번 또는 비밀번호가 올바르지 않습니다.');
+  
+    // 최신 mockUsers 데이터 가져오기
+    const storedUsers = JSON.parse(localStorage.getItem('mockUsers')) || mockUsers;
+    const user = storedUsers.find(u => u.id === employeeId);
+  
+    if (!user) {
+      setError('존재하지 않는 사번입니다.');
+      return;
     }
+  
+    if (user.password !== password) {
+      setError('비밀번호가 올바르지 않습니다.');
+      return;
+    }
+  
+    // 로그인 성공
+    const userData = {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      department: user.department,
+      permissions: user.permissions,
+      isLoggedIn: true
+    };
+  
+    login(userData);
+  
+    if (saveId) {
+      secureLocalStorage.setItem('savedEmployeeId', employeeId);
+    } else {
+      secureLocalStorage.removeItem('savedEmployeeId');
+    }
+  
+    navigate('/home');
   };
   
-  // 비밀번호 찾기 기능
+  
+  
+  // 비밀번호 찾기 기능 - 모달 표시로 변경
   const handlePasswordReset = () => {
-    // 실제로는 비밀번호 찾기 페이지로 이동하거나 모달을 띄움
-    alert('비밀번호 잃어버린 당신잘못! 찾으실수 없습니다.');
+    setShowPasswordReset(true);
+  };
+  
+  // 비밀번호 찾기 모달 닫기 핸들러
+  const handleClosePasswordReset = () => {
+    setShowPasswordReset(false);
   };
   
   return (
@@ -271,6 +267,14 @@ const Login = () => {
           </div>
         )}
       </div>
+      
+      {/* 비밀번호 찾기 모달 */}
+      {showPasswordReset && (
+  <PasswordReset 
+    onClose={handleClosePasswordReset} 
+    onPasswordChange={updateUserPassword}
+  />
+)}
     </div>
   );
 };

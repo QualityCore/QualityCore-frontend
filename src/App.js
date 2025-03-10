@@ -104,10 +104,10 @@ const App = () => {
           <Route path="/process-stage" element={<ProtectedLayout><ProcessStage /></ProtectedLayout>} />
           <Route path="/equipment-info" element={<ProtectedLayout><EquipmentInfo /></ProtectedLayout>} />
           <Route path="/productionPerformance" element={<ProtectedLayout><ProductionPerformancePage /></ProtectedLayout>} />
-             <Route path="/label-info" element={<LabelInfo />} />
-              <Route path="/board" element={<Board/>} />
-              <Route path="/board-create" element={<BoardCreate />} />
-              <Route path="/board/:boardId" element={<BoardDetail/>}/>
+             <Route path="/label-info" element={<ProtectedLayout><LabelInfo /></ProtectedLayout>} />
+              <Route path="/board" element={<ProtectedLayout><Board/></ProtectedLayout>} />
+              <Route path="/board-create" element={<ProtectedLayout><BoardCreate /></ProtectedLayout>} />
+              <Route path="/board/:boardId" element={<ProtectedLayout><BoardDetail/></ProtectedLayout>}/>
                                                   
                                                   
           {/* 404 페이지 */}
