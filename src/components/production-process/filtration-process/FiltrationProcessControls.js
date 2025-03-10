@@ -8,9 +8,9 @@ import styles from "../../../styles/production-process/FiltrationProcessControls
 
 const FiltrationProcessControls = ({ workOrder }) => {
   const [filtrationData, setFiltrationData] = useState({
-    lotNo: workOrder?.lotNo || "", // 작업지시 ID 자동 불러오기
+    lotNo: "", // 작업지시 ID 자동 불러오기
     filtrationTime: "45",
-    grainAbsorption: "50.0",
+    grainAbsorption: " ",
     recoveredWortVolume: "",
     lossVolume: "",
     processStatus: "진행 중",
@@ -23,6 +23,16 @@ const FiltrationProcessControls = ({ workOrder }) => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [buttonLabel, setButtonLabel] = useState("등록하기");
+
+useEffect(() => {
+  const savedLotNo = localStorage.getItem("selectedLotNo");
+  if (savedLotNo) {
+    setFiltrationData((prev) => ({ ...prev, lotNo: savedLotNo }));
+  }
+}, []);
+
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

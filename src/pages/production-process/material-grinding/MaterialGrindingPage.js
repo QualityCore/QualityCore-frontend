@@ -4,6 +4,7 @@ import MaterialGrindingControls from "../../../components/production-process/mat
 import styles from "../../../styles/production-process/MaterialGrindingControls.module.css";
 
 const MaterialGrindingPage = () => {
+  const [lineMaterial, setLineMaterial] = useState([]);
   const [grindingData, setGrindingData] = useState({
     lotNo: "",
     mainMaterial: "",
@@ -21,11 +22,20 @@ const MaterialGrindingPage = () => {
 
 
     return (
-        <div className={styles["productionPlan-container"]}>
-            <h1 className={styles["page-title"]}>분쇄 공정 관리</h1>
-            <MaterialGrindingForm grindingData={grindingData} setGrindingData={setGrindingData} />
-            <MaterialGrindingControls grindingData={grindingData} setGrindingData={setGrindingData} />
-        </div>
+      <div className={styles["productionPlan-container"]}>
+      <h1 className={styles["page-title"]}>분쇄 공정 관리</h1>
+      <MaterialGrindingForm 
+        grindingData={grindingData} 
+        setGrindingData={setGrindingData} 
+        lineMaterial={lineMaterial} 
+        setLineMaterial={setLineMaterial} 
+      />
+      <MaterialGrindingControls 
+        grindingData={grindingData} 
+        setGrindingData={setGrindingData} 
+        setLineMaterial={setLineMaterial} 
+      />
+      </div>
     );
 
 };
