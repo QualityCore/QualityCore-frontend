@@ -32,7 +32,7 @@ const Pagination = ({ page, totalPages, first, last, onPageChange }) => {
                 <button
                     key={index}
                     onClick={() => handlePageChange(index)}
-                    disabled={page === index || totalPages === 0}
+                    disabled={page === index}
                     className={`${pagination.button} ${page === index ? pagination.active : ""}`}
                 >
                     {index + 1}

@@ -1,11 +1,12 @@
+
 .maiBar {
-    height: 545px;
-    width: 1422px;
-    margin-left: 68px;
-    margin-top: 50px;
+    height: 75vh; /* 화면 높이의 75%로 유동적 조절 */
+    width: 90%; 
+    margin: 25px auto; /* 가운데 정렬 */
     background-color: white;
     border-radius: 20px;
-}
+    padding: 15px; /* 내부 여백 추가 */
+  }
 
 .profileBar {
     border: none;
@@ -86,6 +87,7 @@
 
 .fc {
     overflow: hidden;
+    height: 100% !important;
     /* 스크롤 제거 */
 }
 
@@ -182,29 +184,6 @@
     margin-left: 20px;
 }
 
-/* 모달 스타일 */
-.modal {
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 1050;
-}
-
-
-.modalForm {
-    display: flex;
-    flex-direction: column;
-}
-
 .formLabel {
     font-weight: bold;
     font-size: 15px;
@@ -258,236 +237,6 @@
     background-color: #155a24;
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1049;
-}
-
-/* 성공 알림 모달 */
-.successModal {
-    width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 1050;
-}
-
-
-.successModalOverlay {
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.successModalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-.successCloseButton {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.successModalTitle {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.successModalContent {
-    padding: 20px;
-}
-
-.successCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    margin-left: 375px;
-}
-
-.successMessage {
-    margin-left: 35px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
-}
-
-/* 수정 가능 상태 */
-.editView {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* 각 요소 간 간격 */
-    margin-top: 10px;
-}
-
-/* 각 라벨 스타일 */
-.editView label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-/* 입력 필드 스타일 */
-.editView input, .editView select, .editView textarea {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-    max-width: 350px; /* 입력 필드의 최대 너비 */
-    box-sizing: border-box;
-    margin-bottom: 15px;
-}
-
-/* 텍스트 영역 */
-.editView textarea {
-    height: 100px;
-    resize: vertical;
-}
-
-/* 버튼 스타일 */
-.editView button {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.editView button:hover {
-    background-color: #45a049;
-}
-
-/* 취소 버튼 스타일 */
-.editView .cancelButton {
-    background-color: #f44336;
-}
-
-.editView .cancelButton:hover {
-    background-color: #e53935;
-}
-
-.editButton{
-    background-color: #218838;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-}
-
-.editButton:hover {
-    background-color: #155a24;
-} 
-
-.editRemoveButton {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin-left: 20px;
-}
-
-.editRemoveButton:hover {
-    background-color: #e53935;
-} 
-
-/* 경고 알림 모달 */
-.warningModal {
-    width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 1500;
-}
-
-.warningModalOverlay {
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.warningModalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-.warningCloseButton {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.warningModalTitle {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.warningModalContent {
-    padding: 20px;
-}
-
-.warningCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    margin-left: 375px;
-}
-
-.warningMessage {
-    margin-left: 35px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
-}
-
 .fc-event {
     background-color: #28a745 !important;
     color: #fff !important;
@@ -495,3 +244,48 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
+.modal {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998; /* 모달보다 1 낮게 */
+  }
+  
+  .modalCloseBtn{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 0px;
+    transition: background-color 0.3s;
+    margin-left: 330px;
+  }
+
+  .modalCloseBtn:hover {
+    background-color: #0056b3;
+}
+
+.detailh2{
+    margin-left: 145px;
+}

@@ -49,4 +49,3 @@ const WorkplacePage = () => {
   };
 
 export default WorkplacePage;
-

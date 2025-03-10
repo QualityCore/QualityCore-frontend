@@ -17,7 +17,12 @@ import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
 import EquipmentInfo from "./components/standard-information/EquipmentInfo";
+import LabelInfo from "./components/standard-information/LabelInfo";
+import Board from "./pages/board/Board";
+import BoardCreate from "./pages/board/BoardCreate"
 import WortVolumePage from "./pages/routing/WortVolumePage";
+import BoardDetail from "./pages/board/BoardDetail";
+import { WebsocketProvider } from './common/WebSocket/WebsocketContext';
 import ProductionPerformancePage from "./pages/productionPerformance/ProductionPerformancePage"
 import NotFound from "./pages/NotFound"; 
 import { AuthProvider } from "./contexts/AuthContext"; 
@@ -26,7 +31,7 @@ import AccessDenied from "./pages/AccessDenied";
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함합니다
 const Layout = ({ children }) => {
-  return (
+  return ( 
     <div className="app-container">
       <Sidebar />
       <div className="main-wrapper">
@@ -50,7 +55,9 @@ const ProtectedLayout = ({ children, requiredPermission = null }) => {
 
 const App = () => {
   return (
+    <WebsocketProvider>
     <Router>
+
       <AuthProvider>
         <Routes>
           {/* 공개 경로 */}
@@ -97,12 +104,18 @@ const App = () => {
           <Route path="/process-stage" element={<ProtectedLayout><ProcessStage /></ProtectedLayout>} />
           <Route path="/equipment-info" element={<ProtectedLayout><EquipmentInfo /></ProtectedLayout>} />
           <Route path="/productionPerformance" element={<ProtectedLayout><ProductionPerformancePage /></ProtectedLayout>} />
-          
+             <Route path="/label-info" element={<LabelInfo />} />
+              <Route path="/board" element={<Board/>} />
+              <Route path="/board-create" element={<BoardCreate />} />
+              <Route path="/board/:boardId" element={<BoardDetail/>}/>
+                                                  
+                                                  
           {/* 404 페이지 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </Router>
+    </WebsocketProvider>
   );
 };
 

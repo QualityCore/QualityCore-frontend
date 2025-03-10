@@ -16,7 +16,7 @@ function WorkCreate() {
     const [modalMessage, setModalMessage] = useState('');
     const [isWarningModal, setIsWarningModal] = useState(false);
     const [warningMessage, setWarningMessage] = useState("");
-
+    const [etcText, setEtcText] = useState("");
     const etcRef = useRef();
 
     // 생산계획 가져오기
@@ -84,13 +84,18 @@ function WorkCreate() {
                 console.log("🎉 Confetti 실행!");
                 jsConfetti.addConfetti({
                     emojis: ["🍺", "🍻", "🥂"],
-                    emojiSize: 50,
-                    confettiNumber: 7,
+                    emojiSize: 100,
+                    confettiNumber: 70,
                 });
-                setWorkOrders((prevOrders) => prevOrders.filter(order =>
-                    order.planId !== planId || order.planLineId !== planLineId || order.planProductId !== planProductId
-                ));
+                // 수정 후 (정상 작동)
+setWorkOrders((prevOrders) => prevOrders.filter(order => 
+    !(order.planId === planId && 
+      order.planLineId === planLineId && 
+      order.planProductId === planProductId)
+  ));
                 setSelectedWorkOrder(null);
+                setEtcText(""); // textarea 초기화 (이 줄 추가)
+            etcRef.current.value = ""; // ref 초기화 (선택 사항, 이 줄 추가)
                 await fetchWorkOrders(); // 새로 고침
                 // Confetti 실행 후 3초 뒤 비활성화
             } else {
@@ -103,14 +108,17 @@ function WorkCreate() {
     };
 
     // 생산계획 핸들러
-    const handleWorkOrderSelect = (e) => {
-        const selectedValue = e.target.value;
-        const [selectedPlanId, selectedProductName] = selectedValue.split("|");
-        const selectedOrder = workOrders.find(order =>
-            order.planId === selectedPlanId && order.productName === selectedProductName
-        );
-        setSelectedWorkOrder(selectedOrder || null);
-    };
+    // 생산계획 선택 핸들러 업데이트
+const handleWorkOrderSelect = (e) => {
+    const [selectedPlanId, selectedPlanLineId, selectedPlanProductId] = e.target.value.split("|");
+    const selectedOrder = workOrders.find(order => 
+      order.planId === selectedPlanId && 
+      order.planLineId === selectedPlanLineId && 
+      order.planProductId === selectedPlanProductId
+    );
+    setSelectedWorkOrder(selectedOrder || null);
+  };
+  
 
     useEffect(() => {
         fetchWorkOrders();
@@ -154,11 +162,16 @@ function WorkCreate() {
                 <h3 className={workCreate.planH3}>생산계획&nbsp; : &nbsp;</h3>
                 <select onChange={handleWorkOrderSelect} className={workCreate.planSelect} value={selectedWorkOrder ? `${selectedWorkOrder.planId}|${selectedWorkOrder.productName}` : ""}>
                     <option value="">생산 계획 선택</option>
-                    {workOrders.map((order) => (
-                        <option key={`${order.planId}-${order.productName}`} value={`${order.planId}|${order.productName}`}>
-                            ({order.productName}) 시작일 : {order.startDate}
-                        </option>
-                    ))}
+                    // 옵션 요소 수정
+{workOrders.map((order) => (
+  <option 
+    key={`${order.planId}-${order.planLineId}-${order.planProductId}`} // 고유 식별자 강화
+    value={`${order.planId}|${order.planLineId}|${order.planProductId}`} // 3가지 값 모두 포함
+  >
+    ({order.productName}) 시작일 : {order.startDate}
+  </option>
+))}
+
                 </select>
             </div>
             <table className={workCreate.workTable}>
@@ -228,7 +241,13 @@ function WorkCreate() {
                 </div>
             </Modal>
             <h3 className={workCreate.footName}>특이사항</h3>
-            <textarea ref={etcRef} className={workCreate.etc}></textarea>
+            <textarea
+    ref={etcRef}
+    className={workCreate.etc}
+    value={etcText} // 상태 값으로 textarea 값 설정
+    onChange={(e) => setEtcText(e.target.value)} // 상태 업데이트
+></textarea>
+
             <button className={workCreate.createButton} onClick={handleCreateWorkOrder}>
                 등록🔎
             </button>
