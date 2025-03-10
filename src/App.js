@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
-import Home from "./pages/Home";
+import Home from "./pages/Home"; 
 import Login from "./components/login/Login";
 import ProductionPlan from "./pages/productionPlan/ProductionPlan";
 import WorkplacePage from "./pages/standard-information/WorkplacePage";
@@ -13,6 +13,7 @@ import ProductionPlanSteps from "./pages/productionPlan/ProductionPlanSteps"
 import ProductionPlanDetailPage from "./pages/productionPlan/ProductionPlanDetailPage";
 import MaterialGrindingPage from "./pages/production-process/material-grinding/MaterialGrindingPage";
 import MashingProcessPage from "./pages/production-process/mashing-process/MashingProcessPage";
+import FiltrationProcessPage from "./pages/production-process/filtration-process/FiltrationProcessPage"; 
 import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
 import ProcessStage from "./components/standard-information/ProcessStage";
@@ -101,13 +102,14 @@ const App = () => {
           <Route path="/workplace" element={<ProtectedLayout><WorkplacePage /></ProtectedLayout>} />
           <Route path="/material-grinding" element={<ProtectedLayout><MaterialGrindingPage /></ProtectedLayout>} />
           <Route path="/mashing-process" element={<ProtectedLayout><MashingProcessPage /></ProtectedLayout>} />
+          <Route path="/filtration-process" element={<ProtectedLayout><FiltrationProcessPage /></ProtectedLayout>} />
           <Route path="/process-stage" element={<ProtectedLayout><ProcessStage /></ProtectedLayout>} />
           <Route path="/equipment-info" element={<ProtectedLayout><EquipmentInfo /></ProtectedLayout>} />
           <Route path="/productionPerformance" element={<ProtectedLayout><ProductionPerformancePage /></ProtectedLayout>} />
-             <Route path="/label-info" element={<LabelInfo />} />
-              <Route path="/board" element={<Board/>} />
-              <Route path="/board-create" element={<BoardCreate />} />
-              <Route path="/board/:boardId" element={<BoardDetail/>}/>
+             <Route path="/label-info" element={<ProtectedLayout><LabelInfo /></ProtectedLayout>} />
+              <Route path="/board" element={<ProtectedLayout><Board/></ProtectedLayout>} />
+              <Route path="/board-create" element={<ProtectedLayout><BoardCreate /></ProtectedLayout>} />
+              <Route path="/board/:boardId" element={<ProtectedLayout><BoardDetail/></ProtectedLayout>}/>
                                                   
                                                   
           {/* 404 페이지 */}

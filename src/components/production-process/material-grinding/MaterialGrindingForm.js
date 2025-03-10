@@ -219,7 +219,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
             type="number"
             name="mainMaterialInputVolume"
             value={formData.mainMaterialInputVolume}
-            onChange={handleChange}
+            readOnly
           />{" "}
           kg
         </div>
@@ -283,17 +283,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           분
         </div>
 
-        {/* <div className={styles.gGridItem}>
-          <label className={styles.gLabel09}>상태 코드</label>
-          <input
-            className={styles.gItem09}
-            type="text"
-            name="statusCode"
-            value="SC001"
-            disabled
-          />
-        </div> */}
-
+    
         <div className={styles.gGridItem}>
           <label className={styles.gLabel10}>공정 상태</label>
           <input
@@ -301,7 +291,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
             type="text"
             name="processStatus"
             value={formData.processStatus}
-            disabled
+            readOnly
           />
         </div>
 
