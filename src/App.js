@@ -20,8 +20,11 @@ import EquipmentInfo from "./components/standard-information/EquipmentInfo";
 import WortVolumePage from "./pages/routing/WortVolumePage";
 import ProductionPerformancePage from "./pages/productionPerformance/ProductionPerformancePage"
 import NotFound from "./pages/NotFound"; 
+import { AuthProvider } from "./contexts/AuthContext"; 
+import ProtectedRoute from "./components/login/ProtectedRoute"; 
+import AccessDenied from "./pages/AccessDenied"; 
 
-// 레이아웃 컴포넌트 - 사이드바와 헤더를 포함
+// 레이아웃 컴포넌트 - 사이드바와 헤더를 포함합니다
 const Layout = ({ children }) => {
   return (
     <div className="app-container">
@@ -36,53 +39,69 @@ const Layout = ({ children }) => {
   );
 };
 
+// 보호된 레이아웃 컴포넌트 - 인증 및 권한 확인 후 Layout 렌더링
+const ProtectedLayout = ({ children, requiredPermission = null }) => {
+  return (
+    <ProtectedRoute requiredPermission={requiredPermission}>
+      <Layout>{children}</Layout>
+    </ProtectedRoute>
+  );
+};
+
 const App = () => {
   return (
     <Router>
-      <Routes>
-        {/* 로그인 페이지 - 레이아웃 없이 전체 화면 */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* 루트 경로 접근 시 로그인 페이지로 리다이렉트 */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        
-        {/* 이하 모든 페이지는 레이아웃 적용 */}
-        <Route path="/home" element={
-          <Layout>
-            <Home />
-          </Layout>
-        } />
-        
-        <Route path="/plan-overview" element={
-          <Layout>
-            <ProductionPlan />
-          </Layout>
-        } />
-        
-        <Route path="/detail/:planId" element={
-          <Layout>
-            <ProductionPlanDetailPage />
-          </Layout>
-        } />
-        
-      
-        <Route path="/plan-generate" element={<Layout><ProductionPlanSteps /></Layout>} />
-        <Route path="/processTracking" element={<Layout><ProcessTrackingPage /></Layout>} />
-        <Route path="/wort" element={<Layout><WortVolumePage /></Layout>} />
-        <Route path="/material" element={<Layout><MaterialManagementPage /></Layout>} />
-        <Route path="/attendance" element={<Layout><Attendance /></Layout>} />
-        <Route path="/work/orders" element={<Layout><WorkOrder /></Layout>} />
-        <Route path="/work/create" element={<Layout><WorkCreate /></Layout>} />
-        <Route path="/workplace" element={<Layout><WorkplacePage /></Layout>} />
-        <Route path="/material-grinding" element={<Layout><MaterialGrindingPage /></Layout>} />
-        <Route path="/mashing-process" element={<Layout><MashingProcessPage /></Layout>} />
-        <Route path="/process-stage" element={<Layout><ProcessStage /></Layout>} />
-        <Route path="/equipment-info" element={<Layout><EquipmentInfo /></Layout>} />
-        <Route path="/productionPerformance" element={<Layout><ProductionPerformancePage /></Layout>} />
-        <Route path="*" element={<NotFound />} />
-        
-
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          {/* 공개 경로 */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/access-denied" element={<AccessDenied />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          
+          {/* 보호된 경로 - 로그인 필요 */}
+          <Route path="/home" element={
+            <ProtectedLayout>
+              <Home />
+            </ProtectedLayout>
+          } />
+          
+          {/* 특정 권한이 필요한 경로 */}
+          <Route path="/plan-overview" element={
+            <ProtectedLayout requiredPermission="production.read">
+              <ProductionPlan />
+            </ProtectedLayout>
+          } />
+          
+          <Route path="/detail/:planId" element={
+            <ProtectedLayout requiredPermission="production.read">
+              <ProductionPlanDetailPage />
+            </ProtectedLayout>
+          } />
+          
+          <Route path="/plan-generate" element={
+            <ProtectedLayout requiredPermission="production.write">
+              <ProductionPlanSteps />
+            </ProtectedLayout>
+          } />
+          
+          {/* 기타 보호된 경로 */}
+          <Route path="/processTracking" element={<ProtectedLayout><ProcessTrackingPage /></ProtectedLayout>} />
+          <Route path="/wort" element={<ProtectedLayout><WortVolumePage /></ProtectedLayout>} />
+          <Route path="/material" element={<ProtectedLayout><MaterialManagementPage /></ProtectedLayout>} />
+          <Route path="/attendance" element={<ProtectedLayout><Attendance /></ProtectedLayout>} />
+          <Route path="/work/orders" element={<ProtectedLayout requiredPermission="work.read"><WorkOrder /></ProtectedLayout>} />
+          <Route path="/work/create" element={<ProtectedLayout requiredPermission="work.write"><WorkCreate /></ProtectedLayout>} />
+          <Route path="/workplace" element={<ProtectedLayout><WorkplacePage /></ProtectedLayout>} />
+          <Route path="/material-grinding" element={<ProtectedLayout><MaterialGrindingPage /></ProtectedLayout>} />
+          <Route path="/mashing-process" element={<ProtectedLayout><MashingProcessPage /></ProtectedLayout>} />
+          <Route path="/process-stage" element={<ProtectedLayout><ProcessStage /></ProtectedLayout>} />
+          <Route path="/equipment-info" element={<ProtectedLayout><EquipmentInfo /></ProtectedLayout>} />
+          <Route path="/productionPerformance" element={<ProtectedLayout><ProductionPerformancePage /></ProtectedLayout>} />
+          
+          {/* 404 페이지 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 };
