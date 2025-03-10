@@ -20,6 +20,8 @@ import EquipmentInfo from "./components/standard-information/EquipmentInfo";
 import LabelInfo from "./components/standard-information/LabelInfo";
 
 import WortVolumePage from "./pages/routing/WortVolumePage";
+import ProductionPerformancePage from "./pages/productionPerformance/ProductionPerformancePage"
+import NotFound from "./pages/NotFound"; 
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함
 const Layout = ({ children }) => {
@@ -110,6 +112,10 @@ const App = () => {
         <Route path="/mashing-process" element={<Layout><MashingProcessPage /></Layout>} />
         <Route path="/process-stage" element={<Layout><ProcessStage /></Layout>} />
         <Route path="/equipment-info" element={<Layout><EquipmentInfo /></Layout>} />
+        <Route path="/productionPerformance" element={<Layout><ProductionPerformancePage /></Layout>} />
+        <Route path="*" element={<NotFound />} />
+        
+
       </Routes>
     </Router>
   );
