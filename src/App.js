@@ -121,8 +121,6 @@ const App = () => {
         <Route path="/equipment-info" element={<Layout><EquipmentInfo /></Layout>} />
         <Route path="/productionPerformance" element={<Layout><ProductionPerformancePage /></Layout>} />
         <Route path="*" element={<NotFound />} />
-       
-
       </Routes>
     </Router>
     </WebsocketProvider>
