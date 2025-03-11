@@ -8,7 +8,7 @@ function MaturationPage() {
     const [maturationList, setMaturationList] = useState([]);
     const [logData, setLogData] = useState({
         maturationId: "",
-        recordTime: 120, // 2시간 = 120분
+        recordTime: 1, // 1분 = 60초 (테스트용)
         temperature: 0,
         pressure: 0,
         co2Percent: 0,
@@ -18,30 +18,28 @@ function MaturationPage() {
 
     const navigate = useNavigate();
 
-    // 남은 일수 계산 함수
-    const calculateRemainingDays = (endTime) => {
+    // 남은 기간 계산 함수 (분 단위)
+    const calculateRemainingMinutes = (endTime) => {
         const now = new Date();
         const endDate = new Date(endTime);
 
-        // 남은 일수 계산
-        const timeDiff = endDate - now;
-        const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 하루 단위로 반올림
+        const timeDiff = endDate.getTime() - now.getTime(); // 밀리초 단위 차이
+        const minutesRemaining = Math.ceil(timeDiff / (1000 * 60));
 
-        return daysRemaining > 0 ? `${daysRemaining}일 남음` : "숙성 완료";
+        return minutesRemaining > 0 ? `${minutesRemaining}분 남음` : "숙성 완료";
     };
 
     // 체크 시간 계산 함수 (실시간)
     const calculateCheckTime = (nextCheckTime) => {
         const now = new Date();
-        const timeDiff = new Date(nextCheckTime) - now;
+        const timeDiff = new Date(nextCheckTime).getTime() - now.getTime();
 
         if (timeDiff <= 0) return "체크 필요!";
 
-        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000); // 초 단위 추가
+        const minutes = Math.floor(timeDiff / (1000 * 60));
+        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
-        return `${hours}시간 ${minutes}분 ${seconds}초 남음`; // 초 단위 포함
+        return `${minutes}분 ${seconds}초 남음`;
     };
 
     useEffect(() => {
@@ -49,20 +47,20 @@ function MaturationPage() {
             try {
                 const data = await fetchAllMaturation();
                 const updatedData = data.map((item) => {
-                    // 종료 시간 설정 (30일 후), 최초에만 설정!
+                    // 종료 시간 설정 (3분 후), 최초에만 설정!
                     let endTime = localStorage.getItem(`endTime_${item.maturationId}`);
                     if (!endTime) {
                         endTime = new Date(
-                            new Date().getTime() + 30 * 24 * 60 * 60 * 1000
+                            new Date().getTime() + 3 * 60 * 1000
                         ).toISOString();
                         localStorage.setItem(`endTime_${item.maturationId}`, endTime);
                     }
 
-                    // 체크 시간 설정 (2시간 후)
+                    // 체크 시간 설정 (1분 후)
                     let nextCheck = localStorage.getItem(`nextCheck_${item.maturationId}`);
                     if (!nextCheck) {
                         nextCheck = new Date(
-                            new Date().getTime() + 120 * 60 * 1000
+                            new Date().getTime() + 1 * 60 * 1000
                         ).toISOString();
                         localStorage.setItem(`nextCheck_${item.maturationId}`, nextCheck);
                     }
@@ -92,15 +90,15 @@ function MaturationPage() {
             );
         }, 1000); // 1초마다 업데이트
 
-        // 남은 일수 업데이트 (하루마다)
+        // 남은 시간 업데이트 (매 초마다!)
         const dayInterval = setInterval(() => {
             setMaturationList((prevList) =>
                 prevList.map((item) => ({
                     ...item,
-                    remainingDays: calculateRemainingDays(item.endTime),
+                    remainingTime: calculateRemainingMinutes(item.endTime),
                 }))
             );
-        }, 1000 * 60 * 60 * 24); // 하루마다 업데이트
+        }, 1000); // 1초마다 업데이트
 
         return () => {
             clearInterval(checkInterval);
@@ -136,7 +134,7 @@ function MaturationPage() {
 
             setLogData({
                 maturationId: "",
-                recordTime: 120, // 기본값 유지
+                recordTime: 1, // 기본값 유지 (1분)
                 temperature: 0,
                 pressure: 0,
                 co2Percent: 0,
@@ -232,7 +230,7 @@ function MaturationPage() {
                     <div key={maturation.maturationId} className={MaturationCss.item}>
                         <h4>숙성조 번호: {maturation.maturationId}</h4>
                         <p>
-                            남은 기간: {maturation.remainingDays || calculateRemainingDays(maturation.endTime)}
+                            남은 기간: {maturation.remainingTime || calculateRemainingMinutes(maturation.endTime)}
                         </p>
                         <p>
                             다음 체크: {maturation.remainingCheck || calculateCheckTime(maturation.nextCheckTime)}

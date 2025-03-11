@@ -14,9 +14,12 @@ export const fetchLineMaterial = async () => {
     }
 };
 
-// 숙성 상세 공정 등록
+// 숙성 상세 공정 등록 API
 export const createMaturationDetails = async (maturationDetailsDTO) => {
     try {
+        console.log("🔵 [API 요청 시작] POST /maturationdetails/register");
+        console.log("📤 요청 데이터:", maturationDetailsDTO);
+
         const response = await fetch('http://localhost:8080/maturationdetails/register', {
             method: 'POST',
             headers: {
@@ -24,17 +27,24 @@ export const createMaturationDetails = async (maturationDetailsDTO) => {
             },
             body: JSON.stringify(maturationDetailsDTO),
         });
+
+        console.log("🟢 [API 응답 수신] 상태 코드:", response.status);
+
         if (!response.ok) {
-            throw new Error(`요청 실패: ${response.statusText}`);
+            const errorResponse = await response.json();
+            console.error("🔴 [API 오류 응답]:", errorResponse);
+            throw new Error(`요청 실패: ${errorResponse.message || response.statusText}`);
         }
+
         const data = await response.json();
-        console.log('숙성 상세 공정 등록 성공:', data);
+        console.log("🟢 [API 성공 응답]:", data);
         return data;
     } catch (error) {
-        console.error('숙성 상세 공정 등록 실패:', error);
+        console.error("🔴 [API 호출 실패]:", error);
         throw error;
     }
 };
+
 
 // 숙성 상세 공정 종료시간 수정
 export const completeEndTime = async (maturationId) => {
@@ -108,7 +118,7 @@ export const fetchAllMaturation = async () => {
 
         const data = await response.json();
         console.log("숙성 전체 조회 성공:", data);
-        return data.result.maturationDetail || [];  
+        return data.result.maturationDetail || [];
     } catch (error) {
         console.error("숙성 전체 조회 실패:", error);
         throw error;
