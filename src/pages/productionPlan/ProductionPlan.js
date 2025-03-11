@@ -128,19 +128,24 @@ const ProductionPlan = () => {
                           plan.status === "취소" ? "❌ 취소" : plan.status}
                         </span>
                       </td>
-                      <td onClick={(e) => e.stopPropagation()}> 
-                      <button 
-                          className="action-btn"
-                          onClick={() => handleProductionInstruction(plan.planId)}
-                          disabled={plan.status === "확정"} // 상태가 확정이면 버튼 비활성화
-                          style={{
-                              backgroundColor: plan.status === "확정" ? "#cccccc" : "", // 확정 시 회색으로
-                              cursor: plan.status === "확정" ? "not-allowed" : "pointer"
-                          }}
-                      >
-                          {plan.status === "확정" ? "완료" : "생산지시"}
-                      </button>
-                  </td>
+                      <td onClick={(e) => e.stopPropagation()} 
+                            style={{ 
+                                color: (plan.status === "확정" || plan.status === "생산지시") ? "#999" : "", // "확정" 또는 "생산지시" 상태일 때 글씨 회색
+                            }}
+                        > 
+                            <button 
+                                className="action-btn"
+                                onClick={() => handleProductionInstruction(plan.planId)}
+                                disabled={plan.status === "확정" || plan.status === "생산지시"} // 두 상태일 때 버튼 비활성화
+                                style={{
+                                    backgroundColor: (plan.status === "확정" || plan.status === "생산지시") ? "#cccccc" : "", // 두 상태일 때 배경 회색
+                                    cursor: (plan.status === "확정" || plan.status === "생산지시") ? "not-allowed" : "pointer"
+                                }}
+                            >
+                                {(plan.status === "확정" || plan.status === "생산지시") ? "완료" : "생산지시"}
+                            </button>
+                        </td>
+
                     </tr>
                   );
                 })

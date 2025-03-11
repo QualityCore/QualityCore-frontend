@@ -1,22 +1,45 @@
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // useNavigate 추가
 import { RiSettings4Line, RiDatabase2Line } from "react-icons/ri";
 import { MdOutlineProductionQuantityLimits, MdOutlineWork } from "react-icons/md";
-import {WebsocketContext } from "../common/WebSocket/WebsocketContext";
+import { WebsocketContext } from "../common/WebSocket/WebsocketContext";
 import { TbRoute } from "react-icons/tb";
 import { AiOutlineSchedule } from "react-icons/ai";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { GiFactory } from "react-icons/gi";
+import { useAuth } from "../contexts/AuthContext"; // AuthContext 추가
 import "../styles/Sidebar.css";
 
 const Sidebar = () => {
-
-  const { messages, 
+  const navigate = useNavigate(); // 라우팅 네비게이션 추가
+  const { currentUser, logout } = useAuth(); // 현재 사용자 정보와 로그아웃 함수 가져오기
+  
+  const { 
+    messages, 
     workOrderMessages, 
     resetNotifications, 
-    resetWorkOrderNotifications  } = useContext(WebsocketContext);
+    resetWorkOrderNotifications 
+  } = useContext(WebsocketContext);
+  
   const [openCategory, setOpenCategory] = useState(null);
   
+  // 사용자별 프로필 이미지 매핑
+  const userImages = {
+    'admin': '/images/admin.jpg', // 관리자 이미지
+    'plan': '/images/plan.jpg',   // 생산관리자 이미지
+    'work': '/images/work.jpg',   // 작업관리자 이미지
+    'EMP001': '/images/emp001.jpg',     // 일반사원 이미지
+    'iu': '/images/iublack.jpg'        // 아이유 이미지
+  };
+  
+  // 사용자 역할 한글 변환
+  const roleTranslation = {
+    'ADMIN': '관리자',
+    'PRODUCTION_MANAGER': '생산관리자',
+    'WORK_MANAGER': '작업관리자',
+    'EMPLOYEE': '작업자'
+  };
+
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Castoro+Titling&display=swap';
@@ -30,12 +53,44 @@ const Sidebar = () => {
   const toggleCategory = (category) => {
     setOpenCategory(openCategory === category ? null : category);
   };
+  
+  // 로그아웃 처리 함수
+  const handleLogout = () => {
+    logout(); // AuthContext의 logout 함수 호출
+    navigate('/login'); // 로그인 페이지로 이동
+  };
+  
+  // 근태관리 페이지로 이동
+  const handleAttendance = () => {
+    navigate('/attendance'); // 스케줄 관리 페이지로 이동
+  };
+
+  // 로고 클릭시 홈화면으로 이동
+  const handleHome = () => {
+    navigate('/home'); 
+  }
+
+  // 사용자 프로필 이미지 가져오기
+  const getUserImage = () => {
+    if (!currentUser) return '/images/default_profile.png';
+    return userImages[currentUser.id] || '/images/default_profile.png';
+  };
+  
+  // 사용자 역할 한글로 변환
+  const getUserRole = () => {
+    if (!currentUser) return '';
+    return roleTranslation[currentUser.role] || currentUser.role;
+  };
 
   return (
     <div className="sidebar">
       <div className="logo-container">
         <img src="/images/lastLogo.png" alt="BräuHaus Logo" className="logo" />
-        <h2 className="castoro-titling-regular">BräuHaus</h2>
+        <h2 className="castoro-titling-regular">
+          <button className="castoro-titling-regular-btn" onClick={handleHome}>
+            BräuHaus
+          </button>
+        </h2>
       </div>
       <ul>
         {/* 시스템 관리 */}
@@ -176,44 +231,42 @@ const Sidebar = () => {
 
         {/* 게시판 */}
         <li>
-  <Link 
-      to="/board" 
-      onClick={resetNotifications} // 알림 초기화
-      className="menu-item"
-  >
-      <div className="menu-item-content">
-          <HiOutlineUserGroup className="mr-4" />
-          <span>전사게시판</span>
-          {messages.length > 0 && (
-              <span className="notification-badge">{messages.length}</span>
-          )}
-      </div>
-  </Link>
-</li>
-
+          <Link 
+              to="/board" 
+              onClick={resetNotifications} // 알림 초기화
+              className="menu-item"
+          >
+              <div className="menu-item-content">
+                  <HiOutlineUserGroup className="mr-4" />
+                  <span>전사게시판</span>
+                  {messages.length > 0 && (
+                      <span className="notification-badge">{messages.length}</span>
+                  )}
+              </div>
+          </Link>
+        </li>
       </ul>
 
-
-      <div className="sidebar-profile">
-        <div className="profile-content">
-          <div className="profile-image">
-            <img src="/images/iublack.jpg" alt="Profile" />
-          </div>
-          <div className="profile-details">
-            <div className="profile-name">아이유</div>
-            <div className="profile-role">작업자</div>
-            <div className="profile-actions">
-              <button className="profile-btn">로그아웃</button>
-              <button className="profile-btn">근태 관리</button>
+      {/* 로그인한 사용자 정보 표시 영역 */}
+      {currentUser && (
+        <div className="sidebar-profile">
+          <div className="profile-content">
+            <div className="profile-image">
+              <img src={getUserImage()} alt={currentUser.name} />
+            </div>
+            <div className="profile-details">
+              <div className="profile-name">{currentUser.name}</div>
+              <div className="profile-role">{getUserRole()}</div>
+              <div className="profile-actions">
+                <button className="profile-btn" onClick={handleLogout}>로그아웃</button>
+                <button className="profile-btn" onClick={handleAttendance}>스케줄 관리</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
-
-
-
 
 export default Sidebar;
