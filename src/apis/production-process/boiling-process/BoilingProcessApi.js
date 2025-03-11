@@ -25,12 +25,14 @@ const boilingProcessApi = {
     }
   },
 
-  // 📌 끓임 공정 데이터 저장 (CREATE)
-  saveBoilingProcess: async (boilingRequestData) => {
+  
+   // 📌 끓임 공정 데이터 저장 (CREATE)
+   saveBoilingProcess: async (boilingRequestData) => {
     try {
       const response = await axios.post(`${BASE_URL}/register`, boilingRequestData, {
         headers: { "Content-Type": "application/json" },
       });
+      console.log("✅ 끓임 공정 저장 응답 데이터:", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ 끓임 공정 데이터 저장 실패:", error);
@@ -38,47 +40,69 @@ const boilingProcessApi = {
     }
   },
 
-  // 📌 끓임 공정 업데이트 (끓음 후 워트량, 끓음 손실량 및 실제 종료시간 수정)
-  updateBoilingProcess: async (boilingId, updatePayload) => {
-    console.log("updatePayload : ", updatePayload);
-    if (!boilingId) {
-      console.error("❌ updateBoilingProcess 요청 실패: boilingId가 없습니다.");
-      throw new Error("Boiling ID is required");
-    }
 
-    try {
-      console.log(`📌 API 요청: PUT /boilingprocess/update/${boilingId}`, updatePayload);
 
-      const response = await axios.put(
-        `${BASE_URL}/update/${boilingId}`,
-        {
-          postBoilWortVolume: updatePayload.postBoilWortVolume ? Number(updatePayload.postBoilWortVolume) : 0,
-          boilLossVolume: updatePayload.boilLossVolume ? Number(updatePayload.boilLossVolume) : 0,
-          actualEndTime: updatePayload.actualEndTime ? new Date(updatePayload.actualEndTime).toISOString() : new Date().toISOString(),
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
 
-      console.log("✅ 끓임 공정 업데이트 성공:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error(`❌ 끓임 공정 업데이트 실패 (BoilingID: ${boilingId}):`, error);
-      throw error;
-    }
-  },
+ // 📌 끓임 공정 업데이트 (끓임 후 워트량, 끓임 손실량 및 실제 종료시간 수정)
+ updateBoilingProcess: async (boilingId, updatePayload) => {
+  if (!boilingId) {
+    console.error("❌ updateBoilingProcess 요청 실패: boilingId가 없습니다.");
+    throw new Error("Boiling ID is required");
+  }
+
+  try {
+    console.log(`📌 API 요청: PUT ${BASE_URL}/update/${boilingId}`, updatePayload);
+
+    const response = await axios.put(
+      `${BASE_URL}/update/${boilingId}`,
+      updatePayload,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    console.log("✅ 끓임 공정 업데이트 성공:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ 끓임 공정 업데이트 실패 (BoilingID: ${boilingId}):`, error);
+    throw error;
+  }
+},
+
+
+
+// 📌 특정 LOT_NO에 대한 끓임 공정 데이터 조회
+getBoilingProcessByLotNo: async (lotNo) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/lot/${lotNo}`);
+    return response.data.result || null;
+  } catch (error) {
+    console.error(`❌ 끓임 공정 데이터 조회 실패 (LOT_NO: ${lotNo}):`, error);
+    throw error;
+  }
+},
+
+
+
 
   // 📌 홉 투입 정보 업데이트
   updateHopInfo: async (boilingId, hopPayload) => {
     try {
-      console.log(`📌 API 요청: PUT /boilingprocess/hop/${boilingId}`, hopPayload);
-      const response = await axios.put(`${BASE_URL}/hop/${boilingId}`, hopPayload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      console.log(
+        `📌 API 요청: PUT /boilingprocess/hop/${boilingId}`,
+        hopPayload
+      );
+      const response = await axios.put(
+        `${BASE_URL}/hop/${boilingId}`,
+        hopPayload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error(`❌ 홉 투입 정보 업데이트 실패 (BoilingID: ${boilingId}):`, error);
+      console.error(
+        `❌ 홉 투입 정보 업데이트 실패 (BoilingID: ${boilingId}):`,
+        error
+      );
       throw error;
     }
   },
@@ -86,12 +110,19 @@ const boilingProcessApi = {
   // 📌 특정 LOT_NO의 끓임 공정 상태 업데이트
   updateBoilingStatus: async (lotNo, processTrackingUpdate) => {
     try {
-      const response = await axios.put(`${BASE_URL}/update`, processTrackingUpdate, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.put(
+        `${BASE_URL}/update`,
+        processTrackingUpdate,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error(`❌ 끓임 공정 상태 업데이트 실패 (LOT_NO: ${lotNo}):`, error);
+      console.error(
+        `❌ 끓임 공정 상태 업데이트 실패 (LOT_NO: ${lotNo}):`,
+        error
+      );
       throw error;
     }
   },

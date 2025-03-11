@@ -16,6 +16,7 @@ import MashingProcessPage from "./pages/production-process/mashing-process/Mashi
 import FiltrationProcessPage from "./pages/production-process/filtration-process/FiltrationProcessPage"; 
 import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
+import BoilingProcessPage from "./pages/production-process/boiling-process/BoilingProcessPage";
 import ProcessStage from "./components/standard-information/ProcessStage";
 import EquipmentInfo from "./components/standard-information/EquipmentInfo";
 import LabelInfo from "./components/standard-information/LabelInfo";
@@ -103,6 +104,7 @@ const App = () => {
           <Route path="/material-grinding" element={<ProtectedLayout><MaterialGrindingPage /></ProtectedLayout>} />
           <Route path="/mashing-process" element={<ProtectedLayout><MashingProcessPage /></ProtectedLayout>} />
           <Route path="/filtration-process" element={<ProtectedLayout><FiltrationProcessPage /></ProtectedLayout>} />
+          <Route path="/boiling-process" element={<ProtectedLayout><BoilingProcessPage /></ProtectedLayout>} />
           <Route path="/process-stage" element={<ProtectedLayout><ProcessStage /></ProtectedLayout>} />
           <Route path="/equipment-info" element={<ProtectedLayout><EquipmentInfo /></ProtectedLayout>} />
           <Route path="/productionPerformance" element={<ProtectedLayout><ProductionPerformancePage /></ProtectedLayout>} />

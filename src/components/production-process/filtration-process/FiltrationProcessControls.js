@@ -43,6 +43,7 @@ const FiltrationProcessControls = ({ workOrder }) => {
     setFiltrationData((prev) => ({ ...prev, [name]: value }));
   };
 
+
   const handleSave = async () => {
     try {
       const saveData = {
@@ -96,15 +97,6 @@ const FiltrationProcessControls = ({ workOrder }) => {
       };
 
   
-  // useEffect(() => {
-  //   if (!showSuccessModal) return;
-  //   const timer = setTimeout(startTimer, 100); // ✅ 성공 모달 닫힌 후 타이머 시작
-  //   return () => clearTimeout(timer);
-  // }, [showSuccessModal]);
-
-
-  
-
 
 
   const handleNextProcess = async () => {
@@ -181,6 +173,7 @@ useEffect(() => {
     }
   }, []);
 
+  
 
   useEffect(() => {
     if (!showCompleteModal) return; // ✅ 타이머가 끝난 후 실행

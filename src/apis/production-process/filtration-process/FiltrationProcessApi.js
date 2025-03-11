@@ -31,6 +31,29 @@ const filtrationProcessApi = {
   },
 
 
+   // 📌 여과 공정 전체 조회
+   getAllFiltrationProcesses: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/all`);
+      return response.data.result?.data || [];
+    } catch (error) {
+      console.error("❌ 여과 공정 전체 조회 실패:", error);
+      throw error;
+    }
+  },
+
+  // 📌 특정 LOT_NO의 여과 공정 상세 조회
+  getFiltrationProcessesByLotNo: async (lotNo) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/filtration/${lotNo}`);
+      return response.data.result?.data || [];
+    } catch (error) {
+      console.error(`❌ 여과 공정 상세 조회 실패 (LOT_NO: ${lotNo}):`, error);
+      throw error;
+    }
+  },
+
+
 
   // 📌 여과공정 데이터 저장 (CREATE)
   saveFiltrationProcess: async (filtrationRequestData) => {
