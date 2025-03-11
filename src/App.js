@@ -31,6 +31,9 @@ import ProtectedRoute from "./components/login/ProtectedRoute";
 import AccessDenied from "./pages/AccessDenied";
 import MaturationPage from "./pages/production-process/maturation-detail/MaturationPage";
 import MaturationDetail from "./pages/production-process/maturation-detail/MaturationDetail";
+import PostMaturationFiltrationPage from "./pages/postMaturation-filtration/PostMaturationFiltrationPage";
+import CarbonationProcessPage from "./pages/production-process/carbonation-process/CarbonationProcessPage";
+import PackagingAndShipmentPage from "./pages/production-process/packaging-and-shipment/PackagingAndShipmentPage";
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함합니다
 const Layout = ({ children }) => {
@@ -114,6 +117,10 @@ const App = () => {
             <Route path="/board/:boardId" element={<ProtectedLayout><BoardDetail /></ProtectedLayout>} />
             <Route path="/maturation-details" element={<ProtectedLayout><MaturationPage /></ProtectedLayout>} />
             <Route path="/maturation-details/:maturationId" element={<ProtectedLayout><MaturationDetail /></ProtectedLayout>} />
+            <Route path="/post-maturation-filtration" element={<ProtectedLayout><PostMaturationFiltrationPage /></ProtectedLayout>}/>
+            <Route path="/carbonation-process" element={<ProtectedLayout><CarbonationProcessPage/></ProtectedLayout>}/>
+            <Route path="/packaging_and-shipment" element={<ProtectedLayout><PackagingAndShipmentPage/></ProtectedLayout>}/>
+
 
 
             {/* 404 페이지 */}
