@@ -15,34 +15,37 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
   useEffect(() => {
     const fetchLineMaterial = async () => {
       try {
+        // ✅ 작업지시 목록 조회
         const response = await materialGrindingApi.getLineMaterial();
-        console.log("📌 API 응답 데이터:", response);
-
-        // API 응답에서 배열 데이터 추출
+        console.log("📌 작업지시 목록 API 응답:", response);
+  
         const data = response.result?.lineMaterials || [];
         console.log("📌 추출된 작업지시 목록:", data);
-
+  
         if (!Array.isArray(data) || data.length === 0) {
           console.warn("⚠️ 작업지시 ID 데이터 없음!");
           return;
         }
-
-        // lotNo가 존재하는 데이터만 필터링
-        const filteredData = data.filter((item) => item.lotNo);
-        console.log("📌 lotNo가 있는 데이터:", filteredData);
-
-        // 중복된 lotNo 제거 (Set 사용)
-        const uniqueLots = Array.from(
-          new Set(data.map((item) => item.lotNo))
-        ).map((lotNo) => data.find((item) => item.lotNo === lotNo));
-
-        console.log("📌 최종 저장된 작업지시 목록:", uniqueLots);
-
-        setLineMaterial(uniqueLots); // 중복 제거된 데이터 저장
+  
+        // ✅ 분쇄공정에 등록된 작업지시 ID 조회
+        const grindingResponse = await materialGrindingApi.getMaterialGrindingList();
+        console.log("📌 분쇄 공정 등록된 ID 목록 응답:", grindingResponse);
+  
+        const registeredLotNos = new Set(
+          grindingResponse.result?.data?.map((item) => item.lotNo) || []
+        );
+        console.log("📌 분쇄 공정에 등록된 LOT_NO 목록:", registeredLotNos);
+  
+        // ✅ 분쇄 공정에 등록되지 않은 작업지시 ID만 필터링
+        const filteredData = data.filter((item) => !registeredLotNos.has(item.lotNo));
+  
+        console.log("📌 필터링된 작업지시 목록:", filteredData);
+        setLineMaterial(filteredData);
       } catch (error) {
         console.error("❌ 작업지시 ID 목록 불러오기 실패:", error);
       }
     };
+  
     fetchLineMaterial();
   }, []);
 
@@ -54,7 +57,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
     if (!selectedLotNo) return; // ✅ 선택된 lotNo가 없으면 실행하지 않음
 
     try {
-      const response = await materialGrindingApi.getMaterialByLotNo(
+      const response = await materialGrindingApi.getRawMaterialByLotNo(
         selectedLotNo
       );
       console.log("📌 API 응답 데이터:", response);
@@ -219,7 +222,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
             type="number"
             name="mainMaterialInputVolume"
             value={formData.mainMaterialInputVolume}
-            onChange={handleChange}
+            readOnly
           />{" "}
           kg
         </div>
@@ -283,17 +286,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           분
         </div>
 
-        {/* <div className={styles.gGridItem}>
-          <label className={styles.gLabel09}>상태 코드</label>
-          <input
-            className={styles.gItem09}
-            type="text"
-            name="statusCode"
-            value="SC001"
-            disabled
-          />
-        </div> */}
-
+    
         <div className={styles.gGridItem}>
           <label className={styles.gLabel10}>공정 상태</label>
           <input
@@ -301,7 +294,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
             type="text"
             name="processStatus"
             value={formData.processStatus}
-            disabled
+            readOnly
           />
         </div>
 

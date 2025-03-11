@@ -3,6 +3,33 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:8080/productionprocess';
 
 const materialGrindingApi = {
+     // ✅ 전체 분쇄공정 데이터 조회 (추가된 기능)
+     getMaterialGrindingList: async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/materialgrinding`);
+            return response.data;
+        } catch (error) {
+            console.error("❌ 분쇄공정 데이터 전체 조회 실패:", error);
+            throw error;
+        }
+    },
+
+    // ✅ 특정 LOT_NO의 분쇄공정 데이터 조회
+    getGrindingByLotNo: async (lotNo) => {
+        try {
+            const apiUrl = `${BASE_URL}/materialgrinding/${lotNo}`;
+            console.log("📌 요청하는 lotNo:", lotNo);
+            console.log("📌 최종 API 요청 URL:", apiUrl);
+
+            const response = await axios.get(apiUrl);
+            console.log("📌 주원료 API 응답 데이터:", response.data);
+            return response.data || [];  
+        } catch (error) {
+            console.error("❌ 주원료 불러오기 실패:", error);
+            return [];  
+        }
+    },
+
     //  분쇄 데이터 저장 (CREATE)
     saveGrindingData: async (data) => {
         try {
@@ -43,8 +70,8 @@ const materialGrindingApi = {
     },
 
 
-     // ✅ 주원료 데이터 가져오기 (Lot No 기반)
-     getMaterialByLotNo: async (lotNo) => {
+      // ✅ 특정 LOT_NO의 주원료 데이터 조회
+     getRawMaterialByLotNo: async (lotNo) => {
         try {
             const apiUrl = `${BASE_URL}/${lotNo}`;
             console.log("📌 요청하는 lotNo:", lotNo);

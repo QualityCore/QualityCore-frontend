@@ -228,11 +228,8 @@ const MashingProcessControls = ({ workOrder }) => {
 
       console.log("📌 업데이트할 데이터:", updatedMashingData);
 
-      await mashingProcessApi.updateMashingProcess(
-        mashingId,
-        updatedMashingData
-      );
-      navigate("/fermentation");
+      await mashingProcessApi.updateMashingProcess(mashingId,updatedMashingData);
+      navigate("/filtration-process");
     } catch (error) {
       setShowErrorModal(true);
     }
