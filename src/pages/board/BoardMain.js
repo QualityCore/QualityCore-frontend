@@ -17,14 +17,29 @@ function BoardMain() {
         try {
             setLoading(true);
             const { content, pageInfo } = await fetchBoardsMain(page, 5); // API 호출
-            setBoards(content); // 게시글 목록 저장
+            
+            // 정렬 순서: 공지 > 중요 > 일반 순으로 정렬
+            const sortedContent = [...content].sort((a, b) => {
+                const categoryOrder = {
+                    "공지": 3,
+                    "중요": 2,
+                    "일반": 1
+                };
+                
+                // 카테고리 기준 내림차순 정렬 (높은 숫자가 먼저)
+                return categoryOrder[b.boardCategory] - categoryOrder[a.boardCategory] ||
+                       // 같은 카테고리 내에서는 최신순(boardId가 큰 순)으로 정렬
+                       b.boardId.localeCompare(a.boardId);
+            });
+            
+            setBoards(sortedContent); // 정렬된 게시글 목록 저장
             setPaginationInfo({
                 page: pageInfo.currentPage,
                 totalPages: pageInfo.totalPages,
                 first: pageInfo.first,
                 last: pageInfo.last,
-                totalElements: pageInfo.totalElements, // 추가
-            }); // 페이징 정보 저장
+                totalElements: pageInfo.totalElements,
+            });
         } catch (err) {
             setError("게시판 데이터를 불러오는 중 오류가 발생했습니다.");
         } finally {
@@ -63,6 +78,10 @@ function BoardMain() {
                         ) : error ? (
                             <tr>
                                 <td colSpan="4">{error}</td>
+                            </tr>
+                        ) : boards.length === 0 ? (
+                            <tr>
+                                <td colSpan="4">게시글이 없습니다.</td>
                             </tr>
                         ) : (
                             boards.map((board) => (

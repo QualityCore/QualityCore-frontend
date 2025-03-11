@@ -261,6 +261,20 @@
     font-style: normal;
   }
 
+
+  .castoro-titling-regular-btn {
+    all: unset; /* 기본 버튼 스타일 제거 */
+    font-family: "Castoro Titling", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px; /* 크기 조절 */
+    color: #2B3674; /* 기존 색상 유지 */
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0; /* 버튼 패딩 제거 */
+}
+
 .notification-badge {
     position: absolute;
     top: 0%;

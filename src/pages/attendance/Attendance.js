@@ -8,8 +8,10 @@ import {
   findAllWorkOrders,
   fetchWorkOrderByLotNo,
 } from "../../apis/workOrderApi/workOrdersApi";
+import { useAuth } from "../../contexts/AuthContext"; // 추가: AuthContext 가져오기
 
 const ProductionSchedule = () => {
+  const { currentUser } = useAuth(); // 추가: 현재 로그인한 사용자 정보 가져오기
   const [events, setEvents] = useState([]);
   const [isDetailModal, setIsDetailModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -18,27 +20,51 @@ const ProductionSchedule = () => {
   const [userSchedule, setUserSchedule] = useState({
     empName: "로딩 중...",
     workTeam: "로딩 중...",
-    profileImage: "../images/baba.png",
+    profileImage: "../images/default_profile.png", // 기본 이미지 변경
   });
   const [monthlyWorkHours, setMonthlyWorkHours] = useState(0);
   const [currentWorkHours, setCurrentWorkHours] = useState(0);
 
+  // 추가: 사용자별 프로필 이미지 매핑
+  const userImages = {
+    'admin': '../images/admin.jpg',
+    'plan': '../images/pla.jpg',
+    'work': '../images/work.jpg',
+    'EMP001': '../images/emp001.jpg',
+    'iu': '../images/iublack.jpg'
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await findAllWorkOrders(0, 100);
+        // 추가: 현재 로그인한 사용자의 ID를 기준으로 작업 지시서 조회
+        // empId 파라미터 추가 (백엔드에서 이 파라미터를 지원한다고 가정)
+        const response = await findAllWorkOrders(0, 100, '', '', '', '', '', '', currentUser?.id);
+        
         if (response?.work?.content) {
-          const firstWork = response.work.content[0];
-          if (firstWork) {
+          // 로그인한 사용자의 작업만 필터링 (백엔드에서 처리하지 않을 경우)
+          const userWorks = currentUser?.id 
+            ? response.work.content.filter(work => work.empId === currentUser.id)
+            : response.work.content;
+          
+          // 사용자 정보 설정
+          if (userWorks.length > 0) {
             setUserSchedule({
-              empName: firstWork.empName,
-              workTeam: firstWork.workTeam,
-              profileImage: "../images/baba.png",
+              empName: currentUser?.name || userWorks[0].empName,
+              workTeam: userWorks[0].workTeam,
+              profileImage: userImages[currentUser?.id] || "../images/default_profile.png",
+            });
+          } else if (currentUser) {
+            // 작업이 없어도 로그인한 사용자 정보 표시
+            setUserSchedule({
+              empName: currentUser.name,
+              workTeam: currentUser.department || "부서 정보 없음",
+              profileImage: userImages[currentUser.id] || "../images/default_profile.png",
             });
           }
 
           // 개별 일자별 이벤트 생성 (주말 포함)
-          const calendarEvents = response.work.content.flatMap((work) => {
+          const calendarEvents = userWorks.flatMap((work) => {
             const start = new Date(work.startDate);
             const end = new Date(work.endDate);
             const events = [];
@@ -74,15 +100,24 @@ const ProductionSchedule = () => {
         }
       } catch (error) {
         console.error("생산 스케줄 로딩 실패", error);
-        setUserSchedule({
-          empName: "데이터 오류",
-          workTeam: "데이터 오류",
-          profileImage: "../images/baba.png",
-        });
+        // 에러 발생 시에도 로그인한 사용자 정보 표시
+        if (currentUser) {
+          setUserSchedule({
+            empName: currentUser.name,
+            workTeam: currentUser.department || "부서 정보 없음",
+            profileImage: userImages[currentUser.id] || "../images/default_profile.png",
+          });
+        } else {
+          setUserSchedule({
+            empName: "데이터 오류",
+            workTeam: "데이터 오류",
+            profileImage: "../images/default_profile.png",
+          });
+        }
       }
     };
     fetchData();
-  }, []);
+  }, [currentUser]); // 의존성 배열에 currentUser 추가
 
   useEffect(() => {
     const now = new Date();

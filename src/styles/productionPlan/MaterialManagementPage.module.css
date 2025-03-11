@@ -1,4 +1,4 @@
-/* MaterialManagementPage.module.css */
+
 .container {
   background-color: white;
   border-radius: 12px;
@@ -10,12 +10,12 @@
   margin-top: 1rem;
 }
 
+
 .title {
+  text-align: center;
   font-size: 1.8rem;
   color: #2B3674;
-  margin-bottom: 1.5rem;
   font-weight: bold;
-  text-align: center;
 }
 
 .dashboard {
@@ -38,11 +38,13 @@
   margin-bottom: 0.5rem;
 }
 
+
 .card p {
   font-size: 2rem;
-  color: #5687F2;
   font-weight: bold;
+  color: #5687F2;
 }
+
 
 .subtitle {
   font-size: 1.5rem;
@@ -53,10 +55,9 @@
 
 .table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
   margin-bottom: 2rem;
 }
+
 
 .table th {
   background-color: #F4F7FE;
@@ -82,13 +83,77 @@
   background-color: #5687F2;
   color: white;
   border: none;
-  border-radius: 8px;
   padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.moreButton {
+  background-color: #2B3674;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: 600;
+  margin-top: 10px;
 }
 
 .orderButton:hover {
   background-color: #4176E0;
+}
+
+/* ✅ 기존 스타일 유지 */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirmButton {
+  background-color: #5687F2;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background-color: #ccc;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background-color: #bbb;
+}
+
+.moreButton {
+  background-color: #2B3674;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
 }

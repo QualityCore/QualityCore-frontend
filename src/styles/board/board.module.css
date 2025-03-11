@@ -1,190 +1,304 @@
-/* 게시판 목록 테이블 */
-.mainBar {
-    width: 1450px;
-    height: 700px;
-    margin-left: 50px;
-    border-radius: 20px;
-    background: white;
-    padding: 20px;
-    overflow: auto;
-}
-
-/* 테이블 기본 스타일 */
-.boardTable {
+/* 게시판 공통 변수 */
+:root {
+    --primary-color: #5687F2;
+    --primary-hover: #4776E0;
+    --secondary-color: #007bff;
+    --secondary-hover: #0056b3;
+    --danger-color: #EF4444;
+    --danger-hover: #DC2626;
+    --light-bg: #F4F7FE;
+    --border-color: #E2E8F0;
+    --text-color: #2B3674;
+    --text-secondary: #718096;
+    --notice-color: #2B6CB0;
+    --important-color: #E53E3E;
+    --normal-color: #F4F7FE;
+    --border-radius: 12px;
+    --shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 12px 25px rgba(43, 108, 176, 0.15);
+    --transition: all 0.3s ease;
+  }
+  
+  /* 게시판 컨테이너 */
+  .boardContainer {
     width: 100%;
-    border-collapse: collapse;
-    /* 셀의 경계선 겹침 방지 */
-    margin-top: 20px;
-}
-
-/* 테이블 헤더 */
-.boardTable th,
-.boardTable td {
-    padding: 12px;
-    text-align: center;
-    border-top: 2px solid #ddd;
-    /* 헤더의 위 경계선 */
-    border-bottom: 2px solid #ddd;
-    /* 헤더의 아래 경계선 */
-}
-
-/* 테이블 헤더 스타일 */
-.boardTable th {
-    font-weight: normal;
-    /* 글자 두껍게 하지 않음 */
-}
-
-/* 각 행마다 위/아래 경계선만 추가 */
-.boardTable td {
+    height: calc(100vh - 120px);
+    padding: 1rem;
+    display: flex;
+    box-sizing: border-box;
+  }
+  
+  /* 게시판 메인 영역 (하얀색 배경 포함) */
+  .mainBar {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* 헤더 영역 (검색바) */
+  .headerBar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1.5rem;
+    background-color: var(--light-bg);
+    border-radius: 20px;
+    padding: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  /* 글쓰기 버튼 */
+  .leftButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
     cursor: pointer;
-    border-top: 1px solid #ddd;
-    /* 각 행의 위 경계선 */
-    border-bottom: 1px solid #ddd;
-    /* 각 행의 아래 경계선 */
-}
-
-/* 첫 번째/마지막 행에서 중복된 경계선 제거 */
-.boardTable tr:first-child td {
-    border-top: none;
-    /* 첫 번째 행은 위 경계선 없애기 */
-}
-
-
-/* 테이블 반응형 디자인 (모바일을 고려한 스타일) */
-@media (max-width: 768px) {
-    .mainBar {
-        width: 100%;
-        padding: 10px;
+    transition: var(--transition);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  
+  .leftButton:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+  }
+  
+  /* 검색 옵션 셀렉트 */
+  .searchSelect {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    flex: 1;
+    max-width: 150px;
+    color: #2D3748;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* 검색 인풋 */
+  .searchInput {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    flex: 2;
+    color: #2D3748;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .searchInput:focus, .searchSelect:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(86, 135, 242, 0.15);
+    outline: none;
+  }
+  
+  /* 검색 버튼 */
+  .searchButton {
+    background: linear-gradient(to right, #5687F2, #7ea6ff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(86, 135, 242, 0.2);
+  }
+  
+  .searchButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(86, 135, 242, 0.3);
+  }
+  
+  /* 테이블 컨테이너 */
+  .tableContainer {
+    width: 100%;
+    flex: 1;
+    overflow: auto;
+    margin-bottom: 1rem;
+  }
+  
+  /* 테이블 기본 스타일 */
+  .boardTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 700px; /* 테이블 최소 너비 지정 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  /* 테이블 헤더 */
+  .tableHeader {
+    background: linear-gradient(to right, #F4F7FE, #EDF2F7);
+  }
+  
+  .boardTable th {
+    background-color: transparent;
+    color: #2D3748;
+    padding: 1rem 1.2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+  
+  /* 테이블 데이터 셀 */
+  .boardTable td {
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    text-align: center;
+    vertical-align: middle;
+    transition: background-color 0.3s;
+  }
+  
+  /* 테이블 행 효과 */
+  .tableRow {
+    transition: all 0.3s;
+  }
+  
+  .tableRow:hover {
+    background-color: rgba(86, 135, 242, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* 카테고리 태그 */
+  .categoryTag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 70px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .importantTag {
+    background: linear-gradient(135deg, #F56565, #ED8936);
+    color: white;
+  }
+  
+  .normalTag {
+    background: linear-gradient(135deg, #E2E8F0, #EDF2F7);
+    color: #4A5568;
+  }
+  
+  .noticeTag {
+    background: linear-gradient(135deg, #4299E1, #63B3ED);
+    color: white;
+  }
+  
+  /* 중요 게시글 & 공지 게시글 */
+  .importantRow {
+    background-color: rgba(245, 101, 101, 0.25); /* 더 진한 색으로 변경 */
+  }
+  
+  .noticeRow {
+    background-color: rgba(66, 153, 225, 0.25); /* 더 진한 색으로 변경 */
+  }
+  
+  /* 게시글 없음 메시지 */
+  .noText {
+    text-align: center;
+    font-weight: 500;
+    color: #718096;
+    margin: 3rem 0;
+    padding: 2rem;
+    background-color: #F8FAFC;
+    border-radius: 8px;
+    border: 1px dashed #CBD5E0;
+  }
+  
+  /* 페이지네이션 컨테이너 */
+  .paginationContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* 반응형 스타일 */
+  @media (max-width: 992px) {
+    .boardContainer, .mainBar {
+      height: auto;
+      min-height: calc(100vh - 100px);
     }
-
+    
+    .headerBar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .searchGroup {
+      max-width: 100%;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .buttonContainer {
+      width: 100%;
+      justify-content: center;
+      padding-right: 0;
+    }
+    
+    .searchSelect, 
+    .searchInput, 
+    .searchButton {
+      width: 100%;
+      max-width: none;
+      margin: 5px 0;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .boardContainer {
+      padding: 1rem;
+    }
+    
+    .mainBar {
+      padding: 1rem;
+    }
+    
+    .headerBar {
+      padding: 1rem;
+    }
+    
+    .boardTable th:nth-child(3),
+    .boardTable td:nth-child(3) {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .categoryTag {
+      padding: 3px 8px;
+      font-size: 0.7rem;
+    }
+    
     .boardTable th,
     .boardTable td {
-        padding: 10px;
-        font-size: 12px;
+      padding: 8px;
+      font-size: 0.8rem;
     }
-
-    .searchSelect {
-        margin-left: 0;
+    
+    .boardTable th:nth-child(4),
+    .boardTable td:nth-child(4) {
+      display: none;
     }
-}
-
-.boardTable th:nth-child(1),
-.boardTable td:nth-child(1) {
-    width: 100px;
-}
-
-.boardTable th:nth-child(2),
-.boardTable td:nth-child(2) {
-    width: 350px;
-}
-
-.boardTable th:nth-child(3),
-.boardTable td:nth-child(3) {
-    width: 100px;
-}
-
-.boardTable th:nth-child(4),
-.boardTable td:nth-child(4) {
-    width: 100px;
-}
-
-.headerBar {
-    margin-top: 20px;
-    margin-bottom: 5px;
-}
-
-.leftButton {
-    margin-left: 48px;
-    padding: 8px 20px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3sease, transform 0.2sease;
-}
-
-.leftButton:hover,
-.searcButton:hover {
-    background-color: #45a049;
-    /* hover시 색상 변경 */
-    transform: translateY(-2px);
-    /* 마우스 올렸을 때 살짝 올라오는 효과 */
-}
-
-.searchSelect {
-
-    height: 35px;
-    margin-left: 1025px;
-}
-
-.searchInput {
-    margin-bottom: 9px;
-    padding: 8px;
-    width: 200px;
-    border-radius: 4px;
-    border: 1px solid #d1d1d1;
-}
-
-.searchButton {
-
-    padding: 8px 20px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3sease, transform 0.2sease;
-    margin-left: 30px;
-}
-
-.categoryTag {
-    display: inline-block;
-    padding: 2px 12px;
-    border-radius: 0px;
-}
-
-/* 중요 게시글 행 배경색 */
-.importantRow {
-    background-color: #ffe5e5;
-    /* 연한 빨간색 배경 */
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-}
-
-.categoryTag.important {
-    background-color: #ff6b6b;
-    color: white;
-}
-
-.categoryTag.normal {
-    background-color: #f0f0f0;
-    color: #666;
-}
-
-.importantTag {
-    background-color: #ff6b6b;
-    /* 빨간색 태그 */
-    color: white;
-}
-
-.normalTag {
-    background-color: #f0f0f0;
-    /* 회색 태그 */
-    color: #666;
-}
-
-.noticeTag {
-    background-color: #007bff;
-    /* 파란색 태그 */
-    color: white;
-}
-
-.noText {
-    margin-left: 650px;
-    font-weight: bold;
-}
+  }
