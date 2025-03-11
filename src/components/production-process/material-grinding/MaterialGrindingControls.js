@@ -7,7 +7,7 @@ import ErrorModal from "../../standard-information/common/ErrorModal";
 import CompleteModal from "../../standard-information/common/CompleteModal";
 import styles from "../../../styles/production-process/MaterialGrindingControls.module.css";
 
-const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
+const MaterialGrindingControls = ({ grindingData, setGrindingData, lineMaterial, setLineMaterial }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -61,45 +61,51 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData }) => {
 
   const handleSave = async () => {
     console.log("🔍 grindingData 전체 데이터:", grindingData);
-
+  
     if (!grindingData || !grindingData.lotNo) {
       alert("⚠️ LOT_NO를 입력해야 합니다!");
       return;
     }
-
+  
     try {
-      // ✅ LOT_NO가 이미 DB에 있는지 확인하는 API 호출
-      const checkLotResponse = await materialGrindingApi.getMaterialByLotNo(
-        grindingData.lotNo
-      );
-      const savedData = { ...grindingData}; // 상태 변경
-      console.log("✅ 저장할 데이터:", savedData);
-
-
+      // ✅ 분쇄 공정 등록 여부 확인
+      const checkLotResponse = await materialGrindingApi.getGrindingByLotNo(grindingData.lotNo);
       console.log("🔍 LOT_NO 확인 API 응답:", checkLotResponse);
-
+  
+      if (checkLotResponse?.result?.data && Array.isArray(checkLotResponse.result.data) && checkLotResponse.result.data.length > 0) {     
+        alert(`⚠️ 작업지시 ID (${grindingData.lotNo})는 이미 분쇄 공정에 등록되었습니다!`);
+        return;
+      }
+  
+      // ✅ 데이터 저장
+      const savedData = { ...grindingData };
+      console.log("✅ 저장할 데이터:", savedData);
       await materialGrindingApi.saveGrindingData(savedData);
-
-      // ✅ 상태 업데이트 (UPDATE)
+  
+      // ✅ 상태 업데이트 (진행 중으로 변경)
       const updatedData = {
         lotNo: grindingData.lotNo,
         processTracking: { processStatus: "진행 중" },
       };
       console.log("✅ 상태 업데이트 요청:", updatedData);
-      const response = await materialGrindingApi.updateProcessStatus(
-        updatedData
-      );
-
+      const response = await materialGrindingApi.updateProcessStatus(updatedData);
+  
       if (response.status === 200 || response.status === 201) {
-        console.log("✅ 데이터 저장 & 상태 업데이트 성공:", response);
         setGrindingData((prev) => ({ ...prev, processStatus: "진행 중" }));
         setShowSuccessModal(true);
+  
+        // ✅ 등록된 작업지시 ID가 리스트에서 보이지 않도록 상태 업데이트
+        setLineMaterial((prev) => prev.filter((item) => item.lotNo !== grindingData.lotNo));
       }
     } catch (error) {
       console.error("❌ 저장 실패:", error);
       setShowErrorModal(true);
     }
   };
+  
+
+
+
 
   const handleConfirmClick = () => {
     setShowConfirmModal(false);
