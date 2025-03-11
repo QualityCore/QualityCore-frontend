@@ -111,7 +111,7 @@ const MashingProcessControls = ({ workOrder }) => {
             )
           )
           .reduce((sum, item) => sum + Number(item.totalQty), 0);
-
+ 
         const mainMaterialInputVolume = materialsList
           .filter((item) => ["보리", "밀", "쌀"].includes(item.materialName))
           .reduce((sum, item) => sum + Number(item.totalQty), 0);
@@ -238,6 +238,27 @@ const MashingProcessControls = ({ workOrder }) => {
   useEffect(() => {
     console.log("📌 현재 mashingId:", mashingId);
   }, [mashingId]);
+
+  
+  
+  useEffect(() => {
+    if (mashingData.lotNo) {  // ✅ lotNo가 있을 때만 저장
+      const existingData = sessionStorage.getItem("mashingData");
+      const parsedData = existingData ? JSON.parse(existingData) : {};
+  
+      if (
+        parsedData.lotNo !== mashingData.lotNo ||
+        parsedData.grainRatio !== mashingData.grainRatio
+      ) {
+        sessionStorage.setItem("mashingData", JSON.stringify(mashingData));
+        console.log("✅ mashingData 저장 완료:", sessionStorage.getItem("mashingData"));
+      }
+    }
+  }, [mashingData]);  // ✅ mashingData 변경될 때만 저장
+  
+  
+  
+
 
   return (
     <form

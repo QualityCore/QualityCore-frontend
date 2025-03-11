@@ -7,6 +7,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
   const [lineMaterial, setLineMaterial] = useState([]);
   const [selectedMaterial, setSelectedMaterial] = useState("");
 
+  
   useEffect(() => {
     setFormData(grindingData); // ✅ grindingData 변경 시 formData를 최신 상태로 업데이트
   }, [grindingData]);
@@ -82,7 +83,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         maltTypes.includes(item.materialName)
       );
 
-      if (validMaterial) {
+      if (validMaterial) { 
         const materialName = validMaterial.materialName;
         const totalQty = validMaterial.totalQty || 0;
 
@@ -178,11 +179,34 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
     });
   };
 
+  useEffect(() => {
+    if (grindingData && grindingData.lotNo && grindingData.mainMaterialInputVolume) {
+      const existingData = sessionStorage.getItem("mashingData");
+      const parsedData = existingData ? JSON.parse(existingData) : {};
+  
+      if (
+        parsedData.lotNo !== grindingData.lotNo ||
+        parsedData.grainRatio !== grindingData.mainMaterialInputVolume
+      ) {
+        const newData = {
+          lotNo: grindingData.lotNo,
+          grainRatio: grindingData.mainMaterialInputVolume,
+          waterRatio: grindingData.waterRatio || 0,
+          waterInputVolume: grindingData.waterInputVolume || 0
+        };
+        sessionStorage.setItem("mashingData", JSON.stringify(newData));
+        console.log("✅ mashingData 저장 완료:", newData);
+      }
+    } else {
+      console.warn("⚠️ grindingData가 불완전하거나 아직 로드되지 않음:", grindingData);
+    }
+  }, [grindingData]); 
+  
+
+
   return (
 
-
-
-    
+  
     <div className={styles.materialGrindingTableContainer}>
       <h2 className={styles.grindingTitle}>분쇄 공정 원재료 투입 공정</h2>
 

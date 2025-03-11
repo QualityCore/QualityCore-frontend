@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/filtrationproess";
+const BASE_URL = "http://localhost:8080/filtrationprocess";
 
 const filtrationProcessApi = {
 
@@ -49,20 +49,21 @@ const filtrationProcessApi = {
 
   // 📌 특정 FiltrationID의 회수된 워트량, 손실량 및 실제 종료시간 업데이트
   updateFiltrationProcess: async (filtrationId, updatePayload) => {
+    console.log("updatePayload : ", updatePayload)
     if (!filtrationId) {
       console.error("❌ updateFiltrationProcess 요청 실패: filtrationId가 없습니다.");
       throw new Error("Filtration ID is required");
     }
 
     try {
-      console.log(`📌 API 요청: PUT /filtrationproess/update/${filtrationId}`, updatePayload);
+      console.log(`📌 API 요청: PUT /filtrationprocess/update/${filtrationId}`, updatePayload);
 
       const response = await axios.put(
         `${BASE_URL}/update/${filtrationId}`,
         {
-          recoveredWortVolume: updatePayload.recoveredWortVolume || null,
-          lossVolume: updatePayload.lossVolume || null,
-          actualEndTime: updatePayload.actualEndTime || new Date().toISOString(),
+          recoveredWortVolume: updatePayload.recoveredWortVolume ? Number(updatePayload.recoveredWortVolume) : 0,
+          lossVolume: updatePayload.lossVolume ? Number(updatePayload.lossVolume) : 0,
+          actualEndTime: updatePayload.actualEndTime ? new Date(updatePayload.actualEndTime).toISOString() : new Date().toISOString(),
         },
         {
           headers: { "Content-Type": "application/json" },

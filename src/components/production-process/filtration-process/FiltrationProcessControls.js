@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import filtrationProcessApi from "../../../apis/production-process/filtration-process/FiltrationProcessApi";
 import ConfirmModal from "../../standard-information/common/ConfirmModal";
 import SuccessfulModal from "../../standard-information/common/SuccessfulModal";
@@ -22,17 +23,20 @@ const FiltrationProcessControls = ({ workOrder }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [filtrationId, setFiltrationId] = useState(null);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [buttonLabel, setButtonLabel] = useState("등록하기");
+  const navigate = useNavigate();
 
-useEffect(() => {
-  const savedLotNo = localStorage.getItem("selectedLotNo");
-  if (savedLotNo) {
-    setFiltrationData((prev) => ({ ...prev, lotNo: savedLotNo }));
-  }
-}, []);
+  useEffect(() => {
+    const savedLotNo = localStorage.getItem("selectedLotNo");
+    if (savedLotNo) {
+      setFiltrationData((prev) => ({ ...prev, lotNo: savedLotNo }));
+    }
+  }, []);
 
-
-
+ 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,30 +45,153 @@ useEffect(() => {
 
   const handleSave = async () => {
     try {
-      setIsProcessing(true);
-      const response = await filtrationProcessApi.saveFiltrationProcess(filtrationData);
+      const saveData = {
+        ...filtrationData,
+        processStatus:"진행중",
+      };
+
+      const response = await filtrationProcessApi.saveFiltrationProcess(saveData);
       console.log("✅ 여과 공정 저장 성공:", response);
+      
+       // ✅ 서버 응답에서 filtrationId를 받아서 저장해야 함
+       if (response?.result?.saveFiltrationProcess?.filtrationId) {
+        setFiltrationId(response.result.saveFiltrationProcess.filtrationId);
+    } else {
+        console.warn("⚠️ 서버 응답에 filtrationId가 없습니다.");
+    }
+  
+      setFiltrationData((prev)=>({...prev,processStatus:"진행 중"}));
       setShowSuccessModal(true);
       setButtonLabel("다음 공정 이동");
     } catch (error) {
       setShowErrorModal(true);
-    } finally {
-      setIsProcessing(false);
     }
   };
 
-  const handleNextProcess = () => {
-    setShowCompleteModal(true);
-  };
+
+
+
+   // ✅ 타이머 실행 함수
+   const startTimer = () => {
+    setIsTimerRunning(true);
+    const totalTime =
+      process.env.NODE_ENV === "development"
+        ? 5
+        : Number(filtrationData.filtrationTime) * 60;
+        setTimeLeft(totalTime);
+
+        const countdown = setInterval(() => {
+          setTimeLeft((prev) => {
+            const newTime = prev - 1;
+            if (newTime <= 0) {
+              clearInterval(countdown);
+              setIsProcessing(false);
+              setShowCompleteModal(true); // ✅ 완료 모달 표시
+              setButtonLabel("다음 공정 이동");
+              return 0;
+            }
+            return newTime;
+          });
+        }, 1000);
+      };
+
+  
+  // useEffect(() => {
+  //   if (!showSuccessModal) return;
+  //   const timer = setTimeout(startTimer, 100); // ✅ 성공 모달 닫힌 후 타이머 시작
+  //   return () => clearTimeout(timer);
+  // }, [showSuccessModal]);
+
+
+  
+
+
+
+  const handleNextProcess = async () => {
+    if (!filtrationData.recoveredWortVolume || isNaN(Number(filtrationData.recoveredWortVolume))) {
+      console.error("❌ 회수된 워트량 값이 입력되지 않았거나 잘못된 값입니다.");
+      setShowErrorModal(true);
+      return;
+    }
+
+    if (!filtrationData.lossVolume || isNaN(Number(filtrationData.lossVolume))) {
+      console.error("❌ 손실량 값이 입력되지 않았거나 잘못된 값입니다.");
+      setShowErrorModal(true);
+      return;
+    }
+
+    if(!filtrationId){
+      console.log("❌ filtrationId가 없습니다. API 요청을 중단합니다.")
+      setShowErrorModal(true);
+      return;
+    }
+
+    console.log("📌 API 요청 데이터:", {
+      recoveredWortVolume: filtrationData.recoveredWortVolume,
+      lossVolume: filtrationData.lossVolume,
+      actualEndTime: new Date().toISOString(),
+  });
+
+  try {
+      await filtrationProcessApi.updateFiltrationProcess(filtrationId, {
+          recoveredWortVolume: Number(filtrationData.recoveredWortVolume),
+          lossVolume: Number(filtrationData.lossVolume),
+          actualEndTime: new Date().toISOString(),
+      });
+
+      navigate("/boiling-process");
+  } catch (error) {
+      console.error(`❌ 여과공정 업데이트 실패 (FiltrationID: ${filtrationId}):`, error);
+      setShowErrorModal(true);
+  }
+};
+
+
+
+useEffect(() => {
+  console.log("🟢 현재 filtrationId:", filtrationId);
+}, [filtrationId]);
+
+
+
+  useEffect(() => {
+    const savedMashingData = sessionStorage.getItem("mashingData");
+    console.log("📌 필터 공정에서 저장된 데이터 확인:", savedMashingData); // 🔍 확인용 로그
+
+    if (savedMashingData) {
+      const parsedData = JSON.parse(savedMashingData);
+
+      // ✅ 곡물 흡수량 계산 (곡물 흡수량 * 0.14)
+      const calculatedAbsorption = parsedData.waterInputVolume
+        ? parsedData.waterInputVolume * 0.14
+        : 0;
+
+      setFiltrationData((prev) => ({
+        ...prev,
+        lotNo: parsedData.lotNo || prev.lotNo,
+        grainAbsorption: calculatedAbsorption.toFixed(1), // 소수점 2자리 고정
+      }));
+    }
+  }, []);
+
+
 
   return (
-    <form className={styles.filtrationProcessForm} onSubmit={(e) => e.preventDefault()}>
+    <form
+      className={styles.filtrationProcessForm}
+      onSubmit={(e) => e.preventDefault()}
+    >
       <h2 className={styles.filtrationTitle}>여과 공정</h2>
 
       <div className={styles.fFormGrid}>
         <div className={styles.fGridItem}>
           <label className={styles.fLabel01}>작업지시 ID</label>
-          <input className={styles.fItem01} type="text" value={filtrationData.lotNo} readOnly />
+          <input
+            className={styles.fItem01}
+            type="text"
+            value={filtrationData.lotNo}
+            readOnly
+          />
         </div>
 
         <div className={styles.fGridItem}>
@@ -111,11 +238,14 @@ useEffect(() => {
           />
         </div>
 
-      
-
         <div className={styles.fGridItem}>
           <label className={styles.fLabel07}>공정 상태</label>
-          <input className={styles.fItem07} type="text" value={filtrationData.processStatus} readOnly />
+          <input
+            className={styles.fItem07}
+            type="text"
+            value={filtrationData.processStatus}
+            readOnly
+          />
         </div>
 
         <div className={styles.fGridItem}>
@@ -128,6 +258,12 @@ useEffect(() => {
             onChange={handleChange}
           />
         </div>
+
+        {timeLeft > 0 && (
+          <p>
+            남은시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
+          </p>
+        )}
 
         <div className={styles.fGridItem}>
           <button
@@ -145,6 +281,9 @@ useEffect(() => {
           </button>
         </div>
 
+
+
+       
         {/* 모달 처리 */}
         <ConfirmModal
           isOpen={showConfirmModal}
@@ -159,7 +298,10 @@ useEffect(() => {
         <SuccessfulModal
           isOpen={showSuccessModal}
           message="데이터가 성공적으로 저장되었습니다!"
-          onClose={() => setShowSuccessModal(false)}
+          onClose={() => {
+            setShowSuccessModal(false);
+            startTimer(); // ✅ 타이머 시작
+          }}
         />
 
         <ErrorModal
