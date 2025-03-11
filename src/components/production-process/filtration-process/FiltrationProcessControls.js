@@ -166,15 +166,43 @@ useEffect(() => {
         ? parsedData.waterInputVolume * 0.14
         : 0;
 
+
+       // ✅ 회수된 워트량 설정 (waterInputVolume 사용)
+      const wortVolume = parsedData.waterInputVolume
+      ? parsedData.waterInputVolume - calculatedAbsorption
+      : 0;
+
       setFiltrationData((prev) => ({
         ...prev,
         lotNo: parsedData.lotNo || prev.lotNo,
-        grainAbsorption: calculatedAbsorption.toFixed(1), // 소수점 2자리 고정
+        grainAbsorption: calculatedAbsorption.toFixed(1),
+        recoveredWortVolume: wortVolume.toFixed(1), // 소수점 2자리 고정
       }));
     }
   }, []);
 
 
+  useEffect(() => {
+    if (!showCompleteModal) return; // ✅ 타이머가 끝난 후 실행
+  
+    setFiltrationData((prev) => {
+      const lossVolume = prev.recoveredWortVolume
+        ? (prev.recoveredWortVolume * 0.05).toFixed(1) // ✅ 5% 계산 (소수점 1자리)
+        : 0;
+  
+        const updatedWortVolume = prev.recoveredWortVolume
+        ? (prev.recoveredWortVolume - lossVolume).toFixed(1) // ✅ 손실량 반영한 회수된 워트량
+        : 0;
+  
+      console.log(`✅ 손실량 계산 완료: ${lossVolume} L`); // 🔍 로그 확인
+      console.log(`✅ 업데이트된 회수된 워트량: ${updatedWortVolume} L`); // 🔍 로그 확인
+  
+      return { ...prev, lossVolume, recoveredWortVolume: updatedWortVolume };
+    });
+  }, [showCompleteModal]); // ✅ 완료 모달이 닫힐 때 실행
+
+
+  
 
   return (
     <form

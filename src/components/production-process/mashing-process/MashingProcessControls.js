@@ -180,7 +180,7 @@ const MashingProcessControls = ({ workOrder }) => {
       console.error("❌ 데이터 저장 실패:", error);
       setShowErrorModal(true);
     }
-  };
+  }; 
 
   // ✅ 타이머 시작 (테스트 환경에서는 5초)
   const startTimer = () => {
