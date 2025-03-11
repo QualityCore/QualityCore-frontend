@@ -4,25 +4,33 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { createBoard } from "../../apis/boardApi/BoardApi";
 import { useNavigate } from "react-router-dom";
-import SuccessAnimation from "../../lottie/SuccessNotification"; // 성공 애니메이션 컴포넌트 임포트
-    import WarningAnimation from "../../lottie/WarningNotification"; // 경고 애니메이션 컴포넌트 임포트
+import SuccessAnimation from "../../lottie/SuccessNotification";
+import WarningAnimation from "../../lottie/WarningNotification";
 import Modal from 'react-modal';
+import { useAuth } from "../../contexts/AuthContext"; // 추가: AuthContext 가져오기
 
 function BoardCreate() {
     const navigate = useNavigate();
+    const { currentUser } = useAuth(); // 추가: 현재 로그인한 사용자 정보
     const [formData, setFormData] = useState({
         category: "일반",
         title: "",
-        author: "",
         content: "",
         file: null
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [isSuccessModal, setIsSuccessModal] = useState(false); // 성공 모달 상태
-    const [modalMessage, setModalMessage] = useState(''); // 성공 메시지 상태
-    const [isWarningModal, setIsWarningModal] = useState(false); // 경고 모달 상태
-    const [warningMessage, setWarningMessage] = useState(''); // 경고 메시지 상태
+    const [isSuccessModal, setIsSuccessModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [isWarningModal, setIsWarningModal] = useState(false);
+    const [warningMessage, setWarningMessage] = useState('');
+
+    // 카테고리 옵션 - 관리자만 '공지' 카테고리 선택 가능
+    const categoryOptions = [
+        { value: "일반", label: "일반" },
+        { value: "중요", label: "중요" },
+        ...(currentUser?.role === 'ADMIN' ? [{ value: "공지", label: "공지" }] : [])
+    ];
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -44,14 +52,27 @@ function BoardCreate() {
         setError("");
 
         try {
-            if (!formData.title || !formData.content) { // author 검증 제거
+            if (!formData.title || !formData.content) {
                 throw new Error("제목과 내용은 필수 입력 항목입니다.");
             }
+
+            // 사용자가 로그인하지 않은 경우
+            if (!currentUser) {
+                throw new Error("로그인이 필요합니다.");
+            }
+
+            // 가상 사용자 ID를 EMPLOYEE 테이블 ID로 매핑
+            let empId = currentUser.id;
+            if (currentUser.id === 'admin') empId = 'admin';
+            else if (currentUser.id === 'plan') empId = 'plan';
+            else if (currentUser.id === 'work') empId = 'work';
+            else if (currentUser.id === 'EMP001') empId = 'EMP001';
+            else if (currentUser.id === 'iu') empId = 'iu'; 
 
             const apiFormData = new FormData();
             apiFormData.append("boardData", JSON.stringify({
                 boardTitle: encodeURIComponent(formData.title),
-                empId: "EMP001", // 작성자는 고정값으로 설정
+                empId: empId, // 매핑된 EMPLOYEE ID 사용
                 boardContents: encodeURIComponent(formData.content),
                 boardCategory: encodeURIComponent(formData.category)
             }));
@@ -61,19 +82,18 @@ function BoardCreate() {
             }
 
             await createBoard(apiFormData);
-            setModalMessage("게시글이 성공적으로 등록되었습니다!"); // 성공 메시지 설정
-            setIsSuccessModal(true); // 성공 모달 열기
-
-            // 게시판 목록 페이지로 이동 ✅
-            // navigate("/board"); 
+            setModalMessage("게시글이 성공적으로 등록되었습니다!");
+            setIsSuccessModal(true);
 
         } catch (error) {
             if (error.message === "제목과 내용은 필수 입력 항목입니다.") {
                 setWarningMessage("제목과 내용을 입력해 주세요.");
-                setIsWarningModal(true); // 경고 모달 열기
+                setIsWarningModal(true);
+            } else if (error.message === "로그인이 필요합니다.") {
+                setWarningMessage("로그인 후 이용해 주세요.");
+                setIsWarningModal(true);
             } else {
                 setError(error.message);
-
             }
         } finally {
             setLoading(false);
@@ -82,7 +102,7 @@ function BoardCreate() {
 
     const closeModal = () => {
         setIsSuccessModal(false);
-        navigate("/board"); // 모달 닫으면 목록으로 이동
+        navigate("/board");
     };
 
     const closeWarningModal = () => {
@@ -101,9 +121,11 @@ function BoardCreate() {
                         value={formData.category}
                         onChange={handleInputChange}
                     >
-                        <option value="일반">일반</option>
-                        <option value="중요">중요</option>
-                        <option value="공지">공지</option>
+                        {categoryOptions.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className={BoardsCreate.inputGroup}>
@@ -114,6 +136,16 @@ function BoardCreate() {
                         placeholder="제목을 입력하세요"
                         value={formData.title}
                         onChange={handleInputChange}
+                    />
+                </div>
+                <div className={BoardsCreate.inputGroup}>
+                    <label>작성자</label>
+                    <input
+                        type="text"
+                        name="author"
+                        value={currentUser?.name || ''}
+                        disabled
+                        className={BoardsCreate.disabledInput}
                     />
                 </div>
                 <div className={BoardsCreate.inputGroup}>

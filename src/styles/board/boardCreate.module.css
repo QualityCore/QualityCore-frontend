@@ -1,241 +1,362 @@
-.formWrapper {
+/* 게시글 작성 페이지 메인 컨테이너 */
+.mainBar {
+    width: 100%;
+    height: calc(100vh - 120px);
+    padding: 1rem;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.inputGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.inputGroup label {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-top: 10px;
-}
-
-.inputGroup input,
-.inputGroup select {
-    background-color: white;
-    /* 추가된 부분 */
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: border-color 0.3s ease;
-}
-
-.inputGroup input:focus,
-.inputGroup select:focus {
-    border-color: #4CAF50;
-    outline: none;
-}
-
-/* ReactQuill 관련 스타일 */
-.ReactQuill .ql-container {
-    height: 600px;
-    /* 원하는 높이로 설정 (여기서는 600px로 설정) */
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.ReactQuill .ql-editor {
-    font-size: 16px;
-    line-height: 1.6;
-    padding: 20px;
-    min-height: 500px;
-    /* 최소 높이 설정 */
-    max-height: 600px;
-    /* 최대 높이 설정 */
-    overflow-y: auto;
-    /* 내용이 넘칠 때 스크롤 가능 */
-}
-
-.ql-editor {
     box-sizing: border-box;
+    overflow-x: hidden; /* 가로 스크롤바 제거 */
+  }
+  
+  /* 폼 래퍼 */
+  .formWrapper {
+    width: 100%;
     background-color: white;
-    line-height: 1.42;
-    height: 500px;
-    /* 원하는 고정 높이 */
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* 세로 스크롤만 허용 */
+    overflow-x: hidden; /* 가로 스크롤바 제거 */
+    position: relative;
+  }
+  
+  /* 상단 색상 바 */
+  .formWrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right, #5687F2, #7ea6ff);
+  }
+  
+  /* 폼 헤더 */
+  .formHeader {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #E2E8F0;
+  }
+  
+  .formTitle {
+    font-size: 1.5rem;
+    color: #2B3674;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  /* 입력 그룹 */
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  /* 라벨 */
+  .inputGroup label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2D3748;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .inputGroup label::before {
+    content: '';
+    width: 4px;
+    height: 0.9rem;
+    background-color: #5687F2;
+    border-radius: 2px;
+  }
+  
+  /* 입력 필드와 선택 요소 */
+  .inputGroup input,
+  .inputGroup select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: white;
+    color: #2D3748;
+  }
+  
+  .inputGroup input:focus,
+  .inputGroup select:focus {
+    border-color: #5687F2;
     outline: none;
-    overflow-y: auto;
-    padding: 12px 15px;
-    tab-size: 4;
-    -moz-tab-size: 4;
-    text-align: left;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-/* 버튼 스타일 */
-.submitButton {
+    box-shadow: 0 0 0 3px rgba(86, 135, 242, 0.15);
+  }
+  
+  /* 비활성화된 입력 필드 */
+  .disabledInput {
+    background-color: #F8FAFC !important;
+    color: #718096 !important;
+    cursor: not-allowed;
+    border: 1px solid #EDF2F7 !important;
+  }
+  
+  /* 파일 입력 필드 */
+  input[type="file"] {
+    padding: 1rem;
+    border: 2px dashed #E2E8F0;
+    border-radius: 8px;
+    background-color: #F8FAFC;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  input[type="file"]:hover {
+    border-color: #5687F2;
+    background-color: rgba(86, 135, 242, 0.05);
+  }
+  
+  /* ReactQuill 에디터 스타일 */
+  .ql-container, .ql-editor {
+    border-radius: 0 0 8px 8px !important;
+    font-size: 1rem !important;
+    border-color: #E2E8F0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    box-sizing: border-box !important;
+  }
+  
+  .ql-toolbar {
+    border-radius: 8px 8px 0 0 !important;
+    background-color: #F8FAFC !important;
+    border-color: #E2E8F0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .ql-editor {
+    min-height: 300px !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    padding: 1rem !important;
+    background-color: rgba(248, 250, 252, 0.3);
+    background-image: 
+      linear-gradient(rgba(226, 232, 240, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(226, 232, 240, 0.2) 1px, transparent 1px);
+    background-size: 20px 20px;
+    overflow-x: hidden !important; /* 가로 스크롤바 제거 */
+  }
+  
+  /* 에디터 내 이미지 크기 제한 */
+  .ql-editor img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* 에디터 내 테이블 크기 제한 */
+  .ql-editor table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+  }
+  
+  /* 에디터 내 pre 태그와 코드 블록 크기 제한 */
+  .ql-editor pre, .ql-editor code {
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    max-width: 100% !important;
+  }
+  
+  /* 제출 버튼 */
+  .submitButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  
+  .submitButton button {
+    padding: 0.8rem 2rem;
+    background: linear-gradient(to right, #5687F2, #7ea6ff);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    box-shadow: 0 4px 10px rgba(86, 135, 242, 0.2);
+  }
+  
+  .submitButton button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(86, 135, 242, 0.3);
+  }
+  
+  .submitButton button:active {
+    transform: translateY(0);
+  }
+  
+  .submitButton button:disabled {
+    background: #CBD5E0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* 에러 메시지 */
+  .error {
+    background-color: rgba(245, 101, 101, 0.1);
+    color: #E53E3E;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    border-left: 4px solid #E53E3E;
+  }
+  
+  /* 모달 스타일 - 공통 */
+  .successModal,
+  .warningModal {
+    width: 400px;
+    padding: 0;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* 모달 헤더 - 공통 */
+  .successModalHeader,
+  .warningModalHeader {
+    padding: 1rem;
     display: flex;
     justify-content: flex-end;
-}
-
-.submitButton button {
-    padding: 12px 24px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
+  }
+  
+  /* 모달 닫기 버튼 - 공통 */
+  .successCloseButton,
+  .warningCloseButton {
+    background: none;
     border: none;
-    border-radius: 5px;
+    font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3sease, transform 0.2sease;
-    margin-top: 40px;
-}
-
-.submitButton button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-}
-
-
-/* 성공 알림 모달 */
-.successModal {
-    width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-}
-
-.successModalOverlay {
-    background: rgba(0, 0, 0, 0.5);
+    color: #718096;
+    transition: all 0.3s ease;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  
+  .successCloseButton:hover,
+  .warningCloseButton:hover {
+    background-color: #F7FAFC;
+    color: #2D3748;
+  }
+  
+  /* 모달 내용 - 공통 */
+  .successModalContent,
+  .warningModalContent {
+    padding: 0 2rem 2rem;
+    text-align: center;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* 모달 메시지 - 공통 */
+  .successMessage,
+  .warningMessage {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    color: #2D3748;
+  }
+  
+  /* 성공 모달 특화 스타일 */
+  .successModal {
+    border-top: 5px solid #48BB78;
+  }
+  
+  .successModalContent {
+    color: #2F855A;
+  }
+  
+  /* 경고 모달 특화 스타일 */
+  .warningModal {
+    border-top: 5px solid #F56565;
+  }
+  
+  .warningModalContent {
+    color: #C53030;
+  }
+  
+  /* 오버레이 스타일 */
+  .successModalOverlay,
+  .warningModalOverlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.successModalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-.successCloseButton {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.successModalTitle {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.successModalContent {
-    padding: 20px;
-}
-
-.successCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    margin-left: 375px;
-}
-
-.successMessage {
-    margin-left: 23px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
-}
-
-/* 경고 알림 모달 */
-.warningModal {
-    width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 1500;
-}
-
-.warningModalOverlay {
-    position: fixed;
-    /* 화면에 고정 */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* 전체 화면을 덮도록 */
-    display: flex;
-    /* 모달을 중앙 정렬 */
-    justify-content: center;
-    /* 수평 중앙 */
-    align-items: center;
-    /* 수직 중앙 */
-    background: rgba(0, 0, 0, 0.5);
-
-}
-
-.warningModalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-.warningCloseButton {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.warningModalTitle {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.warningModalContent {
-    padding: 20px;
-}
-
-.warningCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    margin-left: 375px;
-}
-
-.warningMessage {
-    margin-left: 55px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
-}
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+  }
+  
+  /* 반응형 스타일 */
+  @media (max-width: 992px) {
+    .mainBar {
+      height: auto;
+      min-height: calc(100vh - 100px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .mainBar {
+      padding: 0.8rem;
+    }
+    
+    .formWrapper {
+      padding: 1.5rem;
+    }
+    
+    .submitButton button {
+      width: 100%;
+    }
+    
+    .successModal,
+    .warningModal {
+      width: 90%;
+      max-width: 350px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .formWrapper {
+      padding: 1rem;
+    }
+    
+    .inputGroup label {
+      font-size: 0.9rem;
+    }
+    
+    .inputGroup input,
+    .inputGroup select {
+      padding: 0.7rem 0.9rem;
+    }
+    
+    .ql-editor {
+      min-height: 250px !important;
+    }
+  }
