@@ -22,23 +22,30 @@
 /* 테이블 스타일 */
 .detailTable {
     width: 100%;
-    border-collapse: collapse; /* 테두리 겹침 방지 */
+    border-collapse: collapse;
+    /* 테두리 겹침 방지 */
 }
 
 .detailTable th,
 .detailTable td {
-    padding: 12px; /* 셀 패딩 증가 */
-    text-align: left; /* 텍스트 왼쪽 정렬 */
-    border-bottom: 1.5px solid #ddd; /* 경계선 스타일 */
+    padding: 12px;
+    /* 셀 패딩 증가 */
+    text-align: left;
+    /* 텍스트 왼쪽 정렬 */
+    border-bottom: 1.5px solid #ddd;
+    /* 경계선 스타일 */
 }
 
 .detailTable th {
-    font-weight: bold; /* 라벨 강조 */
-    width: 150px; /* 라벨 열 너비 */
+    font-weight: bold;
+    /* 라벨 강조 */
+    width: 150px;
+    /* 라벨 열 너비 */
 }
 
 .detailTable td {
-    color: #333; /* 값 색상 */
+    color: #333;
+    /* 값 색상 */
 }
 
 /* 카테고리 태그 스타일 */
@@ -46,7 +53,8 @@
     display: inline-block;
     padding: 4px 12px;
     border-radius: 15px;
-    font-size: 14px; /* 태그 글꼴 크기 */
+    font-size: 14px;
+    /* 태그 글꼴 크기 */
 }
 
 .important {
@@ -56,14 +64,17 @@
 }
 
 .normal {
-    background-color: #f0f0f0; /* 회색 배경 */
-    color: #666; /* 어두운 회색 텍스트 */
+    background-color: #f0f0f0;
+    /* 회색 배경 */
+    color: #666;
+    /* 어두운 회색 텍스트 */
     margin-left: 25px;
 }
 
 /* 내용 스타일 */
 .contentRow {
-    margin-top: 20px; /* 위 요소와 간격 증가 */
+    margin-top: 20px;
+    /* 위 요소와 간격 증가 */
 }
 
 .content {
@@ -75,14 +86,14 @@
     height: 360px;
 }
 
-.label1{
+.label1 {
     font-weight: bold;
     margin-left: 10px;
 }
 
 /* 뒤로 가기 버튼 */
 
-.buttonAll{
+.buttonAll {
     display: flex;
     margin-top: 20px;
 }
@@ -104,7 +115,7 @@
     background-color: #0056b3;
 }
 
-.updateButton{
+.updateButton {
     margin-left: 1040px;
     padding: 12px 24px;
     background-color: #4CAF50;
@@ -114,14 +125,14 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    
+
 }
 
 .updateButton:hover {
     background-color: #45a049;
 }
 
-.deleteButton{
+.deleteButton {
     margin-top: 0px;
     padding: 12px 24px;
     background-color: #f44336;
@@ -140,41 +151,65 @@
 
 /* 수정 모드 입력 필드 스타일 (제목) */
 input[name="boardTitle"] {
-    width: 100%; /* 제목 필드가 테이블 셀에 맞게 확장 */
-    padding: 5px; /* 내용과의 여백 */
-    font-size: 16px; /* 글자 크기 */
-    border: 1px solid #ddd; /* 테두리 색상 */
-    border-radius: 10px; /* 둥근 테두리 */
-    background-color: white; /* 배경색 */
-    box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+    width: 100%;
+    /* 제목 필드가 테이블 셀에 맞게 확장 */
+    padding: 5px;
+    /* 내용과의 여백 */
+    font-size: 16px;
+    /* 글자 크기 */
+    border: 1px solid #ddd;
+    /* 테두리 색상 */
+    border-radius: 10px;
+    /* 둥근 테두리 */
+    background-color: white;
+    /* 배경색 */
+    box-sizing: border-box;
+    /* 패딩 포함한 크기 계산 */
 }
 
 /* 수정 모드 선택 박스 스타일 (카테고리) */
 select[name="boardCategory"] {
-    width: 100%; /* 선택 박스가 테이블 셀에 맞게 확장 */
-    padding: 5px; /* 내용과의 여백 */
-    font-size: 16px; /* 글자 크기 */
-    border: 1px solid #ddd; /* 테두리 색상 */
-    border-radius: 10px; /* 둥근 테두리 */
-    background-color: white; /* 배경색 */
-    box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+    width: 100%;
+    /* 선택 박스가 테이블 셀에 맞게 확장 */
+    padding: 5px;
+    /* 내용과의 여백 */
+    font-size: 16px;
+    /* 글자 크기 */
+    border: 1px solid #ddd;
+    /* 테두리 색상 */
+    border-radius: 10px;
+    /* 둥근 테두리 */
+    background-color: white;
+    /* 배경색 */
+    box-sizing: border-box;
+    /* 패딩 포함한 크기 계산 */
 }
 
 /* 수정 모드 텍스트 영역 스타일 (내용) */
 textarea[name="boardContents"] {
-    width: 100%; /* 텍스트 영역이 테이블 셀에 맞게 확장 */
-    height: 360px; /* 상세 조회와 동일한 높이 설정 */
-    padding: 20px; /* 내용과의 여백 */
-    font-size: 16px; /* 글자 크기 */
-    line-height: 1.5; /* 줄 간격 */
-    border: 1px solid #ddd; /* 테두리 색상 */
-    border-radius: 10px; /* 둥근 테두리 */
-    background-color: white; /* 배경색 */
-    resize: none; /* 크기 조정 비활성화 */
-    box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+    width: 100%;
+    /* 텍스트 영역이 테이블 셀에 맞게 확장 */
+    height: 360px;
+    /* 상세 조회와 동일한 높이 설정 */
+    padding: 20px;
+    /* 내용과의 여백 */
+    font-size: 16px;
+    /* 글자 크기 */
+    line-height: 1.5;
+    /* 줄 간격 */
+    border: 1px solid #ddd;
+    /* 테두리 색상 */
+    border-radius: 10px;
+    /* 둥근 테두리 */
+    background-color: white;
+    /* 배경색 */
+    resize: none;
+    /* 크기 조정 비활성화 */
+    box-sizing: border-box;
+    /* 패딩 포함한 크기 계산 */
 }
 
-.saveButton{
+.saveButton {
     display: block;
     margin-top: 0px;
     padding: 12px 24px;
@@ -188,7 +223,7 @@ textarea[name="boardContents"] {
     margin-left: 1130px;
 }
 
-.removeButton{
+.removeButton {
     display: block;
     margin-top: 0px;
     padding: 12px 24px;
@@ -216,7 +251,151 @@ textarea[name="boardContents"] {
     color: #0056b3;
 }
 
-.fileLabel{
-    margin-left: 550px;
+.fileLabel {
+    margin-left: 400px;
+    font-weight: bold;
+}
+
+/* 성공 알림 모달 */
+.successModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.successModalOverlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.successModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.successCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.successModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.successModalContent {
+    padding: 20px;
+}
+
+.successCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 375px;
+}
+
+.successMessage {
+    margin-left: 23px;
+    font-size: large;
+    font-family: emoji;
+    font-weight: bold;
+}
+
+/* 경고 알림 모달 */
+.warningModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 1500;
+}
+
+.warningModalOverlay {
+    position: fixed;
+    /* 화면에 고정 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* 전체 화면을 덮도록 */
+    display: flex;
+    /* 모달을 중앙 정렬 */
+    justify-content: center;
+    /* 수평 중앙 */
+    align-items: center;
+    /* 수직 중앙 */
+    background: rgba(0, 0, 0, 0.5);
+
+}
+
+.warningModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.warningCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.warningModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.warningModalContent {
+    padding: 20px;
+}
+
+.warningCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 375px;
+}
+
+.warningMessage {
+    margin-left: 55px;
+    font-size: large;
+    font-family: emoji;
     font-weight: bold;
 }

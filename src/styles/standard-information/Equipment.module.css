@@ -48,37 +48,44 @@
 /* 각 열의 너비 설정 */
 .equipmentTable th:nth-child(1),
 .equipmentTable td:nth-child(1) {
-    width: 120px; /* 작업장 */
+    width: 120px;
+    /* 작업장 */
 }
 
 .equipmentTable th:nth-child(2),
 .equipmentTable td:nth-child(2) {
-    width: 100px; /* 공정 */
+    width: 100px;
+    /* 공정 */
 }
 
 .equipmentTable th:nth-child(3),
 .equipmentTable td:nth-child(3) {
-    width: 130px; /* 설비 */
+    width: 130px;
+    /* 설비 */
 }
 
 .equipmentTable th:nth-child(4),
 .equipmentTable td:nth-child(4) {
-    width: 140px; /* 모델명 */
+    width: 140px;
+    /* 모델명 */
 }
 
 .equipmentTable th:nth-child(5),
 .equipmentTable td:nth-child(5) {
-    width: 120px; /* 제조사 */
+    width: 120px;
+    /* 제조사 */
 }
 
 .equipmentTable th:nth-child(6),
 .equipmentTable td:nth-child(6) {
-    width: 100px; /* 상태 */
+    width: 100px;
+    /* 상태 */
 }
 
 .equipmentTable th:nth-child(7),
 .equipmentTable td:nth-child(7) {
-    width: 110px; /* 설치일 */
+    width: 110px;
+    /* 설치일 */
 }
 
 .searchBarInput {
@@ -100,8 +107,7 @@
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 5px;
-    transition: background-color 0.3sease, transform 0.2sease;
+    margin-left: 20px;
 }
 
 .searchButton:hover,
@@ -247,10 +253,7 @@ h1 {
 .equipmentImage {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    /* 부모 컨테이너를 완전히 채우기 위해 크기 조정 */
-    object-position: center;
-    /* 이미지를 중앙에 배치하여 잘리는 부분을 조정 */
+    object-fit: contain;
 }
 
 
@@ -650,5 +653,80 @@ h1 {
     margin-left: 948px;
     width: 80px;
     height: 33px;
-    margin-right: 20px;
+}
+
+/* 경고 알림 모달 */
+.warningModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.warningModalOverlay {
+    position: fixed;
+    /* 화면에 고정 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* 전체 화면을 덮도록 */
+    display: flex;
+    /* 모달을 중앙 정렬 */
+    justify-content: center;
+    /* 수평 중앙 */
+    align-items: center;
+    /* 수직 중앙 */
+    background: rgba(0, 0, 0, 0.5);
+
+}
+
+.warningModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.warningCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.warningModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.warningModalContent {
+    padding: 20px;
+}
+
+.warningCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-left: 375px;
+    font-weight: bold;
+}
+
+.warningMessage {
+    margin-left: 55px;
+    font-size: large;
+    font-family: emoji;
+    font-weight: bold;
 }

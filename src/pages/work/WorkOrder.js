@@ -6,6 +6,8 @@ import Modal from "react-modal";
 import SuccessAnimation from "../../lottie/SuccessNotification";
 import generatePDF from "../../common/PDF/generatePDF";
 import { FaRotateRight } from "react-icons/fa6";
+import WarningAnimation from "../../lottie/WarningNotification"; // 경고 애니메이션 컴포넌트 임포트
+// import BoardsCreate from "../../boards/BoardsCreate"; // BoardsCreate 스타일 임포트 (경고 모달 스타일용) 삭제
 
 Modal.setAppElement('#root'); // 앱의 루트 엘리먼트를 지정 (모달 접근성 개선)
 
@@ -22,6 +24,8 @@ function WorkOrder() {
     const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기 상태
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);  // 성공 모달 상태
     const [modalMessage, setModalMessage] = useState('');  // 모달 메시지
+    const [isWarningModal, setIsWarningModal] = useState(false); // 경고 모달 상태
+    const [warningMessage, setWarningMessage] = useState(''); // 경고 메시지 상태
 
     // 검색조건 상태관리
     const [workTeam, setWorkTeam] = useState('');
@@ -46,13 +50,11 @@ function WorkOrder() {
     };
 
     const fetchData = async (page = 0, filterParams = {}) => {
-        console.log(`✅ fetchData 호출됨, 페이지 번호: ${page}, 필터:`, filterParams);
         try {
             const { workTeam, productName, lotNo, lineNo, startDate, endDate } = filterParams;
             let lineNoParam = lineNo ? parseInt(lineNo, 10) : undefined; // 숫자로 변환
 
             const data = await findAllWorkOrders(page, 13, workTeam, productName, lotNo, lineNoParam, startDate, endDate);
-            console.log("✅ API 응답 데이터:", data);
 
             if (data && data.work && Array.isArray(data.work.content)) {
                 const updatedWorkOrders = data.work.content.map((work) => ({
@@ -74,12 +76,10 @@ function WorkOrder() {
                     last: data.work.last
                 });
             } else {
-                console.error("❌ API 응답이 예상한 형식이 아닙니다:", data);
                 setWorkOrders([]);
                 setNoResults(true); // API 응답 형식이 잘못된 경우에도 검색 결과 없음 상태로 설정
             }
         } catch (error) {
-            console.error("❌ 작업지시서 데이터를 불러오는 중 오류 발생:", error);
             setWorkOrders([]);
             setNoResults(true); // 오류 발생 시 검색 결과 없음 상태로 설정
         }
@@ -92,15 +92,7 @@ function WorkOrder() {
 
     // 검색 기능
     const handleSearch = () => {
-        console.log("🔎 검색 버튼 클릭됨");
-        console.log("현재 검색 조건:", {
-            workTeam,
-            productName,
-            lineNo,
-            startDate,
-            endDate,
-            lotNo
-        });
+
         fetchData(0, { workTeam, productName, lineNo, startDate, endDate, lotNo });
     };
 
@@ -123,7 +115,6 @@ function WorkOrder() {
             setSelectedWorkOrder(workOrderData);  // 상세 정보 설정
             setIsModalOpen(true); // 모달 열기
         } catch (error) {
-            console.error("작업지시서 상세 정보를 불러오는 데 실패했습니다.", error);
         }
     };
 
@@ -136,25 +127,45 @@ function WorkOrder() {
         fetchData(0);
     }, []);
 
-    // 작업지시서 삭제
+    // 삭제 핸들러
     const handleDelete = async (lotNo) => {
+        const invalidStatus = ['SC002', 'SC003', 'SC004', 'SC005', 'SC006', 'SC007', 'SC008', 'SC009'];
+
+        // 1. 선택된 작업지시서 확인
+        if (!selectedWorkOrder) {
+            setWarningMessage("선택된 작업지시서가 없습니다.");
+            setIsWarningModal(true);
+            return;
+        }
+
+        // 2. 상태 코드 확인 (statusCode 사용)
+
+        // 3. 삭제 불가능한 상태인지 확인
+        if (invalidStatus.includes(selectedWorkOrder.statusCode)) {
+            setWarningMessage("진행 중인 작업은 삭제할 수 없습니다.");
+            setIsWarningModal(true);
+            return;
+        }
+
         try {
-            // 작업지시서 삭제 API 호출
-            await workOrderDelete(lotNo);
+            const response = await workOrderDelete(lotNo);
+
             setIsSuccessModalOpen(true);
             setModalMessage("작업지시서가 성공적으로 삭제되었습니다.");
-
-            // 삭제 후 모달 닫기
             closeModal();
-
-            // 작업지시서 목록 새로 고침
             fetchData(pageInfo.page);
         } catch (error) {
-            console.error("❌ 작업지시서 삭제 실패:", error);
+            // 6. API 오류 처리
+            setWarningMessage("작업지시서 삭제에 실패했습니다.");
+            setIsWarningModal(true);
         }
     };
 
+
     const closeSuccessModal = () => setIsSuccessModalOpen(false);
+    const closeWarningModal = () => {
+        setIsWarningModal(false);
+    };
 
     return (
         <div className={workOrder.container}>
@@ -269,17 +280,20 @@ function WorkOrder() {
                     overlayClassName={workOrder.modalOverlay}
                 >
                     <div className={workOrder.successModalContent}>
+                        <button className={workOrder.closeButton} onClick={closeSuccessModal}>X</button>
                         <SuccessAnimation />
                         <p className={workOrder.successMessage}>{modalMessage}</p>
                     </div>
                 </Modal>
-                <Pagination
-                    page={pageInfo.page}
-                    totalPages={pageInfo.totalPages}
-                    first={pageInfo.first}
-                    last={pageInfo.last}
-                    onPageChange={handlePageChange}  // 페이지 변경 함수 전달
-                />
+                <div style={{ position: "fixed", bottom: "100px", left: "58%", transform: "translateX(-50%)" }}>
+                    <Pagination
+                        page={pageInfo.page}
+                        totalPages={pageInfo.totalPages}
+                        first={pageInfo.first}
+                        last={pageInfo.last}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
             </div>
             {/* 작업지시서 상세조회 모달 */}
             <Modal
@@ -299,17 +313,15 @@ function WorkOrder() {
                                 className={workOrder.pdfButton}
                                 onClick={() => {
                                     if (selectedWorkOrder) {  // selectedWorkOrder가 있을 때만 PDF 생성
-                                        console.log('pdf데이터', selectedWorkOrder);
+
                                         generatePDF(selectedWorkOrder, selectedWorkOrder.lineMaterials); // PDF 생성 함수 호출
                                     } else {
-                                        console.error("작업지시서 정보가 없습니다.");
                                     }
                                 }}
                             >
                                 PDF 추출
                             </button>
                         </div>
-
                         {/* 테이블을 감싸는 wrapper 추가 */}
                         <div className={workOrder.tableWrapper}>
                             <table className={workOrder.detailTable}>
@@ -377,13 +389,29 @@ function WorkOrder() {
                         ) : (
                             <p>자재 정보가 없습니다.</p>
                         )}
-
                         <h2>특이사항</h2>
                         <textarea value={selectedWorkOrder.workEtc} className={workOrder.etc}></textarea>
                         <button className={workOrder.deleteButton} onClick={() => handleDelete(selectedWorkOrder.lotNo)}>🚫삭제</button>
                     </div>
                 )}
             </Modal>
+            {/* 경고 모달 */}
+            {isWarningModal && (
+                <Modal
+                    isOpen={isWarningModal}
+                    onRequestClose={closeWarningModal}
+                    className={workOrder.warningModal}
+                    overlayClassName="warningModalOverlay"
+                >
+                    <div className={workOrder.warningModalHeader}>
+                        <button className={workOrder.warningCloseButton} onClick={closeWarningModal}>X</button>
+                    </div>
+                    <div className={workOrder.warningModalContent}>
+                        <WarningAnimation />
+                        <p className={workOrder.warningMessage}>{warningMessage}</p>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 }

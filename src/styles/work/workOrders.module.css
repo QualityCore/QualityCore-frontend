@@ -200,7 +200,7 @@
     /* 수평 중앙 정렬 */
     align-items: center;
     /* 수직 중앙 정렬 */
-    z-index: 9999;
+    z-index: 9995;
     /* 다른 요소들 위에 표시 */
 }
 
@@ -484,7 +484,82 @@ h2 {
 }
 
 .successMessage {
-    margin-left: 35px;
+    margin-left: 7px;
+    font-size: large;
+    font-family: emoji;
+    font-weight: bold;
+}
+
+/* 경고 알림 모달 */
+.warningModal {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 80px;
+    position: fixed;
+    top: 30%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.warningModalOverlay {
+    position: fixed;
+    /* 화면에 고정 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* 전체 화면을 덮도록 */
+    display: flex;
+    /* 모달을 중앙 정렬 */
+    justify-content: center;
+    /* 수평 중앙 */
+    align-items: center;
+    /* 수직 중앙 */
+    background: rgba(0, 0, 0, 0.5);
+
+}
+
+.warningModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.warningCloseButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.warningModalTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.warningModalContent {
+    padding: 20px;
+}
+
+.warningCloseButton {
+    color: black;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 375px;
+}
+
+.warningMessage {
+    margin-left: 25px;
     font-size: large;
     font-family: emoji;
     font-weight: bold;

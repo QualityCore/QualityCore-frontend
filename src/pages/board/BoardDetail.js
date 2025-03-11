@@ -4,6 +4,9 @@ import { fetchBoardByCode, updateBoard, deleteBoard } from "../../apis/boardApi/
 import BoardsDetail from "../../styles/board/boardDetail.module.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import SuccessAnimation from "../../lottie/SuccessNotification"; // 성공 애니메이션 컴포넌트 임포트
+import WarningAnimation from "../../lottie/WarningNotification"; // 경고 애니메이션 컴포넌트 임포트
+import Modal from 'react-modal';
 
 function BoardDetail() {
     const { boardId } = useParams();
@@ -13,6 +16,10 @@ function BoardDetail() {
     const [error, setError] = useState("");
     const [isEditing, setIsEditing] = useState(false);
     const [editedBoard, setEditedBoard] = useState(null);
+    const [isSuccessModal, setIsSuccessModal] = useState(false); // 성공 모달 상태
+    const [modalMessage, setModalMessage] = useState(''); // 성공 메시지 상태
+    const [isWarningModal, setIsWarningModal] = useState(false); // 경고 모달 상태
+    const [warningMessage, setWarningMessage] = useState(''); // 경고 메시지 상태
 
     // 게시글 상세 조회
     useEffect(() => {
@@ -42,22 +49,26 @@ function BoardDetail() {
             await updateBoard(editedBoard);
             setBoard(editedBoard);
             setIsEditing(false);
+            setModalMessage("게시글이 성공적으로 수정되었습니다!"); // 성공 메시지 설정
+            setIsSuccessModal(true); // 성공 모달 열기
         } catch (err) {
-            setError("게시글 수정에 실패했습니다.");
+            setWarningMessage("게시글 수정에 실패했습니다.");
+            setIsWarningModal(true); // 경고 모달 열기
         }
     };
 
     // 게시글 삭제
     const handleDelete = async () => {
-        if (window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
-            try {
-                await deleteBoard(boardId);
-                navigate("/board");
-            } catch (err) {
-                setError("게시글 삭제에 실패했습니다.");
-            }
+        try {
+            await deleteBoard(boardId);
+            setModalMessage("게시글이 성공적으로 삭제되었습니다!"); // 성공 메시지 설정
+            setIsSuccessModal(true); // 성공 모달 열기
+        } catch (err) {
+            setWarningMessage("게시글 삭제에 실패했습니다.");
+            setIsWarningModal(true); // 경고 모달 열기
         }
     };
+
 
     // 입력 필드 변경 처리
     const handleChange = (e) => {
@@ -71,35 +82,42 @@ function BoardDetail() {
     };
 
     // 파일 다운로드 처리
-   // 파일 다운로드 처리
-const handleFileDownload = async () => {
-    if (board.fileUrl) {
-        try {
-            const response = await fetch(board.fileUrl, {
-                method: 'GET',
-                // mode: 'cors', // CORS 설정 필요에 따라 추가
-                cache: 'no-cache', // 캐싱 방지
-            });
+    const handleFileDownload = async () => {
+        if (board.fileUrl) {
+            try {
+                const response = await fetch(board.fileUrl, {
+                    method: 'GET',
+                    cache: 'no-cache', // 캐싱 방지
+                });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', board.fileName); // 다운로드 파일명 설정
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+
+                alert('파일 다운로드에 실패했습니다.');
             }
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', board.fileName); // 다운로드 파일명 설정
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('File download failed:', error);
-            alert('파일 다운로드에 실패했습니다.');
         }
-    }
-};
+    };
+
+    const closeModal = () => {
+        setIsSuccessModal(false);
+        navigate("/board"); // 모달 닫으면 목록으로 이동
+    };
+
+    const closeWarningModal = () => {
+        setIsWarningModal(false);
+    };
 
     if (loading) return <div>로딩 중...</div>;
     if (error) return <div>{error}</div>;
@@ -124,8 +142,7 @@ const handleFileDownload = async () => {
                                     onChange={handleChange}
                                 />
                             ) : (
-                                <>
-                                    {board.boardTitle}
+                                <>{board.boardTitle}
                                     <span className={`${BoardsDetail.categoryTag} ${board.boardCategory === "중요" ? BoardsDetail.important : BoardsDetail.normal}`}>
                                         {board.boardCategory}
                                     </span>
@@ -140,21 +157,20 @@ const handleFileDownload = async () => {
                     <tr>
                         <th className={BoardsDetail.label}>작성자</th>
                         <td className={BoardsDetail.value}>
-    {board.empName}
-    {/* 첨부파일 영역 */}
-    {board.fileName && (
-        <span className={BoardsDetail.fileLabel}>
-            {" 첨부파일  "}
-            <button 
-                onClick={handleFileDownload} 
-                className={BoardsDetail.fileLink}
-            >
-                {board.fileName}
-            </button>
-        </span>
-    )}
-</td>
-
+                            {board.empName}
+                            {/* 첨부파일 영역 */}
+                            {board.fileName && (
+                                <span className={BoardsDetail.fileLabel}>
+                                    {" 첨부파일  "}
+                                    <button
+                                        onClick={handleFileDownload}
+                                        className={BoardsDetail.fileLink}
+                                    >
+                                        {board.fileName}
+                                    </button>
+                                </span>
+                            )}
+                        </td>
                     </tr>
                     {isEditing && (
                         <tr>
@@ -197,24 +213,24 @@ const handleFileDownload = async () => {
                 {!isEditing ? (
                     <>
                         {/* 목록 버튼 */}
-                        <button 
-                            className={BoardsDetail.backButton} 
+                        <button
+                            className={BoardsDetail.backButton}
                             onClick={() => navigate(-1)}
                         >
                             목록
                         </button>
 
                         {/* 수정 버튼 */}
-                        <button 
-                            className={BoardsDetail.updateButton} 
+                        <button
+                            className={BoardsDetail.updateButton}
                             onClick={handleEdit}
                         >
                             수정
                         </button>
 
                         {/* 삭제 버튼 */}
-                        <button 
-                            className={BoardsDetail.deleteButton} 
+                        <button
+                            className={BoardsDetail.deleteButton}
                             onClick={handleDelete}
                         >
                             삭제
@@ -223,16 +239,16 @@ const handleFileDownload = async () => {
                 ) : (
                     <>
                         {/* 저장 버튼 */}
-                        <button 
-                            className={BoardsDetail.saveButton} 
+                        <button
+                            className={BoardsDetail.saveButton}
                             onClick={handleSave}
                         >
                             저장
                         </button>
 
                         {/* 취소 버튼 */}
-                        <button 
-                            className={BoardsDetail.removeButton} 
+                        <button
+                            className={BoardsDetail.removeButton}
                             onClick={() => setIsEditing(false)}
                         >
                             취소
@@ -240,6 +256,42 @@ const handleFileDownload = async () => {
                     </>
                 )}
             </div>
+
+            {/* 성공 모달 */}
+            {isSuccessModal && (
+                <Modal
+                    isOpen={isSuccessModal}
+                    onRequestClose={closeModal}
+                    className={BoardsDetail.successModal}
+                    overlayClassName="modal-overlay"
+                >
+                    <div className={BoardsDetail.successModalHeader}>
+                        <button className={BoardsDetail.successCloseButton} onClick={closeModal}>X</button>
+                    </div>
+                    <div className={BoardsDetail.successModalContent}>
+                        <SuccessAnimation />
+                        <p className={BoardsDetail.successMessage}>{modalMessage}</p>
+                    </div>
+                </Modal>
+            )}
+
+            {/* 경고 모달 */}
+            {isWarningModal && (
+                <Modal
+                    isOpen={isWarningModal}
+                    onRequestClose={closeWarningModal}
+                    className={BoardsDetail.warningModal}
+                    overlayClassName="warningModalOverlay"
+                >
+                    <div className={BoardsDetail.warningModalHeader}>
+                        <button className={BoardsDetail.warningCloseButton} onClick={closeWarningModal}>X</button>
+                    </div>
+                    <div className={BoardsDetail.warningModalContent}>
+                        <WarningAnimation />
+                        <p className={BoardsDetail.warningMessage}>{warningMessage}</p>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 }

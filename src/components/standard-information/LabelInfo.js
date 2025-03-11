@@ -48,38 +48,44 @@ function LabelInfo() {
     const [supplier, setSupplier] = useState(""); // 납품업체
     const [selectedLabel, setSelectedLabel] = useState({}); // 선택된 라벨 정보
     const canvasRef = useRef(null); // 캔버스 참조
-
-    //검색 추가
+    const [isSuccessModal, setIsSuccessModal] = useState(false); // 성공 모달 상태
+    const [modalMessage, setModalMessage] = useState(''); // 성공 메시지 상태
     const [searchKeyword, setSearchKeyword] = useState("");
-    // 맥주 종류에 따른 이미지 매핑
+
+    const closeSuccessModal = () => {
+        setIsSuccessModal(false);
+        setModalMessage('');
+    };
+
+    const openSuccessModal = (message) => {
+        setIsSuccessModal(true);
+        setModalMessage(message);
+    };
+
     const beerLabelImages = {
         아이유맥주: beerImage1,
         장원영맥주: beerImage3,
         카리나맥주: beerImage2,
     };
 
-    // 맥주 종류에 따른 브랜드명 매핑
     const beerNames = {
         아이유맥주: "아이유 맥주",
         장원영맥주: "장원영 맥주",
         카리나맥주: "카리나 맥주",
     };
 
-    // 맥주 종류에 따른 알코올 함량 (고정값)
     const alcPercentages = {
         아이유맥주: 4.5,
         장원영맥주: 4.0,
         카리나맥주: 4.0,
     };
 
-    // 맥주 종류에 따른 병 이미지 매핑
     const beerBottleImages = {
         아이유맥주: beerImage1_1,
         장원영맥주: beerImage3_1,
         카리나맥주: beerImage2_1,
     };
 
-    // 납품업체 고정값
     const suppliers = ["호텔델루나", "까멜리아", "단밤", "쌍갑포차"];
 
     const [pageInfo, setPageInfo] = useState({
@@ -90,21 +96,13 @@ function LabelInfo() {
         last: true,
     });
 
-    //성공 모달 추가
-    const [successModal, setSuccessModal] = useState({
-        isOpen: false,
-        message: "",
-    });
-
-    // 설비 전체조회
     const fetchData = async (page = 0, search = "") => {
         try {
             const data = await fetchLabelInfo(page, 8, search);
 
             if (data && data.content) {
-                setLabelInfo(data.content); // ✅ 실제 목록 데이터만 저장
+                setLabelInfo(data.content);
                 setPageInfo({
-                    // ✅ 정확한 페이징 정보 저장
                     page: data.pageInfo.page,
                     totalPages: data.pageInfo.totalPages,
                     totalElements: data.pageInfo.totalElements,
@@ -116,7 +114,7 @@ function LabelInfo() {
                 setLabelInfo([]);
                 setPageInfo({
                     page: 0,
-                    totalPages: 0, // 데이터가 없으므로 0으로 설정
+                    totalPages: 0,
                     totalElements: 0,
                     first: true,
                     last: true,
@@ -127,7 +125,7 @@ function LabelInfo() {
             setLabelInfo([]);
             setPageInfo({
                 page: 0,
-                totalPages: 0, // 에러 발생 시 0으로 설정
+                totalPages: 0,
                 totalElements: 0,
                 first: true,
                 last: true,
@@ -136,8 +134,8 @@ function LabelInfo() {
     };
 
     useEffect(() => {
-        fetchData(0, searchKeyword); // 초기 데이터 로드 및 검색어 적용
-    }, [searchKeyword]); // 검색어가 변경될 때마다 fetchData 호출
+        fetchData(0, searchKeyword);
+    }, [searchKeyword]);
 
     const drawLabel = () => {
         const canvas = canvasRef.current;
@@ -145,39 +143,35 @@ function LabelInfo() {
 
         const ctx = canvas.getContext("2d");
         const image = new Image();
-        image.src = beerLabelImages[beerType]; // 선택된 맥주 종류에 맞는 이미지 로드
+        image.src = beerLabelImages[beerType];
 
         image.onload = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // 기존 내용 지우기
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // 이미지 그리기
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-            // 첫 번째 텍스트: 브랜드명 (크기와 색 변경)
-            ctx.font = "bold 40px 'Noto Sans KR', sans-serif"; // 글씨 크기 30px, 볼드체
-            ctx.fillStyle = "#FFFFFF"; // 글씨 색상 (예: 빨간색)
-            ctx.fillText(beerNames[beerType], 111, 520); // 맥주 종류에 맞는 브랜드명
+            ctx.font = "bold 40px 'Noto Sans KR', sans-serif";
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillText(beerNames[beerType], 111, 520);
 
-            // 두 번째 텍스트: 용량 (고정값 500)
-            ctx.font = "italic 30px 'Noto Sans KR', sans-serif"; // 글씨 크기 25px, 이탤릭체
-            ctx.fillStyle = "#FFFFFF"; // 글씨 색상 (예: 초록색)
-            ctx.fillText(`500ML`, 160, 560); // 용량 500으로 고정
+            ctx.font = "italic 30px 'Noto Sans KR', sans-serif";
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillText(`500ML`, 160, 560);
 
-            // 세 번째 텍스트: 알코올 함량 (고정값)
-            ctx.font = "bold 20px 'Noto Sans KR', sans-serif"; // 글씨 크기 25px, 이탤릭체
-            ctx.fillStyle = "#000"; // 글씨 색상
-            ctx.fillText(`${alcPercentages[beerType]}%`, 560, 199); // 알코올 함량 표시
-
-            // 나머지 텍스트들 (기존 그대로)
             ctx.font = "bold 20px 'Noto Sans KR', sans-serif";
-            ctx.fillStyle = "#000"; // 기본 글씨 색상 (검은색)
-            ctx.fillText(beerNames[beerType], 530, 89); // 브랜드명 (하단 위치)
-            ctx.fillText(`500ml`, 510, 238); // 용량 500ml로 고정
-            ctx.fillText(`${productionDate}`, 560, 343); // 생산일자
+            ctx.fillStyle = "#000";
+            ctx.fillText(`${alcPercentages[beerType]}%`, 560, 199);
+
+            ctx.font = "bold 20px 'Noto Sans KR', sans-serif";
+            ctx.fillStyle = "#000";
+            ctx.fillText(beerNames[beerType], 530, 89);
+            ctx.fillText(`500ml`, 510, 238);
+            ctx.fillText(`${productionDate}`, 560, 343);
         };
     };
 
     useEffect(() => {
         if (beerType && canvasRef.current) {
-            drawLabel(); // 맥주 종류가 변경되면 라벨을 다시 그리기
+            drawLabel();
         }
     }, [beerType, productionDate]);
 
@@ -204,17 +198,14 @@ function LabelInfo() {
         setSelectedLabel({});
     };
 
-    // 라벨등록
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (!beerType || !productionDate || !supplier) {
-            alert("모든 필드를 입력해 주세요.");
             return;
         }
 
         const formData = new FormData();
-        // productId를 선택한 맥주 이름에 따라 설정
         const productIdMap = {
             아이유맥주: "I001",
             장원영맥주: "J001",
@@ -222,7 +213,7 @@ function LabelInfo() {
         };
 
         const labelData = {
-            productionDate, // 생산 일자
+            productionDate,
             beerSupplier: encodeURIComponent(supplier),
             productId: productIdMap[beerType],
         };
@@ -243,7 +234,6 @@ function LabelInfo() {
             formData.append("labelImage", blob, "labelImage.png");
         }
 
-        // 병 이미지 추가
         const bottleBlob = await fetch(beerBottleImages[beerType])
             .then((res) => res.blob())
             .catch((err) => {
@@ -257,43 +247,32 @@ function LabelInfo() {
         }
 
         try {
-            await createLabelInfo(formData, setSuccessModal); // setSuccessModal 전달
-            console.log("라벨 등록 성공");
-
+            await createLabelInfo(formData);
+            openSuccessModal("라벨이 성공적으로 등록되었습니다!");
             handleModalClose();
             fetchData(0, searchKeyword);
         } catch (error) {
             console.error("라벨 등록 실패:", error);
-            // 오류는 createLabelInfo에서 처리하므로 여기서는 추가 처리가 필요 없음
         }
     };
 
     const handleDeleteLabel = async () => {
         try {
-            await deleteLabelInfo(selectedLabel.labelId, setSuccessModal); // setSuccessModal 전달
-            handleDetailModalClose();
+            await deleteLabelInfo(selectedLabel.labelId);
+            openSuccessModal("라벨이 성공적으로 삭제되었습니다!");
             fetchData(0, searchKeyword);
+            setShowDetailModal(false);
         } catch (error) {
             console.error("라벨 삭제 실패:", error);
-            // 오류는 deleteLabelInfo에서 처리하므로 여기서는 추가 처리가 필요 없음
         }
     };
 
-    // 페이지 변경 핸들러
     const handlePageChange = (newPage) => {
-        fetchData(newPage, searchKeyword); // 페이지 변경 시 fetchData 호출
+        fetchData(newPage, searchKeyword);
     };
 
-    // 검색 버튼 클릭 시 호출
     const handleSearchClick = () => {
-        fetchData(0, searchKeyword); // 검색어와 함께 첫 페이지 데이터를 가져오기
-    };
-
-    const closeSuccessModal = () => {
-        setSuccessModal({
-            isOpen: false,
-            message: "",
-        });
+        fetchData(0, searchKeyword);
     };
 
     return (
@@ -426,9 +405,10 @@ function LabelInfo() {
                     X
                 </button>
             </Modal>
+
             {/* 성공 모달 */}
             <Modal
-                isOpen={successModal.isOpen}
+                isOpen={isSuccessModal}
                 onRequestClose={closeSuccessModal}
                 className={labelInfos.successModal}
                 overlayClassName="modal-overlay"
@@ -443,31 +423,32 @@ function LabelInfo() {
                 </div>
                 <div className={labelInfos.successModalContent}>
                     <SuccessAnimation />
-                    <p className={labelInfos.successMessage}>{successModal.message}</p>
+                    <p className={labelInfos.successMessage}>{modalMessage}</p>
                 </div>
             </Modal>
             {/* 기존 테이블 */}
             <div className={labelInfos.cardContainer}>
                 {Array.isArray(labelInfo) && labelInfo.length > 0 ? (
                     labelInfo.map((item) => (
-                        <LabelInfoCard
-                            key={item.labelId}
-                            item={item}
-                            handleDetailModalOpen={handleDetailModalOpen}
-                        />
+                        <LabelInfoCard key={item.labelId} item={item} handleDetailModalOpen={handleDetailModalOpen} />
                     ))
                 ) : (
-                    <p>라벨 정보가 없습니다.</p>
+                    <div className={labelInfos.noLabelMessage}>
+                        라벨 정보가 없습니다.
+                    </div>
                 )}
             </div>
+
             {/* 페이지네이션 */}
-            <Pagination
-                page={pageInfo.page}
-                totalPages={pageInfo.totalPages}
-                first={pageInfo.first}
-                last={pageInfo.last}
-                onPageChange={handlePageChange}
-            />
+            <div style={{ position: "fixed", bottom: "80px", left: "58%", transform: "translateX(-50%)" }}>
+                <Pagination
+                    page={pageInfo.page}
+                    totalPages={pageInfo.totalPages}
+                    first={pageInfo.first}
+                    last={pageInfo.last}
+                    onPageChange={handlePageChange}
+                />
+            </div>
         </div>
     );
 }

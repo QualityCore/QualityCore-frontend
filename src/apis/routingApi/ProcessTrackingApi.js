@@ -4,8 +4,8 @@ export const routingApi = {
     getProcessTracking: async (params) => {
         try {
             const response = await axios.get(
-                `http://localhost:8080/api/v1/processTracking`, 
-                { 
+                `http://localhost:8080/api/v1/processTracking`,
+                {
                     params: {
                         lotNo: params.lotNo || '',
                         processStatus: params.processStatus || ''

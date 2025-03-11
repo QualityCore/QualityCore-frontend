@@ -27,7 +27,6 @@ function WorkCreate() {
                 setWorkOrders(workOrdersData);
             }
         } catch (error) {
-            console.error("작업지시서 데이터를 불러오는 데 실패했습니다:", error.message);
         }
     };
 
@@ -39,7 +38,6 @@ function WorkCreate() {
                 setBeerRecipes(recipesResponse);
             }
         } catch (error) {
-            console.error("레시피 데이터를 불러오는 데 실패했습니다:", error.message);
         }
     };
 
@@ -81,21 +79,21 @@ function WorkCreate() {
             if (response && response.status === 201) {
                 setIsSuccessModal(true);
                 setModalMessage("작업 지시서가 성공적으로 생성되었습니다.");
-                console.log("🎉 Confetti 실행!");
+
                 jsConfetti.addConfetti({
                     emojis: ["🍺", "🍻", "🥂"],
                     emojiSize: 100,
                     confettiNumber: 70,
                 });
                 // 수정 후 (정상 작동)
-setWorkOrders((prevOrders) => prevOrders.filter(order => 
-    !(order.planId === planId && 
-      order.planLineId === planLineId && 
-      order.planProductId === planProductId)
-  ));
+                setWorkOrders((prevOrders) => prevOrders.filter(order =>
+                    !(order.planId === planId &&
+                        order.planLineId === planLineId &&
+                        order.planProductId === planProductId)
+                ));
                 setSelectedWorkOrder(null);
                 setEtcText(""); // textarea 초기화 (이 줄 추가)
-            etcRef.current.value = ""; // ref 초기화 (선택 사항, 이 줄 추가)
+                etcRef.current.value = ""; // ref 초기화 (선택 사항, 이 줄 추가)
                 await fetchWorkOrders(); // 새로 고침
                 // Confetti 실행 후 3초 뒤 비활성화
             } else {
@@ -103,22 +101,21 @@ setWorkOrders((prevOrders) => prevOrders.filter(order =>
             }
         } catch (error) {
             alert("작업 지시서 생성 중 오류 발생했습니다.");
-            console.error("작업지시서 생성 오류:", error);
         }
     };
 
     // 생산계획 핸들러
     // 생산계획 선택 핸들러 업데이트
-const handleWorkOrderSelect = (e) => {
-    const [selectedPlanId, selectedPlanLineId, selectedPlanProductId] = e.target.value.split("|");
-    const selectedOrder = workOrders.find(order => 
-      order.planId === selectedPlanId && 
-      order.planLineId === selectedPlanLineId && 
-      order.planProductId === selectedPlanProductId
-    );
-    setSelectedWorkOrder(selectedOrder || null);
-  };
-  
+    const handleWorkOrderSelect = (e) => {
+        const [selectedPlanId, selectedPlanLineId, selectedPlanProductId] = e.target.value.split("|");
+        const selectedOrder = workOrders.find(order =>
+            order.planId === selectedPlanId &&
+            order.planLineId === selectedPlanLineId &&
+            order.planProductId === selectedPlanProductId
+        );
+        setSelectedWorkOrder(selectedOrder || null);
+    };
+
 
     useEffect(() => {
         fetchWorkOrders();
@@ -156,6 +153,15 @@ const handleWorkOrderSelect = (e) => {
     const closeSuccessModal = () => setIsSuccessModal(false);
     const closeWarningModal = () => setIsWarningModal(false);
 
+    // 날짜변환
+    function convertUTCToKST(dateString) {
+        return new Date(dateString).toLocaleDateString("ko-KR");
+    }
+
+
+
+
+
     return (
         <div className={workCreate.mainBar}>
             <div className={workCreate.planInfoName}>
@@ -163,14 +169,14 @@ const handleWorkOrderSelect = (e) => {
                 <select onChange={handleWorkOrderSelect} className={workCreate.planSelect} value={selectedWorkOrder ? `${selectedWorkOrder.planId}|${selectedWorkOrder.productName}` : ""}>
                     <option value="">생산 계획 선택</option>
                     // 옵션 요소 수정
-{workOrders.map((order) => (
-  <option 
-    key={`${order.planId}-${order.planLineId}-${order.planProductId}`} // 고유 식별자 강화
-    value={`${order.planId}|${order.planLineId}|${order.planProductId}`} // 3가지 값 모두 포함
-  >
-    ({order.productName}) 시작일 : {order.startDate}
-  </option>
-))}
+                    {workOrders.map((order) => (
+                        <option
+                            key={`${order.planId}-${order.planLineId}-${order.planProductId}`} // 고유 식별자 강화
+                            value={`${order.planId}|${order.planLineId}|${order.planProductId}`} // 3가지 값 모두 포함
+                        >
+                            ({order.productName}) 시작일 : {convertUTCToKST(order.startDate)}
+                        </option>
+                    ))}
 
                 </select>
             </div>
@@ -184,9 +190,17 @@ const handleWorkOrderSelect = (e) => {
                     </tr>
                     <tr>
                         <th>생산예정일</th>
-                        <td>{selectedWorkOrder ? selectedWorkOrder.startDate : "-"}</td>
+                        <td>
+                            {selectedWorkOrder
+                                ? convertUTCToKST(selectedWorkOrder.startDate)
+                                : "-"}
+                        </td>
                         <th>생산종료일</th>
-                        <td>{selectedWorkOrder ? selectedWorkOrder.endDate : "-"}</td>
+                        <td>
+                            {selectedWorkOrder
+                                ? convertUTCToKST(selectedWorkOrder.endDate)
+                                : "-"}
+                        </td>
                     </tr>
                     <tr>
                         <th>지시수량</th>
@@ -221,15 +235,15 @@ const handleWorkOrderSelect = (e) => {
                 </table>
             )}
             {/* 성공모달 */}
-                <Modal isOpen={isSuccessModal} onRequestClose={closeSuccessModal} className={workCreate.successModal} overlayClassName="modal-overlay">
-                    <div className={workCreate.successModalHeader}>
-                        <button className={workCreate.successCloseButton} onClick={closeSuccessModal}>X</button>
-                    </div>
-                    <div className={workCreate.successModalContent}>
-                        <SuccessAnimation />
-                        <p className={workCreate.successMessage}>{modalMessage}</p>
-                    </div>
-                </Modal>
+            <Modal isOpen={isSuccessModal} onRequestClose={closeSuccessModal} className={workCreate.successModal} overlayClassName="modal-overlay">
+                <div className={workCreate.successModalHeader}>
+                    <button className={workCreate.successCloseButton} onClick={closeSuccessModal}>X</button>
+                </div>
+                <div className={workCreate.successModalContent}>
+                    <SuccessAnimation />
+                    <p className={workCreate.successMessage}>{modalMessage}</p>
+                </div>
+            </Modal>
             {/* 경고모달 */}
             <Modal isOpen={isWarningModal} onRequestClose={closeWarningModal} className={workCreate.warningModal} overlayClassName={workCreate.warningModalOverlay}>
                 <div className={workCreate.warningModalHeader}>
@@ -242,11 +256,11 @@ const handleWorkOrderSelect = (e) => {
             </Modal>
             <h3 className={workCreate.footName}>특이사항</h3>
             <textarea
-    ref={etcRef}
-    className={workCreate.etc}
-    value={etcText} // 상태 값으로 textarea 값 설정
-    onChange={(e) => setEtcText(e.target.value)} // 상태 업데이트
-></textarea>
+                ref={etcRef}
+                className={workCreate.etc}
+                value={etcText} // 상태 값으로 textarea 값 설정
+                onChange={(e) => setEtcText(e.target.value)} // 상태 업데이트
+            ></textarea>
 
             <button className={workCreate.createButton} onClick={handleCreateWorkOrder}>
                 등록🔎
