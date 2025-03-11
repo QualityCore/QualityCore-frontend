@@ -86,7 +86,7 @@ const Login = () => {
       { id: 'admin', password: '123', name: '시스템관리자', role: 'ADMIN', department: '정보시스템부', permissions: ['all'] },
       { id: 'plan', password: '123', name: '문관리', role: 'PRODUCTION_MANAGER', department: '생산관리부', permissions: ['production.read', 'production.write', 'production.approve', 'work.read', 'work.write'] },
       { id: 'work', password: '1234', name: '김작업', role: 'WORK_MANAGER', department: '작업관리팀', permissions: ['work.read', 'work.write', 'work.approve', 'production.read'] },
-      { id: 'emp', password: '123', name: '이사원', role: 'EMPLOYEE', department: '생산1팀', permissions: ['production.read', 'work.read'] },
+      { id: 'EMP001', password: '123', name: '장사원', role: 'EMPLOYEE', department: '생산1팀', permissions: ['production.read', 'work.read'] },
       { id: 'iu', password: '123', name: '아이유', role: 'EMPLOYEE', department: '생산2팀', permissions: ['production.read', 'work.read', 'work.execute'] }
     ];
   });

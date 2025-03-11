@@ -1,3 +1,4 @@
+// 아이콘 임포트 수정
 import React, { useState, useEffect } from "react";
 import { findAllWorkOrders, fetchWorkOrderByLotNo, workOrderDelete } from "../../apis/workOrderApi/workOrdersApi";
 import workOrder from "../../styles/work/workOrders.module.css";
@@ -5,11 +6,11 @@ import Pagination from "../../Pagination/Pagination";
 import Modal from "react-modal";
 import SuccessAnimation from "../../lottie/SuccessNotification";
 import generatePDF from "../../common/PDF/generatePDF";
-import { FaRotateRight } from "react-icons/fa6";
-import WarningAnimation from "../../lottie/WarningNotification"; // 경고 애니메이션 컴포넌트 임포트
-// import BoardsCreate from "../../boards/BoardsCreate"; // BoardsCreate 스타일 임포트 (경고 모달 스타일용) 삭제
+import { FaSearch, FaFileExport, FaTrashAlt, FaSync } from "react-icons/fa";
+import WarningAnimation from "../../lottie/WarningNotification";
 
-Modal.setAppElement('#root'); // 앱의 루트 엘리먼트를 지정 (모달 접근성 개선)
+
+Modal.setAppElement('#root');
 
 function WorkOrder() {
     // 작업지시서 상태관리
@@ -17,15 +18,15 @@ function WorkOrder() {
     const [pageInfo, setPageInfo] = useState({
         page: 0, totalPages: 1, first: true, last: true
     });
-    const [selectedWorkOrder, setSelectedWorkOrder] = useState(null); // 선택된 작업지시서
-    const [noResults, setNoResults] = useState(false); // 검색 결과 없음 상태
+    const [selectedWorkOrder, setSelectedWorkOrder] = useState(null);
+    const [noResults, setNoResults] = useState(false);
 
     // 모달 상태관리
-    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기 상태
-    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);  // 성공 모달 상태
-    const [modalMessage, setModalMessage] = useState('');  // 모달 메시지
-    const [isWarningModal, setIsWarningModal] = useState(false); // 경고 모달 상태
-    const [warningMessage, setWarningMessage] = useState(''); // 경고 메시지 상태
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [isWarningModal, setIsWarningModal] = useState(false);
+    const [warningMessage, setWarningMessage] = useState('');
 
     // 검색조건 상태관리
     const [workTeam, setWorkTeam] = useState('');
@@ -52,7 +53,7 @@ function WorkOrder() {
     const fetchData = async (page = 0, filterParams = {}) => {
         try {
             const { workTeam, productName, lotNo, lineNo, startDate, endDate } = filterParams;
-            let lineNoParam = lineNo ? parseInt(lineNo, 10) : undefined; // 숫자로 변환
+            let lineNoParam = lineNo ? parseInt(lineNo, 10) : undefined;
 
             const data = await findAllWorkOrders(page, 13, workTeam, productName, lotNo, lineNoParam, startDate, endDate);
 
@@ -77,11 +78,11 @@ function WorkOrder() {
                 });
             } else {
                 setWorkOrders([]);
-                setNoResults(true); // API 응답 형식이 잘못된 경우에도 검색 결과 없음 상태로 설정
+                setNoResults(true);
             }
         } catch (error) {
             setWorkOrders([]);
-            setNoResults(true); // 오류 발생 시 검색 결과 없음 상태로 설정
+            setNoResults(true);
         }
     };
 
@@ -92,7 +93,6 @@ function WorkOrder() {
 
     // 검색 기능
     const handleSearch = () => {
-
         fetchData(0, { workTeam, productName, lineNo, startDate, endDate, lotNo });
     };
 
@@ -110,17 +110,17 @@ function WorkOrder() {
     // 모달
     const openModal = async (lotNo) => {
         try {
-            // API 호출하여 상세 정보 가져오기
             const workOrderData = await fetchWorkOrderByLotNo(lotNo);
-            setSelectedWorkOrder(workOrderData);  // 상세 정보 설정
-            setIsModalOpen(true); // 모달 열기
+            setSelectedWorkOrder(workOrderData);
+            setIsModalOpen(true);
         } catch (error) {
+            console.error("Error fetching work order details:", error);
         }
     };
 
     const closeModal = () => {
-        setIsModalOpen(false); // 모달 닫기
-        setSelectedWorkOrder(null); // 선택된 작업지시서 초기화
+        setIsModalOpen(false);
+        setSelectedWorkOrder(null);
     };
 
     useEffect(() => {
@@ -131,16 +131,12 @@ function WorkOrder() {
     const handleDelete = async (lotNo) => {
         const invalidStatus = ['SC002', 'SC003', 'SC004', 'SC005', 'SC006', 'SC007', 'SC008', 'SC009'];
 
-        // 1. 선택된 작업지시서 확인
         if (!selectedWorkOrder) {
             setWarningMessage("선택된 작업지시서가 없습니다.");
             setIsWarningModal(true);
             return;
         }
 
-        // 2. 상태 코드 확인 (statusCode 사용)
-
-        // 3. 삭제 불가능한 상태인지 확인
         if (invalidStatus.includes(selectedWorkOrder.statusCode)) {
             setWarningMessage("진행 중인 작업은 삭제할 수 없습니다.");
             setIsWarningModal(true);
@@ -148,41 +144,55 @@ function WorkOrder() {
         }
 
         try {
-            const response = await workOrderDelete(lotNo);
-
+            await workOrderDelete(lotNo);
             setIsSuccessModalOpen(true);
             setModalMessage("작업지시서가 성공적으로 삭제되었습니다.");
             closeModal();
             fetchData(pageInfo.page);
         } catch (error) {
-            // 6. API 오류 처리
             setWarningMessage("작업지시서 삭제에 실패했습니다.");
             setIsWarningModal(true);
         }
     };
 
-
     const closeSuccessModal = () => setIsSuccessModalOpen(false);
-    const closeWarningModal = () => {
-        setIsWarningModal(false);
+    const closeWarningModal = () => setIsWarningModal(false);
+
+    // Enter 키로 검색 실행
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
     };
 
     return (
         <div className={workOrder.container}>
             <div className={workOrder.searchBar}>
-                <select className={workOrder.selectSearch} value={workTeam} onChange={(e) => setWorkTeam(e.target.value)}>
+                <select 
+                    className={workOrder.selectSearch} 
+                    value={workTeam} 
+                    onChange={(e) => setWorkTeam(e.target.value)}
+                >
                     <option value="" disabled>작업조</option>
                     <option value="A조">A조</option>
                     <option value="B조">B조</option>
                     <option value="C조">C조</option>
                 </select>
-                <select className={workOrder.selectSearch} value={productName} onChange={(e) => setProductName(e.target.value)}>
+                <select 
+                    className={workOrder.selectSearch} 
+                    value={productName} 
+                    onChange={(e) => setProductName(e.target.value)}
+                >
                     <option value="" disabled>맥주명</option>
                     <option value="아이유 맥주">아이유 맥주</option>
                     <option value="카리나 맥주">카리나 맥주</option>
                     <option value="장원영 맥주">장원영 맥주</option>
                 </select>
-                <select className={workOrder.selectSearch} value={lineNo} onChange={(e) => setLineNo(e.target.value)}>
+                <select 
+                    className={workOrder.selectSearch} 
+                    value={lineNo} 
+                    onChange={(e) => setLineNo(e.target.value)}
+                >
                     <option value="" disabled>생산라인</option>
                     <option value="1">1LINE</option>
                     <option value="2">2LINE</option>
@@ -208,10 +218,16 @@ function WorkOrder() {
                     value={lotNo}
                     onChange={(e) => setLotNo(e.target.value)}
                     placeholder="작업지시번호를 입력하세요.."
+                    onKeyPress={handleKeyPress}
                 />
-                <button className={workOrder.searchButton} onClick={handleSearch}>검색🔎</button>
-                <button className={workOrder.searchRefresh} onClick={handleReset}><FaRotateRight /></button>
+                <button className={workOrder.searchButton} onClick={handleSearch}>
+                    <FaSearch /> 검색
+                </button>
+                <button className={workOrder.searchRefresh} onClick={handleReset}>
+                    <FaSync />
+                </button>
             </div>
+            
             <div className={workOrder.mainbar}>
                 {noResults ? (
                     <p className={workOrder.noResults}>작업지시서가 없습니다.</p>
@@ -242,28 +258,12 @@ function WorkOrder() {
                                     <td>{work.lineNo} LINE</td>
                                     <td>{work.processStatus}</td>
                                     <td>
-                                        <div style={{
-                                            width: "100%",
-                                            backgroundColor: "#e0e0e0",
-                                            borderRadius: "5px",
-                                            height: "23px",
-                                            position: "relative"
-                                        }}>
-                                            <div style={{
-                                                width: `${getWorkProgress(work.statusCode)}%`,
-                                                backgroundColor: getProgressBarColor(getWorkProgress(work.statusCode)),
-                                                height: "100%",
-                                                borderRadius: "5px",
-                                            }} />
-                                            <div style={{
-                                                position: "absolute",
-                                                top: "50%",
-                                                left: "50%",
-                                                transform: "translate(-50%, -50%)",
-                                                color: "#fff",
-                                                fontWeight: "bold",
-                                                fontSize: "12px",
-                                            }}>
+                                        <div className={workOrder.progressBar}>
+                                            <div 
+                                                className={workOrder.progressBarFill}
+                                                style={{width: `${getWorkProgress(work.statusCode)}%`}}
+                                            ></div>
+                                            <div className={workOrder.progressBarLabel}>
                                                 {getWorkProgress(work.statusCode)}%
                                             </div>
                                         </div>
@@ -273,19 +273,8 @@ function WorkOrder() {
                         </tbody>
                     </table>
                 )}
-                <Modal
-                    isOpen={isSuccessModalOpen}
-                    onRequestClose={closeSuccessModal}
-                    className={workOrder.successModal}
-                    overlayClassName={workOrder.modalOverlay}
-                >
-                    <div className={workOrder.successModalContent}>
-                        <button className={workOrder.closeButton} onClick={closeSuccessModal}>X</button>
-                        <SuccessAnimation />
-                        <p className={workOrder.successMessage}>{modalMessage}</p>
-                    </div>
-                </Modal>
-                <div style={{ position: "fixed", bottom: "100px", left: "58%", transform: "translateX(-50%)" }}>
+                
+                <div className={workOrder.paginationWrapper}>
                     <Pagination
                         page={pageInfo.page}
                         totalPages={pageInfo.totalPages}
@@ -295,6 +284,7 @@ function WorkOrder() {
                     />
                 </div>
             </div>
+            
             {/* 작업지시서 상세조회 모달 */}
             <Modal
                 isOpen={isModalOpen}
@@ -303,7 +293,7 @@ function WorkOrder() {
                 overlayClassName={workOrder.modalOverlay}
             >
                 <div className={workOrder.modalHeader}>
-                    <button onClick={closeModal} className={workOrder.closeButton}>X</button>
+                    <button onClick={closeModal} className={workOrder.closeButton}>×</button>
                 </div>
                 {selectedWorkOrder && (
                     <div>
@@ -312,58 +302,63 @@ function WorkOrder() {
                             <button
                                 className={workOrder.pdfButton}
                                 onClick={() => {
-                                    if (selectedWorkOrder) {  // selectedWorkOrder가 있을 때만 PDF 생성
-
-                                        generatePDF(selectedWorkOrder, selectedWorkOrder.lineMaterials); // PDF 생성 함수 호출
-                                    } else {
+                                    if (selectedWorkOrder) {
+                                        generatePDF(selectedWorkOrder, selectedWorkOrder.lineMaterials);
                                     }
                                 }}
                             >
-                                PDF 추출
+                                <FaFileExport /> PDF 추출
                             </button>
                         </div>
-                        {/* 테이블을 감싸는 wrapper 추가 */}
+                        
                         <div className={workOrder.tableWrapper}>
                             <table className={workOrder.detailTable}>
-                                <tr>
-                                    <td className={workOrder.oneTd}>작업지시번호</td>
-                                    <td>{selectedWorkOrder.lotNo}</td>
-                                </tr>
-                                <tr>
-                                    <td className={workOrder.twoTd}>작업조</td>
-                                    <td>{selectedWorkOrder.workTeam}</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td className={workOrder.oneTd}>작업지시번호</td>
+                                        <td>{selectedWorkOrder.lotNo}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className={workOrder.twoTd}>작업조</td>
+                                        <td>{selectedWorkOrder.workTeam}</td>
+                                    </tr>
+                                </tbody>
                             </table>
 
                             <table className={workOrder.dateTable}>
-                                <tr>
-                                    <td className={workOrder.threeTd}>생산시작일</td>
-                                    <td>{selectedWorkOrder.startDate}</td>
-                                </tr>
-                                <tr>
-                                    <td className={workOrder.fourTd}>생산종료일</td>
-                                    <td>{selectedWorkOrder.endDate}</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td className={workOrder.threeTd}>생산시작일</td>
+                                        <td>{selectedWorkOrder.startDate}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className={workOrder.fourTd}>생산종료일</td>
+                                        <td>{selectedWorkOrder.endDate}</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
 
                         <h2>생산정보</h2>
                         <table className={workOrder.productTable}>
-                            <tr>
-                                <th>제품명</th>
-                                <th>수량</th>
-                                <th>생산라인</th>
-                                <th>작업지시상태</th>
-                            </tr>
-                            <tr>
-                                <td>{selectedWorkOrder.productName}</td>
-                                <td>{selectedWorkOrder.planQty} ea</td>
-                                <td>{selectedWorkOrder.lineNo} LINE</td>
-                                <td>{selectedWorkOrder.processStatus}</td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>제품명</th>
+                                    <th>수량</th>
+                                    <th>생산라인</th>
+                                    <th>작업지시상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{selectedWorkOrder.productName}</td>
+                                    <td>{selectedWorkOrder.planQty} ea</td>
+                                    <td>{selectedWorkOrder.lineNo} LINE</td>
+                                    <td>{selectedWorkOrder.processStatus}</td>
+                                </tr>
+                            </tbody>
                         </table>
 
-                        {/* 자재 정보 추가 */}
                         <h2>자재정보</h2>
                         {selectedWorkOrder.lineMaterials && selectedWorkOrder.lineMaterials.length > 0 ? (
                             <table className={workOrder.materialTable}>
@@ -389,29 +384,55 @@ function WorkOrder() {
                         ) : (
                             <p>자재 정보가 없습니다.</p>
                         )}
+                        
                         <h2>특이사항</h2>
-                        <textarea value={selectedWorkOrder.workEtc} className={workOrder.etc}></textarea>
-                        <button className={workOrder.deleteButton} onClick={() => handleDelete(selectedWorkOrder.lotNo)}>🚫삭제</button>
+                        <textarea 
+                            value={selectedWorkOrder.workEtc || ''} 
+                            className={workOrder.etc} 
+                            readOnly
+                        ></textarea>
+                        
+                        <button 
+                            className={workOrder.deleteButton} 
+                            onClick={() => handleDelete(selectedWorkOrder.lotNo)}
+                        >
+                            <FaTrashAlt /> 삭제
+                        </button>
                     </div>
                 )}
             </Modal>
+            
+            {/* 성공 모달 */}
+            <Modal
+                isOpen={isSuccessModalOpen}
+                onRequestClose={closeSuccessModal}
+                className={workOrder.successModal}
+                overlayClassName={workOrder.modalOverlay}
+            >
+                <div className={workOrder.successModalHeader}>
+                    <button className={workOrder.successCloseButton} onClick={closeSuccessModal}>×</button>
+                </div>
+                <div className={workOrder.successModalContent}>
+                    <SuccessAnimation />
+                    <p className={workOrder.successMessage}>{modalMessage}</p>
+                </div>
+            </Modal>
+            
             {/* 경고 모달 */}
-            {isWarningModal && (
-                <Modal
-                    isOpen={isWarningModal}
-                    onRequestClose={closeWarningModal}
-                    className={workOrder.warningModal}
-                    overlayClassName="warningModalOverlay"
-                >
-                    <div className={workOrder.warningModalHeader}>
-                        <button className={workOrder.warningCloseButton} onClick={closeWarningModal}>X</button>
-                    </div>
-                    <div className={workOrder.warningModalContent}>
-                        <WarningAnimation />
-                        <p className={workOrder.warningMessage}>{warningMessage}</p>
-                    </div>
-                </Modal>
-            )}
+            <Modal
+                isOpen={isWarningModal}
+                onRequestClose={closeWarningModal}
+                className={workOrder.warningModal}
+                overlayClassName={workOrder.modalOverlay}
+            >
+                <div className={workOrder.warningModalHeader}>
+                    <button className={workOrder.warningCloseButton} onClick={closeWarningModal}>×</button>
+                </div>
+                <div className={workOrder.warningModalContent}>
+                    <WarningAnimation />
+                    <p className={workOrder.warningMessage}>{warningMessage}</p>
+                </div>
+            </Modal>
         </div>
     );
 }
