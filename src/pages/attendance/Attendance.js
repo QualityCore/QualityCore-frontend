@@ -37,7 +37,7 @@ const ProductionSchedule = () => {
             });
           }
 
-          // 개별 일자별 이벤트 생성 (주말 제외)
+          // 개별 일자별 이벤트 생성 (주말 포함)
           const calendarEvents = response.work.content.flatMap((work) => {
             const start = new Date(work.startDate);
             const end = new Date(work.endDate);
@@ -49,8 +49,6 @@ const ProductionSchedule = () => {
               date <= end;
               date.setDate(date.getDate() + 1)
             ) {
-              if (date.getDay() === 0 || date.getDay() === 6) continue; // 주말 제외
-
               events.push({
                 title: work.productName,
                 start: new Date(date),
@@ -117,10 +115,7 @@ const ProductionSchedule = () => {
         d <= lastDayOfMonth;
         d.setDate(d.getDate() + 1)
       ) {
-        if (d.getDay() !== 0 && d.getDay() !== 6) {
-          // 주말 제외
-          monthlyHours += 8;
-        }
+        monthlyHours += 8; // 주말 포함
       }
 
       for (
@@ -128,10 +123,7 @@ const ProductionSchedule = () => {
         d <= now;
         d.setDate(d.getDate() + 1)
       ) {
-        if (d.getDay() !== 0 && d.getDay() !== 6) {
-          // 주말 제외
-          currentHours += 8;
-        }
+        currentHours += 8; // 주말 포함
       }
 
       setMonthlyWorkHours(monthlyHours);
@@ -167,9 +159,9 @@ const ProductionSchedule = () => {
     const endDateString = isNaN(endDate.getTime())
       ? ""
       : endDate.toLocaleDateString("ko-KR", {
-          month: "numeric",
-          day: "numeric",
-        });
+        month: "numeric",
+        day: "numeric",
+      });
 
     return (
       <div
@@ -260,7 +252,6 @@ const ProductionSchedule = () => {
             </p>
           </div>
         </div>
-
         {/* 인원 투입 시간 테이블 */}
         <div className={Schedule.tableBar}>
           <h3 className={Schedule.tableName}>인원투입시간관리</h3>
@@ -313,6 +304,12 @@ const ProductionSchedule = () => {
           overlayClassName={Schedule.overlay}
         >
           <div className={Schedule.modalContent}>
+            <button
+              className={Schedule.closeButton}
+              onClick={() => setIsDetailModal(false)}
+            >
+              X
+            </button>
             <h2 className={Schedule.detailh2}>생산 상세 정보</h2>
             <p>
               <b>작업지시번호:</b> {selectedEvent.lotNo}

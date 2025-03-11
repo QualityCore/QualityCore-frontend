@@ -25,14 +25,14 @@ import WortVolumePage from "./pages/routing/WortVolumePage";
 import BoardDetail from "./pages/board/BoardDetail";
 import { WebsocketProvider } from './common/WebSocket/WebsocketContext';
 import ProductionPerformancePage from "./pages/productionPerformance/ProductionPerformancePage"
-import NotFound from "./pages/NotFound"; 
-import { AuthProvider } from "./contexts/AuthContext"; 
-import ProtectedRoute from "./components/login/ProtectedRoute"; 
-import AccessDenied from "./pages/AccessDenied"; 
+import NotFound from "./pages/NotFound";
+import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/login/ProtectedRoute";
+import AccessDenied from "./pages/AccessDenied";
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함합니다
 const Layout = ({ children }) => {
-  return ( 
+  return (
     <div className="app-container">
       <Sidebar />
       <div className="main-wrapper">
@@ -57,8 +57,8 @@ const ProtectedLayout = ({ children, requiredPermission = null }) => {
 const App = () => {
   return (
     <WebsocketProvider>
-    <Router>
-
+      <Router>
+    
       <AuthProvider>
         <Routes>
           {/* 공개 경로 */}

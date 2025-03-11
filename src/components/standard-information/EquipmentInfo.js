@@ -4,6 +4,7 @@ import { fetchAllEquipment, fetchEquipmentById, createEquipment, deleteEquipment
 import Modal from "react-modal";
 import { fetchWorkplaces } from "../../apis/standard-information/WorkplaceApi";  // 작업장 API import
 import SuccessAnimation from "../../lottie/SuccessNotification";
+import WarningAnimation from "../../lottie/WarningNotification";
 import Pagination from "../../Pagination/Pagination";
 
 function EquipmentInfo() {
@@ -31,6 +32,8 @@ function EquipmentInfo() {
     });
     const [searchType, setSearchType] = useState('');
     const [searchKeyword, setSearchKeyword] = useState('');
+    const [isWarningModal, setIsWarningModal] = useState(false); // 경고 모달 상태
+    const [warningMessage, setWarningMessage] = useState(''); // 경고 메시지 상태
 
 
     // 설비 전체조회
@@ -116,6 +119,12 @@ function EquipmentInfo() {
         setIsEditMode(false); // 모달 닫을 때 수정 모드 초기화
     };
 
+    // 경고 모달 닫기 함수
+    const closeWarningModal = () => {
+        setIsWarningModal(false);
+        setWarningMessage('');
+    };
+
     const closeRegisterModal = () => {
         setIsRegisterModalOpen(false);
         setNewEquipment({
@@ -172,7 +181,8 @@ function EquipmentInfo() {
         event.preventDefault();
 
         if (!newEquipment.workplaceId) {
-            alert("Please select a workplace.");
+            setWarningMessage('모든 필드를 입력해 주세요.');
+            setIsWarningModal(true);
             return; // 직장이 선택되지 않으면 전송을 중지
         }
 
@@ -347,6 +357,16 @@ function EquipmentInfo() {
                         )}
                     </tbody>
                 </table>
+                {/* 페이지네이션 */}
+                <div style={{ position: "fixed", bottom: "80px", left: "58%", transform: "translateX(-50%)" }}>
+                    <Pagination
+                        page={pageInfo.page}
+                        totalPages={pageInfo.totalPages}
+                        first={pageInfo.first}
+                        last={pageInfo.last}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
             </div>
 
             {/* 상세조회 모달 */}
@@ -569,14 +589,23 @@ function EquipmentInfo() {
                     <p className={Equipment.successMessage}>{modalMessage}</p>
                 </div>
             </Modal>
-            {/* 페이지네이션 */}
-            <Pagination
-                page={pageInfo.page}
-                totalPages={pageInfo.totalPages}
-                first={pageInfo.first}
-                last={pageInfo.last}
-                onPageChange={handlePageChange}  // 페이지 변경 함수 전달
-            />
+            {/* 경고 모달 */}
+            {isWarningModal && (
+                <Modal
+                    isOpen={isWarningModal}
+                    onRequestClose={closeWarningModal}
+                    className={Equipment.warningModal}
+                    overlayClassName="warningModalOverlay"
+                >
+                    <div className={Equipment.warningModalHeader}>
+                        <button className={Equipment.warningCloseButton} onClick={closeWarningModal}>X</button>
+                    </div>
+                    <div className={Equipment.warningModalContent}>
+                        <WarningAnimation />
+                        <p className={Equipment.warningMessage}>{warningMessage}</p>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 }

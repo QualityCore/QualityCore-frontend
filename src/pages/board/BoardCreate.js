@@ -4,6 +4,9 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { createBoard } from "../../apis/boardApi/BoardApi";
 import { useNavigate } from "react-router-dom";
+import SuccessAnimation from "../../lottie/SuccessNotification"; // 성공 애니메이션 컴포넌트 임포트
+    import WarningAnimation from "../../lottie/WarningNotification"; // 경고 애니메이션 컴포넌트 임포트
+import Modal from 'react-modal';
 
 function BoardCreate() {
     const navigate = useNavigate();
@@ -16,6 +19,10 @@ function BoardCreate() {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [isSuccessModal, setIsSuccessModal] = useState(false); // 성공 모달 상태
+    const [modalMessage, setModalMessage] = useState(''); // 성공 메시지 상태
+    const [isWarningModal, setIsWarningModal] = useState(false); // 경고 모달 상태
+    const [warningMessage, setWarningMessage] = useState(''); // 경고 메시지 상태
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -35,7 +42,7 @@ function BoardCreate() {
         e.preventDefault();
         setLoading(true);
         setError("");
-    
+
         try {
             if (!formData.title || !formData.content) { // author 검증 제거
                 throw new Error("제목과 내용은 필수 입력 항목입니다.");
@@ -54,18 +61,34 @@ function BoardCreate() {
             }
 
             await createBoard(apiFormData);
-            alert("게시글이 등록되었습니다!");
-            
+            setModalMessage("게시글이 성공적으로 등록되었습니다!"); // 성공 메시지 설정
+            setIsSuccessModal(true); // 성공 모달 열기
+
             // 게시판 목록 페이지로 이동 ✅
-            navigate("/board"); 
+            // navigate("/board"); 
 
         } catch (error) {
-            setError(error.message);
-            console.error("등록 실패:", error);
+            if (error.message === "제목과 내용은 필수 입력 항목입니다.") {
+                setWarningMessage("제목과 내용을 입력해 주세요.");
+                setIsWarningModal(true); // 경고 모달 열기
+            } else {
+                setError(error.message);
+
+            }
         } finally {
             setLoading(false);
         }
-    };  
+    };
+
+    const closeModal = () => {
+        setIsSuccessModal(false);
+        navigate("/board"); // 모달 닫으면 목록으로 이동
+    };
+
+    const closeWarningModal = () => {
+        setIsWarningModal(false);
+    };
+
     return (
         <div className={BoardsCreate.mainBar}>
             <div className={BoardsCreate.formWrapper}>
@@ -111,7 +134,7 @@ function BoardCreate() {
                 </div>
 
                 <div className={BoardsCreate.submitButton}>
-                    <button 
+                    <button
                         onClick={handleSubmit}
                         disabled={loading}
                         style={{ opacity: loading ? 0.7 : 1 }}
@@ -120,6 +143,42 @@ function BoardCreate() {
                     </button>
                 </div>
             </div>
+
+            {/* 성공 모달 */}
+            {isSuccessModal && (
+                <Modal
+                    isOpen={isSuccessModal}
+                    onRequestClose={closeModal}
+                    className={BoardsCreate.successModal}
+                    overlayClassName="successModalOverlay"
+                >
+                    <div className={BoardsCreate.successModalHeader}>
+                        <button className={BoardsCreate.successCloseButton} onClick={closeModal}>X</button>
+                    </div>
+                    <div className={BoardsCreate.successModalContent}>
+                        <SuccessAnimation />
+                        <p className={BoardsCreate.successMessage}>{modalMessage}</p>
+                    </div>
+                </Modal>
+            )}
+
+            {/* 경고 모달 */}
+            {isWarningModal && (
+                <Modal
+                    isOpen={isWarningModal}
+                    onRequestClose={closeWarningModal}
+                    className={BoardsCreate.warningModal}
+                    overlayClassName="warningModalOverlay"
+                >
+                    <div className={BoardsCreate.warningModalHeader}>
+                        <button className={BoardsCreate.warningCloseButton} onClick={closeWarningModal}>X</button>
+                    </div>
+                    <div className={BoardsCreate.warningModalContent}>
+                        <WarningAnimation />
+                        <p className={BoardsCreate.warningMessage}>{warningMessage}</p>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 }

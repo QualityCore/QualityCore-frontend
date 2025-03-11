@@ -1,104 +1,104 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/productionPlan/ProductionPlanStep2.module.css";
-import _ from 'lodash';  
+import _ from 'lodash';
 
 const ProductionPlanStep2 = ({ formData, setFormData, goToStep, currentStep = 2 }) => {
     const [allocatedRounds, setAllocatedRounds] = useState([]);
     const [totalAllocated, setTotalAllocated] = useState(0);
     const [allocationWarning, setAllocationWarning] = useState(false);
- // 총 계획 수량 계산
- const totalPlanned = formData.products.reduce((sum, p) => sum + parseInt(p.planQty || 0), 0);
+    // 총 계획 수량 계산
+    const totalPlanned = formData.products.reduce((sum, p) => sum + parseInt(p.planQty || 0), 0);
 
- useEffect(() => {
-     if (formData.allocatedLines) {
-         // 여기서 각 라인에 맥주 타입 정보 추가
-         const linesWithBeerType = Object.values(formData.allocatedLines).map(round => 
-             round.map(line => {
-                 // 해당 제품의 맥주 타입 찾기
-                 const product = formData.products.find(p => p.productId === line.productId);
+    useEffect(() => {
+        if (formData.allocatedLines) {
+            // 여기서 각 라인에 맥주 타입 정보 추가
+            const linesWithBeerType = Object.values(formData.allocatedLines).map(round =>
+                round.map(line => {
+                    // 해당 제품의 맥주 타입 찾기
+                    const product = formData.products.find(p => p.productId === line.productId);
 
-                 return {
-                     ...line,
-                     beerType: product?.beerType || '에일맥주' // 기본값 설정
-                 };
-             })
-         );
-         setAllocatedRounds(linesWithBeerType);
-     }
- }, [formData.allocatedLines, formData.products]);
+                    return {
+                        ...line,
+                        beerType: product?.beerType || '에일맥주' // 기본값 설정
+                    };
+                })
+            );
+            setAllocatedRounds(linesWithBeerType);
+        }
+    }, [formData.allocatedLines, formData.products]);
 
- // 현재 배정된 총 수량 계산 (실시간)
- useEffect(() => {
-     const currentTotal = allocatedRounds.reduce((sum, round) => 
-         sum + round.reduce((roundSum, line) => roundSum + (parseInt(line.allocatedQty) || 0), 0), 0);
-     setTotalAllocated(currentTotal);
-     
-     // 배정 수량이 계획 수량과 다르면 경고 표시
-     setAllocationWarning(currentTotal !== totalPlanned);
- }, [allocatedRounds, totalPlanned]);
+    // 현재 배정된 총 수량 계산 (실시간)
+    useEffect(() => {
+        const currentTotal = allocatedRounds.reduce((sum, round) =>
+            sum + round.reduce((roundSum, line) => roundSum + (parseInt(line.allocatedQty) || 0), 0), 0);
+        setTotalAllocated(currentTotal);
 
- const calculateEndDate = (startDate, beerType) => {
-     const start = new Date(startDate);
-     // 맥주 타입에 따라 일수 계산
-     const daysToAdd = beerType === '라거맥주' ? 52 : 25;
-     const endDate = new Date(start);
-     endDate.setDate(start.getDate() + daysToAdd);
-     
-     console.log('Start Date:', start);
-     console.log('Beer Type:', beerType);
-     console.log('Calculated End Date:', endDate.toISOString().split('T')[0]);
-     
-     return endDate.toISOString().split('T')[0];
- };
+        // 배정 수량이 계획 수량과 다르면 경고 표시
+        setAllocationWarning(currentTotal !== totalPlanned);
+    }, [allocatedRounds, totalPlanned]);
 
- const handleAllocatedQtyChange = (roundIndex, lineIndex, field, value) => {
-     const newRounds = [...allocatedRounds];
-     const currentLine = newRounds[roundIndex][lineIndex];
- 
-     if (field === 'startDate') {
-         // 시작 날짜 변경 시 맥주 타입에 따른 종료 날짜 계산
-         const endDate = calculateEndDate(value, currentLine.beerType);
+    const calculateEndDate = (startDate, beerType) => {
+        const start = new Date(startDate);
+        // 맥주 타입에 따라 일수 계산
+        const daysToAdd = beerType === '라거맥주' ? 52 : 25;
+        const endDate = new Date(start);
+        endDate.setDate(start.getDate() + daysToAdd);
 
-         currentLine.startDate = value;
-         currentLine.endDate = endDate;
+        console.log('Start Date:', start);
+        console.log('Beer Type:', beerType);
+        console.log('Calculated End Date:', endDate.toISOString().split('T')[0]);
 
-         if (currentLine.endDate && value > currentLine.endDate) {
-             alert('생산 시작일은 종료일보다 늦을 수 없습니다!!! 다시!!!!');
-             return;
-         }
-     } 
-     else if (field === 'allocatedQty') {
-         currentLine[field] = value === '' || value === '0' ? '' : parseInt(value);
-     }
-     else if (field === 'endDate') {
-         // 수동으로 종료 날짜 변경 시 유효성 검사
-         if (currentLine.startDate && value < currentLine.startDate) {
-             alert('생산 종료일은 시작일보다 빠를 수 없습니다!!!! 다시!!!!');
-             return;
-         }
-         currentLine.endDate = value;
-     }
- 
-     setAllocatedRounds(newRounds);
- 
-     // formData 업데이트
-     const updatedLines = newRounds.flat();
-     setFormData(prev => ({
-         ...prev,
-         allocatedLines: _.groupBy(updatedLines, 'planBatchNo')
-     }));
- };
+        return endDate.toISOString().split('T')[0];
+    };
 
- const handleNextStep = () => {
-     if (totalAllocated !== totalPlanned) {
-         if (!window.confirm(`총 계획 수량(${totalPlanned.toLocaleString()}개)과 현재 배정된 수량(${totalAllocated.toLocaleString()}개)이 일치하지 않습니다.\n계속 진행하시겠습니까?`)) {
-             return;
-         }
-     }
-     goToStep(3);
- };
+    const handleAllocatedQtyChange = (roundIndex, lineIndex, field, value) => {
+        const newRounds = [...allocatedRounds];
+        const currentLine = newRounds[roundIndex][lineIndex];
 
-    
+        if (field === 'startDate') {
+            // 시작 날짜 변경 시 맥주 타입에 따른 종료 날짜 계산
+            const endDate = calculateEndDate(value, currentLine.beerType);
+
+            currentLine.startDate = value;
+            currentLine.endDate = endDate;
+
+            if (currentLine.endDate && value > currentLine.endDate) {
+                alert('생산 시작일은 종료일보다 늦을 수 없습니다!!! 다시!!!!');
+                return;
+            }
+        }
+        else if (field === 'allocatedQty') {
+            currentLine[field] = value === '' || value === '0' ? '' : parseInt(value);
+        }
+        else if (field === 'endDate') {
+            // 수동으로 종료 날짜 변경 시 유효성 검사
+            if (currentLine.startDate && value < currentLine.startDate) {
+                alert('생산 종료일은 시작일보다 빠를 수 없습니다!!!! 다시!!!!');
+                return;
+            }
+            currentLine.endDate = value;
+        }
+
+        setAllocatedRounds(newRounds);
+
+        // formData 업데이트
+        const updatedLines = newRounds.flat();
+        setFormData(prev => ({
+            ...prev,
+            allocatedLines: _.groupBy(updatedLines, 'planBatchNo')
+        }));
+    };
+
+    const handleNextStep = () => {
+        if (totalAllocated !== totalPlanned) {
+            if (!window.confirm(`총 계획 수량(${totalPlanned.toLocaleString()}개)과 현재 배정된 수량(${totalAllocated.toLocaleString()}개)이 일치하지 않습니다.\n계속 진행하시겠습니까?`)) {
+                return;
+            }
+        }
+        goToStep(3);
+    };
+
+
 
     return (
         <div className={styles.container}>
@@ -116,9 +116,9 @@ const ProductionPlanStep2 = ({ formData, setFormData, goToStep, currentStep = 2 
                     <span>자재정보</span>
                 </div>
             </div>
-    
+
             <h2 className={styles.title}>공정 정보 입력</h2>
-    
+
             <div className={styles.summarySection}>
                 <div className={styles.summaryCard}>
                     <h3>생산 계획 요약</h3>
@@ -145,7 +145,7 @@ const ProductionPlanStep2 = ({ formData, setFormData, goToStep, currentStep = 2 
                     )}
                 </div>
             </div>
-    
+
             <div className={styles.roundsContainer}>
                 {allocatedRounds.length > 0 ? (
                     allocatedRounds.map((round, roundIndex) => {
@@ -213,7 +213,7 @@ const ProductionPlanStep2 = ({ formData, setFormData, goToStep, currentStep = 2 
                     <p>📌 배정된 생산 라인 데이터가 없습니다.</p>
                 )}
             </div>
-    
+
             <div className={styles.buttonGroup}>
                 <button onClick={() => goToStep(1)} className={styles.prevButton}>← 이전</button>
                 <button onClick={handleNextStep} className={styles.nextButton}>다음 단계 →</button>

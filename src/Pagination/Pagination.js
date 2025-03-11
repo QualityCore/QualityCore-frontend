@@ -2,7 +2,7 @@ import React from "react";
 import { FaFastBackward, FaAngleLeft, FaAngleRight, FaFastForward } from 'react-icons/fa'; // react-icons에서 아이콘 임포트
 import pagination from "./Pagination.module.css";
 
-const Pagination = ({ page, totalPages, first, last, onPageChange }) => {
+const Pagination = ({ page, totalPages, first, last, onPageChange, customStyle }) => {
     console.log("Pagination 컴포넌트 렌더링, 현재 페이지:", page);
 
     const handlePageChange = (newPage) => {
@@ -13,7 +13,7 @@ const Pagination = ({ page, totalPages, first, last, onPageChange }) => {
     };
 
     return (
-        <div className={pagination.paging}>
+        <div className={pagination.paging} style={customStyle}>
             <button
                 onClick={() => handlePageChange(0)}
                 disabled={first || totalPages === 0}
