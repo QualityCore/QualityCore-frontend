@@ -367,7 +367,7 @@ function EquipmentInfo() {
                     />
                 </div>
             </div>
-
+    
             {/* 상세조회 모달 */}
             <Modal
                 isOpen={isModalOpen}
@@ -416,31 +416,33 @@ function EquipmentInfo() {
                         </div>
                         <div className={Equipment.tableContainer}>
                             <table className={Equipment.centerTable}>
-                                <tr>
-                                    <td className={Equipment.detailLabel}>작업장</td>
-                                    <td className={Equipment.detailLabel}>공정</td>
-                                    <th className={Equipment.detailLabel}>상태</th>
-                                </tr>
-                                <tr>
-                                    <td className={Equipment.detailValue}>{selectedEquipment.workplaceName}</td>
-                                    <td className={Equipment.detailValue}>{selectedEquipment.workplaceType}</td>
-                                    <td>
-                                        {isEditMode ? (
-                                            <select
-                                                name="equipmentStatus"
-                                                value={selectedEquipment.equipmentStatus || ''}
-                                                onChange={handleEditInputChange}
-                                                className={Equipment.editSelect}
-                                            >
-                                                <option value="정상">정상</option>
-                                                <option value="수리중">수리중</option>
-                                                <option value="고장">고장</option>
-                                            </select>
-                                        ) : (
-                                            <div className={Equipment.detailValue}>{selectedEquipment.equipmentStatus}</div>
-                                        )}
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td className={Equipment.detailLabel}>작업장</td>
+                                        <td className={Equipment.detailLabel}>공정</td>
+                                        <th className={Equipment.detailLabel}>상태</th>
+                                    </tr>
+                                    <tr>
+                                        <td className={Equipment.detailValue}>{selectedEquipment.workplaceName}</td>
+                                        <td className={Equipment.detailValue}>{selectedEquipment.workplaceType}</td>
+                                        <td>
+                                            {isEditMode ? (
+                                                <select
+                                                    name="equipmentStatus"
+                                                    value={selectedEquipment.equipmentStatus || ''}
+                                                    onChange={handleEditInputChange}
+                                                    className={Equipment.editSelect}
+                                                >
+                                                    <option value="정상">정상</option>
+                                                    <option value="수리중">수리중</option>
+                                                    <option value="고장">고장</option>
+                                                </select>
+                                            ) : (
+                                                <div className={Equipment.detailValue}>{selectedEquipment.equipmentStatus}</div>
+                                            )}
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                         <div className={Equipment.textareaContainer}>
@@ -473,8 +475,7 @@ function EquipmentInfo() {
                     </div>
                 )}
             </Modal>
-
-            {/* 설비 등록 모달 */}
+    
             <Modal
                 isOpen={isRegisterModalOpen}
                 onRequestClose={closeRegisterModal}
@@ -555,7 +556,7 @@ function EquipmentInfo() {
                                 <option value="고장">고장</option>
                             </select>
                         </div>
-
+    
                         <div className={Equipment.createInputContainer}>
                             <label className={Equipment.createInputLabel}>특이사항</label>
                             <textarea
@@ -578,8 +579,13 @@ function EquipmentInfo() {
                     </form>
                 </div>
             </Modal>
-            {/* 성공 모달 */}
-            <Modal isOpen={isSuccessModal} onRequestClose={closeSuccessModal} className={Equipment.successModal} overlayClassName="modal-overlay">
+    
+            <Modal 
+                isOpen={isSuccessModal} 
+                onRequestClose={closeSuccessModal} 
+                className={Equipment.successModal} 
+                overlayClassName="modal-overlay"
+            >
                 <div className={Equipment.successModalHeader}>
                     <button className={Equipment.successCloseButton} onClick={closeSuccessModal}>X</button>
                 </div>
@@ -588,13 +594,13 @@ function EquipmentInfo() {
                     <p className={Equipment.successMessage}>{modalMessage}</p>
                 </div>
             </Modal>
-            {/* 경고 모달 */}
+    
             {isWarningModal && (
                 <Modal
                     isOpen={isWarningModal}
                     onRequestClose={closeWarningModal}
                     className={Equipment.warningModal}
-                    overlayClassName="warningModalOverlay"
+                    overlayClassName={Equipment.warningModalOverlay}
                 >
                     <div className={Equipment.warningModalHeader}>
                         <button className={Equipment.warningCloseButton} onClick={closeWarningModal}>X</button>
