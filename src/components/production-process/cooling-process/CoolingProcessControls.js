@@ -112,19 +112,8 @@ const CoolingProcessControls = ({ workOrder }) => {
 
   const handleNextProcess = async () => {
     try {
-      const { boilingId, postBoilWortVolume, boilLossVolume } = coolingData;
-
-      if (!boilingId) {
-        throw new Error("Boiling ID is missing!");
-      }
-
-      await coolingProcessApi.updateBoilingProcess(boilingId, {
-        postBoilWortVolume,
-        boilLossVolume,
-        actualEndTime: new Date().toISOString(),
-      });
-
-      navigate("/cooling-process");
+     
+      navigate("/maturation-details");
     } catch (error) {
       setShowErrorModal(true);
     }
@@ -251,6 +240,7 @@ const CoolingProcessControls = ({ workOrder }) => {
         message="데이터가 성공적으로 저장되었습니다!"
         onClose={() => {
           setShowSuccessModal(false);
+          startTimer();
         }}
       />
       <ErrorModal
