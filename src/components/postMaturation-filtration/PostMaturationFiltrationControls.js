@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { postMaturationFiltrationApi } from "../../apis/production-process/postMaturation-filtration/PostMaturationApi";
 import ConfirmModal from "../standard-information/common/ConfirmModal";
 import SuccessfulModal from "../standard-information/common/SuccessfulModal";
@@ -6,7 +7,7 @@ import ErrorModal from "../standard-information/common/ErrorModal";
 import CompleteModal from "../standard-information/common/CompleteModal";
 import styles from "../../styles/production-process/PostMaturationFiltration.module.css";
 
-const PostMaturationFiltrationControls = ({ workOrder, workOrderList, setSelectedWorkOrder }) => {
+const PostMaturationFiltrationControls = () => {
     const [filtrationData, setFiltrationData] = useState({
         lotNo: "",
         filtrationTime: "",
@@ -23,31 +24,83 @@ const PostMaturationFiltrationControls = ({ workOrder, workOrderList, setSelecte
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [showCompleteModal, setShowCompleteModal] = useState(false);
     const [buttonLabel, setButtonLabel] = useState("등록하기");
+    const [timeLeft, setTimeLeft] = useState(0);
+    const [isTimerRunning, setIsTimerRunning] = useState(false);
+    const [isProcessStarted, setIsProcessStarted] = useState(false);
+    const [confirmModalShown, setConfirmModalShown] = useState(false);
+    const [isCompleteModalConfirmed, setIsCompleteModalConfirmed] = useState(false); // 완료 모달 확인 여부 상태
+    const navigate = useNavigate();
 
-    // 작업지시 선택 시 데이터 초기화
     useEffect(() => {
-        if (workOrder?.lotNo) {
-            setFiltrationData((prev) => ({
-                ...prev,
-                lotNo: workOrder.lotNo,
-                startTime: new Date().toISOString(),
-            }));
+        const savedLotNo = localStorage.getItem("selectedLotNo");
+        if (savedLotNo) {
+            setFiltrationData((prev) => ({ ...prev, lotNo: savedLotNo }));
         }
-    }, [workOrder]);
+    }, []);
+
+    useEffect(() => {
+        if (isTimerRunning && timeLeft > 0) {
+            const timer = setInterval(() => {
+                setTimeLeft(prev => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        } else if (timeLeft <= 0 && isTimerRunning) {
+            setIsTimerRunning(false);
+            setShowCompleteModal(true); // 타이머 종료 시 모달 표시
+            setButtonLabel("다음 공정으로 이동");
+        }
+    }, [isTimerRunning, timeLeft]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFiltrationData((prev) => ({ ...prev, [name]: value }));
+        setFiltrationData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const formatDateToISOStringWithoutMs = (date) => {
+        return date.toISOString().split(".")[0];
     };
 
     const handleSave = async () => {
         try {
             setIsProcessing(true);
-            await postMaturationFiltrationApi.createPostMaturationFiltration(filtrationData);
+
+            if (!filtrationData.filtrationTime) {
+                alert("여과 시간을 입력해주세요.");
+                setIsProcessing(false);
+                return;
+            }
+
+            const startTime = formatDateToISOStringWithoutMs(new Date());
+            //테스트용으로 5초만 되게하고, 해제하면 입력한 시간대로 설정되도록 주석 처리
+            const totalSeconds = 5;
+            //const totalSeconds = filtrationData.filtrationTime * 60;
+            const expectedEndTime = formatDateToISOStringWithoutMs(
+                new Date(Date.now() + totalSeconds * 1000)
+            );
+
+            const response = await postMaturationFiltrationApi.createPostMaturationFiltration({
+                ...filtrationData,
+                filtrationTime: totalSeconds / 60,
+                startTime,
+                expectedEndTime
+            });
+
+            if (!response?.result?.savePostMaturationFiltration?.mfiltrationId) {
+                throw new Error("서버 응답 오류");
+            }
+
+            setFiltrationData(prev => ({
+                ...prev,
+                mfiltrationId: response.result.savePostMaturationFiltration.mfiltrationId
+            }));
+
             setShowSuccessModal(true);
-            setButtonLabel("공정 완료");
+            setButtonLabel("공정 진행 중");
+            setTimeLeft(totalSeconds);
+            setIsTimerRunning(true);
+            setIsProcessStarted(true);
+            setConfirmModalShown(true);
         } catch (error) {
-            console.error("공정 등록 실패:", error);
             setShowErrorModal(true);
         } finally {
             setIsProcessing(false);
@@ -56,16 +109,29 @@ const PostMaturationFiltrationControls = ({ workOrder, workOrderList, setSelecte
 
     const handleCompleteProcess = async () => {
         try {
-            await postMaturationFiltrationApi.updatePostMaturationFiltration(filtrationData.mfiltrationId, {
-                turbidity: filtrationData.turbidity,
-                actualEndTime: new Date(),
-            });
-            setShowCompleteModal(true);
+            const actualEndTime = formatDateToISOStringWithoutMs(new Date());
+            await postMaturationFiltrationApi.updatePostMaturationFiltration(
+                filtrationData.mfiltrationId,
+                {
+                    actualEndTime,
+                    turbidity: Number(filtrationData.turbidity),
+                    notes: filtrationData.notes
+                }
+            );
         } catch (error) {
-            console.error("공정 완료 처리 실패:", error);
             setShowErrorModal(true);
         }
     };
+
+    const handleNextProcess = () => {
+
+        navigate("/carbonation-process");
+    };
+
+    const handleCompleteModalClose = () => {
+        setShowCompleteModal(false);
+        setIsCompleteModalConfirmed(true);
+    }
 
     return (
         <form className={styles.filtrationForm} onSubmit={(e) => e.preventDefault()}>
@@ -74,36 +140,37 @@ const PostMaturationFiltrationControls = ({ workOrder, workOrderList, setSelecte
             <div className={styles.formGrid}>
                 {/* 작업지시 ID */}
                 <div className={styles.gridItem}>
-                    <label>작업지시 ID</label>
-                    <select
-                        value={filtrationData.lotNo}
-                        onChange={(e) =>
-                            setSelectedWorkOrder(workOrderList.find((wo) => wo.lotNo === e.target.value))
-                        }
-                    >
-                        {workOrderList.map((wo) => (
-                            <option key={wo.lotNo} value={wo.lotNo}>
-                                {wo.lotNo}
-                            </option>
-                        ))}
-                    </select>
+                    <div className={styles.fGridItem}>
+                        <label className={styles.fLabel01}>작업지시 ID</label>
+                        <input
+                            className={styles.fItem01}
+                            type="text"
+                            value={filtrationData.lotNo}
+                            readOnly
+                        />
+                    </div>
                 </div>
 
-                {/* 여과 소요 시간 */}
+                {/* 여과 시간 입력 */}
                 <div className={styles.gridItem}>
-                    <label>여과 소요 시간 (분)</label>
+                    <label className={styles.label}>여과 시간 (분)</label>
                     <input
+                        className={styles.inputField}
                         type="number"
+                        step="0.1"
                         name="filtrationTime"
                         value={filtrationData.filtrationTime}
                         onChange={handleChange}
+                        placeholder="0.0"
+                        disabled={isProcessStarted}
                     />
                 </div>
 
-                {/* 탁도 */}
+                {/* 탁도 측정 */}
                 <div className={styles.gridItem}>
-                    <label>탁도 (NTU)</label>
+                    <label className={styles.label}>탁도 (NTU)</label>
                     <input
+                        className={styles.inputField}
                         type="number"
                         name="turbidity"
                         value={filtrationData.turbidity}
@@ -111,56 +178,81 @@ const PostMaturationFiltrationControls = ({ workOrder, workOrderList, setSelecte
                     />
                 </div>
 
-                {/* 메모 */}
+                {/* 메모 입력 */}
                 <div className={styles.gridItem}>
-                    <label>메모</label>
+                    <label className={styles.label}>메모 사항</label>
                     <textarea
+                        className={styles.inputField}
                         name="notes"
                         value={filtrationData.notes}
                         onChange={handleChange}
-                    ></textarea>
+                        rows="3"
+                        placeholder="여과 상태 기록"
+                    />
                 </div>
 
-                {/* 등록 버튼 */}
+                {/* 타이머 표시 */}
+                {timeLeft > 0 && (
+                    <div className={styles.gridItem}>
+                        <p className={styles.timer}>
+                            남은 시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
+                        </p>
+                    </div>
+                )}
+
+                {/* 실행 버튼 */}
                 <div className={styles.gridItem}>
                     <button
-                        onClick={() =>
-                            buttonLabel === "등록하기" ? setShowConfirmModal(true) : handleCompleteProcess()
-                        }
-                        disabled={isProcessing}
+                        className={styles.submitButton}
+                        onClick={() => {
+                            if (buttonLabel === "등록하기" && !confirmModalShown) {
+                                setShowConfirmModal(true);
+                            } else if (buttonLabel === "다음 공정으로 이동" && isCompleteModalConfirmed) {
+                                handleNextProcess();
+                            } else if (buttonLabel === "공정 진행 중" && !isTimerRunning) {
+                                handleCompleteProcess();
+                            }
+                        }}
+                        disabled={isProcessing || (buttonLabel === "공정 진행 중" && isTimerRunning) || !isCompleteModalConfirmed && buttonLabel === "다음 공정으로 이동"}
                     >
-                        {buttonLabel}
+                        {buttonLabel === "등록하기"
+                            ? "등록하기"
+                            : buttonLabel === "공정 진행 중"
+                                ? `공정 진행 중 (${Math.floor(timeLeft / 60)}분 ${timeLeft % 60}초)`
+                                : "다음 공정으로 이동"}
                     </button>
                 </div>
             </div>
 
             {/* 모달 처리 */}
             <ConfirmModal
-                isOpen={showConfirmModal}
-                message="등록하시겠습니까?"
+                isOpen={showConfirmModal && !confirmModalShown}
+                message="공정을 시작하시겠습니까?"
                 onConfirm={() => {
-                    setShowConfirmModal(false);
                     handleSave();
+                    setShowConfirmModal(false);
                 }}
                 onClose={() => setShowConfirmModal(false)}
             />
 
             <SuccessfulModal
                 isOpen={showSuccessModal}
-                message="데이터가 성공적으로 저장되었습니다!"
+                message="공정이 성공적으로 시작되었습니다!"
                 onClose={() => setShowSuccessModal(false)}
-            />
-
-            <ErrorModal
-                isOpen={showErrorModal}
-                message="오류가 발생했습니다. 다시 시도해주세요."
-                onClose={() => setShowErrorModal(false)}
             />
 
             <CompleteModal
                 isOpen={showCompleteModal}
                 message="공정이 완료되었습니다."
-                onClose={() => setShowCompleteModal(false)}
+                onClose={() => {
+                    handleCompleteModalClose();
+                }}
+            />
+
+            <ErrorModal
+                isOpen={showErrorModal}
+                message="처리 중 오류가 발생했습니다."
+                onClose={() => setShowErrorModal(false)}
             />
         </form>
     );
