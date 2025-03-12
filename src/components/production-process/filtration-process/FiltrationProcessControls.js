@@ -69,9 +69,6 @@ const FiltrationProcessControls = ({ workOrder }) => {
     }
   };
 
-
-
-
    // ✅ 타이머 실행 함수
    const startTimer = () => {
     setIsTimerRunning(true);
@@ -95,9 +92,6 @@ const FiltrationProcessControls = ({ workOrder }) => {
           });
         }, 1000);
       };
-
-  
-
 
   const handleNextProcess = async () => {
     if (!filtrationData.recoveredWortVolume || isNaN(Number(filtrationData.recoveredWortVolume))) {

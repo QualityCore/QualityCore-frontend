@@ -1,12 +1,32 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
-import { fetchMaturationById, createMaturationDetails } from "../../../apis/production-process/maturation-detail/maturationDetailApi";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from "chart.js";
+import {
+    fetchMaturationById,
+    createMaturationDetails,
+} from "../../../apis/production-process/maturation-detail/maturationDetailApi";
 import MaturationCss from "../../../styles/production-process/MaturationPage.module.css";
 
 // Chart.js 등록
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 function MaturationDetail() {
     const { maturationId } = useParams();
@@ -40,36 +60,49 @@ function MaturationDetail() {
 
                 if (detail) {
                     // 차트 데이터 준비
-                    const labels = ["평균 온도", "평균 압력", "CO2 농도", "용존 산소량"];
+                    const labels = [
+                        "평균 온도",
+                        "평균 압력",
+                        "CO2 농도",
+                        "용존 산소량",
+                    ];
                     const data = [
                         detail.avgTemperature,
                         detail.avgPressure,
                         detail.avgCo2Percent,
-                        detail.avgDissolvedOxygen
+                        detail.avgDissolvedOxygen,
                     ];
 
                     // 기준치 초과 여부 확인
-                    const isOverLimit = data.map(value => value > 5);
+                    const isOverLimit = data.map((value) => value > 5);
 
                     // 데이터셋 생성
                     setChartData({
                         labels: labels,
-                        datasets: [{
-                            label: '측정값',
-                            data: data,
-                            backgroundColor: isOverLimit.map(over => over ? 'rgba(255, 99, 132, 0.5)' : 'rgba(75, 192, 192, 0.5)'),
-                            borderColor: isOverLimit.map(over => over ? 'rgb(255, 99, 132)' : 'rgb(75, 192, 192)'),
-                            borderWidth: 2,
-                        },
-                        {
-                            label: '기준치',
-                            data: [5, 5, 5, 5],
-                            borderColor: 'rgba(255, 159, 64, 0.8)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: false,
-                            pointRadius: 0,
-                        }]
+                        datasets: [
+                            {
+                                label: "측정값",
+                                data: data,
+                                backgroundColor: isOverLimit.map((over) =>
+                                    over
+                                        ? "rgba(255, 99, 132, 0.5)"
+                                        : "rgba(75, 192, 192, 0.5)"
+                                ),
+                                borderColor: isOverLimit.map((over) =>
+                                    over ? "rgb(255, 99, 132)" : "rgb(75, 192, 192)"
+                                ),
+                                borderWidth: 2,
+                            },
+                            {
+                                label: "기준치",
+                                data: [5, 5, 5, 5],
+                                borderColor: "rgba(255, 159, 64, 0.8)",
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                fill: false,
+                                pointRadius: 0,
+                            },
+                        ],
                     });
                 }
             } catch (error) {
@@ -107,6 +140,7 @@ function MaturationDetail() {
             await createMaturationDetails(maturationDetailsDTO);
             alert("등록 성공!");
             setIsRegistered(true);
+            navigate("/post-maturation-filtration"); // 등록 성공 후 페이지 이동
         } catch (error) {
             console.error("등록 실패:", error);
             alert(`등록 실패: ${error.message}`);
@@ -122,18 +156,18 @@ function MaturationDetail() {
             tooltip: {
                 callbacks: {
                     label: function (context) {
-                        let label = context.dataset.label || '';
+                        let label = context.dataset.label || "";
 
                         if (label) {
-                            label += ': ';
+                            label += ": ";
                         }
                         if (context.parsed.y !== null) {
                             label += context.parsed.y.toFixed(2);
                         }
                         return label;
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         scales: {
             y: {
@@ -164,10 +198,22 @@ function MaturationDetail() {
                     <p>작업지시 ID: {maturationDetail.lotNo}</p>
                     <p>숙성 시간: {maturationDetail.maturationTime} 일</p>
                     <p>숙성 시작 온도: {maturationDetail.startTemperature}°C</p>
-                    <p>평균 온도 (전체): {maturationDetail.avgTemperature?.toFixed(2)}°C</p>
-                    <p>평균 압력 (전체): {maturationDetail.avgPressure?.toFixed(2)} bar</p>
-                    <p>평균 CO2 농도 (전체): {maturationDetail.avgCo2Percent?.toFixed(2)}%</p>
-                    <p>평균 용존 산소량 (전체): {maturationDetail.avgDissolvedOxygen?.toFixed(2)} ppm</p>
+                    <p>
+                        평균 온도 (전체):{" "}
+                        {maturationDetail.avgTemperature?.toFixed(2)}°C
+                    </p>
+                    <p>
+                        평균 압력 (전체):{" "}
+                        {maturationDetail.avgPressure?.toFixed(2)} bar
+                    </p>
+                    <p>
+                        평균 CO2 농도 (전체):{" "}
+                        {maturationDetail.avgCo2Percent?.toFixed(2)}%
+                    </p>
+                    <p>
+                        평균 용존 산소량 (전체):{" "}
+                        {maturationDetail.avgDissolvedOxygen?.toFixed(2)} ppm
+                    </p>
                     <p>메모: {maturationDetail.notes || "없음"}</p>
                     <p>시작 시간: {maturationDetail.startTime}</p>
                     <p>종료 시간: {maturationDetail.endTime}</p>
@@ -186,11 +232,17 @@ function MaturationDetail() {
                             onClick={handleRegistration}
                             style={{ marginTop: "20px" }}
                         >
-                            최종 결과 등록
+                            다음 공정으로 이동
                         </button>
                     )}
                     {isRegistered && (
-                        <p style={{ color: "green", fontWeight: "bold", marginTop: "20px" }}>
+                        <p
+                            style={{
+                                color: "green",
+                                fontWeight: "bold",
+                                marginTop: "20px",
+                            }}
+                        >
                             ✔️ 등록이 완료되었습니다.
                         </p>
                     )}
