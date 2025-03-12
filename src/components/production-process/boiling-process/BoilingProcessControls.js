@@ -15,8 +15,7 @@ const BoilingProcessControls = ({ workOrder }) => {
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [buttonLabel, setButtonLabel] = useState("등록하기");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(false);
+  const [timer, setTimer] = useState(0); // 타이머 변수 통일
   const navigate = useNavigate();
   const [boilingData, setBoilingData] = useState({
     lotNo: "",
@@ -41,9 +40,6 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   }, []);
 
-
-
-
   // LOT_NO가 변경되면 자재 정보 및 여과 공정 데이터 조회 실행
   useEffect(() => {
     if (boilingData.lotNo) {
@@ -52,11 +48,6 @@ const BoilingProcessControls = ({ workOrder }) => {
       fetchBoilingData(boilingData.lotNo);
     }
   }, [boilingData.lotNo]);
-
-
-
-
-
 
   // 여과 공정 데이터 조회 함수
   const fetchFiltrationData = async (lotNo) => {
@@ -74,34 +65,28 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
+  // ✅ 끓임 공정 데이터 불러올 때 boilingId 포함
+  const fetchBoilingData = async (lotNo) => {
+    try {
+      const response = await boilingProcessApi.getBoilingProcessByLotNo(lotNo);
+      console.log("✅ 가져온 끓임 공정 데이터:", response);
 
-
-
-// ✅ 끓임 공정 데이터 불러올 때 boilingId 포함
-const fetchBoilingData = async (lotNo) => {
-  try {
-    const response = await boilingProcessApi.getBoilingProcessByLotNo(lotNo);
-    console.log("✅ 가져온 끓임 공정 데이터:", response);
-
-    if (response.boilingProcesses && response.boilingProcesses.length > 0) {
-      const latestBoilingProcess = response.boilingProcesses[0]; // ✅ 첫 번째 데이터 선택
-      setBoilingData((prev) => ({
-        ...prev,
-        boilingId: latestBoilingProcess.boilingId,
-        postBoilWortVolume: latestBoilingProcess.postBoilWortVolume || "",
-        boilLossVolume: latestBoilingProcess.boilLossVolume || "",
-        processStatus: latestBoilingProcess.processStatus || "진행 중",
-      }));
-    } else {
-      console.warn("⚠️ 끓임 공정 데이터가 없습니다.");
+      if (response.boilingProcesses && response.boilingProcesses.length > 0) {
+        const latestBoilingProcess = response.boilingProcesses[0]; // ✅ 첫 번째 데이터 선택
+        setBoilingData((prev) => ({
+          ...prev,
+          boilingId: latestBoilingProcess.boilingId,
+          postBoilWortVolume: latestBoilingProcess.postBoilWortVolume || "",
+          boilLossVolume: latestBoilingProcess.boilLossVolume || "",
+          processStatus: latestBoilingProcess.processStatus || "진행 중",
+        }));
+      } else {
+        console.warn("⚠️ 끓임 공정 데이터가 없습니다.");
+      }
+    } catch (error) {
+      console.error(`❌ 끓임 공정 데이터 조회 실패 (LOT_NO: ${lotNo}):`, error);
     }
-  } catch (error) {
-    console.error(`❌ 끓임 공정 데이터 조회 실패 (LOT_NO: ${lotNo}):`, error);
-  }
-};
-
-
-
+  };
 
   // 자재 정보 조회 함수 (API 주소를 참고하여 수정)
   const fetchMaterials = async (lotNo) => {
@@ -137,48 +122,33 @@ const fetchBoilingData = async (lotNo) => {
     }
   };
 
-
-
-
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBoilingData((prev) => ({ ...prev, [name]: value }));
   };
-
-
-
-
-
 
   const handleSave = async () => {
     try {
       setIsProcessing(true);
       await boilingProcessApi.saveBoilingProcess(boilingData);
       setShowSuccessModal(true);
-      startTimer();
+      setButtonLabel("다음 공정 이동");
     } catch (error) {
       setShowErrorModal(true);
     }
   };
 
-
-
-
-
-
   // ✅ 타이머 실행 함수
   const startTimer = () => {
-    setIsTimerRunning(true);
+    setIsProcessing(true);
     const totalTime =
       process.env.NODE_ENV === "development"
         ? 5
         : Number(boilingData.boilingTime) * 60;
-    setTimeLeft(totalTime);
+    setTimer(totalTime);
 
     const countdown = setInterval(() => {
-      setTimeLeft((prev) => {
+      setTimer((prev) => {
         const newTime = prev - 1;
         if (newTime <= 0) {
           clearInterval(countdown);
@@ -193,11 +163,6 @@ const fetchBoilingData = async (lotNo) => {
     }, 1000);
   };
 
-
-
-
-
-
   const calculateLoss = () => {
     const initialVolume = Number(boilingData.initialWortVolume);
     const lossVolume = (initialVolume * 0.05).toFixed(2);
@@ -208,12 +173,6 @@ const fetchBoilingData = async (lotNo) => {
       postBoilWortVolume: postBoilVolume,
     }));
   };
-
-
-
-
-
-
 
   const handleNextProcess = async () => {
     try {
@@ -235,11 +194,6 @@ const fetchBoilingData = async (lotNo) => {
       setShowErrorModal(true);
     }
   };
-
-
-
-
-
 
   return (
     <form
@@ -317,7 +271,7 @@ const fetchBoilingData = async (lotNo) => {
         </div>
 
         <div className={styles.gridItem}>
-          <label className={styles.bLabel07}>첫 번째 홉 </label>
+          <label className={styles.bLabel07}>첫 번째 홉</label>
           <input
             className={styles.bItem07}
             type="text"
@@ -339,7 +293,7 @@ const fetchBoilingData = async (lotNo) => {
         </div>
 
         <div className={styles.gridItem}>
-          <label className={styles.bLabel09}>두 번째 홉 </label>
+          <label className={styles.bLabel09}>두 번째 홉</label>
           <input
             className={styles.bItem09}
             type="text"
@@ -361,7 +315,7 @@ const fetchBoilingData = async (lotNo) => {
         </div>
 
         <div className={styles.gridItem}>
-          <label className={styles.bLabel11}>공정 상태 (g)</label>
+          <label className={styles.bLabel11}>공정 상태</label>
           <input
             className={styles.bItem11}
             type="text"
@@ -372,7 +326,7 @@ const fetchBoilingData = async (lotNo) => {
         </div>
 
         <div className={styles.gridItem}>
-          <label className={styles.bLabel12}>메모 사항 (g)</label>
+          <label className={styles.bLabel12}>메모 사항</label>
           <input
             className={styles.bItem12}
             type="text"
@@ -383,26 +337,42 @@ const fetchBoilingData = async (lotNo) => {
         </div>
       </div>
 
-      {timeLeft > 0 && (
-          <p>
-            남은시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
-          </p>
+      {/* 타이머와 버튼을 포함하는 컨테이너 */}
+      <div className={styles.controlsContainer}>
+        {/* 타이머 영역 - 타이머가 있을 때만 표시 */}
+        {timer > 0 ? (
+          <div className={styles.timerContainer}>
+            <div className={styles.timerLabel}>끓임 공정 진행 중</div>
+            <div className={styles.timerDisplay}>
+              <img src="/images/clock-un.gif" alt="타이머" className={styles.timerIcon} />
+              <div className={styles.timerValue}>
+                {String(Math.floor(timer / 60)).padStart(2, '0')}:{String(timer % 60).padStart(2, '0')}
+              </div>
+            </div>
+            <div className={styles.timerStatus}>
+              {isProcessing ? "공정이 진행 중입니다" : ""}
+            </div>
+          </div>
+        ) : (
+          <div></div> /* 타이머가 없을 때 빈 공간 생성 */
         )}
-
-      <div className={styles.fGridItem}>
-        <button
-          className={styles.fSaveButton}
-          onClick={() => {
-            if (buttonLabel === "등록하기") {
-              setShowConfirmModal(true);
-            } else {
-              handleNextProcess();
-            }
-          }}
-          disabled={isProcessing}
-        >
-          {buttonLabel}
-        </button>
+        
+        {/* 버튼 영역 - 항상 오른쪽에 배치 */}
+        <div className={styles.buttonContainer}>
+          <button
+            className={styles.bSaveButton}
+            onClick={() => {
+              if (buttonLabel === "등록하기") {
+                setShowConfirmModal(true);
+              } else {
+                handleNextProcess();
+              }
+            }}
+            disabled={isProcessing}
+          >
+            {buttonLabel}
+          </button>
+        </div>
       </div>
 
       {/* 모달 처리 */}
@@ -416,12 +386,12 @@ const fetchBoilingData = async (lotNo) => {
         onClose={() => setShowConfirmModal(false)}
       />
 
-
       <SuccessfulModal
         isOpen={showSuccessModal}
         message="데이터가 성공적으로 저장되었습니다!"
         onClose={() => {
           setShowSuccessModal(false);
+          startTimer(); // 타이머 시작
         }}
       />
       <ErrorModal

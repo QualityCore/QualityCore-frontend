@@ -276,181 +276,186 @@ function LabelInfo() {
     };
 
     return (
-        <div>
+        <div className={labelInfos.pageContainer}>
+          <div className={labelInfos.mainContainer}>
             <div className={labelInfos.titleBar}>
-                <button
-                    className={labelInfos.createButton}
-                    onClick={() => setShowModal(true)}
+              <h1 className={labelInfos.pageTitle}>라벨 정보</h1>
+              <div className={labelInfos.searchArea}>
+                <button 
+                  className={labelInfos.createButton}
+                  onClick={() => setShowModal(true)}
                 >
-                    라벨등록
+                  라벨등록
                 </button>
                 <input
-                    type="text"
-                    placeholder="맥주명을 입력하세요..."
-                    className={labelInfos.searchInput}
-                    value={searchKeyword}
-                    onChange={(e) => setSearchKeyword(e.target.value)}
+                  type="text"
+                  placeholder="맥주명을 입력하세요..."
+                  className={labelInfos.searchInput}
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
                 />
                 <button className={labelInfos.searchButton} onClick={handleSearchClick}>
-                    검색
+                  검색
                 </button>
+              </div>
             </div>
-
-            {/* 모달 등록창 */}
-            <Modal
-                isOpen={showModal}
-                onRequestClose={handleModalClose}
-                className={labelInfos.modalContent}
-                overlayClassName={labelInfos.modalOverlay}
-            >
-                <form onSubmit={handleSubmit}>
-                    <label>맥주 종류:</label>
-                    <select
-                        value={beerType}
-                        onChange={(e) => setBeerType(e.target.value)}
-                        required
-                    >
-                        <option value="" disabled>
-                            선택하세요
-                        </option>
-                        <option value="아이유맥주">아이유맥주</option>
-                        <option value="장원영맥주">장원영맥주</option>
-                        <option value="카리나맥주">카리나맥주</option>
-                    </select>
-
-                    <label>생산일자:</label>
-                    <input
-                        type="date"
-                        value={productionDate}
-                        onChange={(e) => setProductionDate(e.target.value)}
-                        required
-                    />
-
-                    <label>납품업체:</label>
-                    <select
-                        value={supplier}
-                        onChange={(e) => setSupplier(e.target.value)}
-                        required
-                    >
-                        <option value="" disabled>
-                            선택하세요
-                        </option>
-                        {suppliers.map((supplierName, index) => (
-                            <option key={index} value={supplierName}>
-                                {supplierName}
-                            </option>
-                        ))}
-                    </select>
-
-                    <button type="submit" className={labelInfos.createButton1}>
-                        등록
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleModalClose}
-                        className={labelInfos.closeButton}
-                    >
-                        X
-                    </button>
-                </form>
-
-                {beerType && (
-                    <canvas
-                        ref={canvasRef}
-                        width={800}
-                        height={600}
-                        style={{ border: "1px solid #ccc", marginTop: "20px" }}
-                    ></canvas>
-                )}
-            </Modal>
-
-            {/* 상세조회 모달 */}
-            <Modal
-                isOpen={showDetailModal}
-                onRequestClose={handleDetailModalClose}
-                className={labelInfos.detailModalContent}
-                overlayClassName={labelInfos.detailModalOverlay}
-            >
-                <h2>라벨 상세 정보</h2>
-                <div>
-                    <img src={selectedLabel.labelImage} loading="lazy" alt="병 이미지" />
-                    <p>
-                        <strong>배치번호 :</strong> {selectedLabel.labelId}
-                    </p>
-                    <p>
-                        <strong>제품명 :</strong> {selectedLabel.productName}
-                    </p>
-                    <p>
-                        <strong>용량 :</strong> {selectedLabel.sizeSpec}
-                    </p>
-                    <p>
-                        <strong>알코올도수 :</strong> {selectedLabel.alcPercent}%
-                    </p>
-                    <p>
-                        <strong>생산일자 :</strong>{" "}
-                        {new Date(selectedLabel.productionDate).toLocaleDateString()}
-                    </p>
-                    <p>
-                        <strong>납품업체 :</strong> {selectedLabel.beerSupplier}
-                    </p>
-                </div>
-                <button className={labelInfos.delete} onClick={handleDeleteLabel}>
-                    삭제
-                </button>
-                <button
-                    type="button"
-                    onClick={handleDetailModalClose}
-                    className={labelInfos.closeButton}
-                >
-                    X
-                </button>
-            </Modal>
-
-            {/* 성공 모달 */}
-            <Modal
-                isOpen={isSuccessModal}
-                onRequestClose={closeSuccessModal}
-                className={labelInfos.successModal}
-                overlayClassName="modal-overlay"
-            >
-                <div className={labelInfos.successModalHeader}>
-                    <button
-                        className={labelInfos.successCloseButton}
-                        onClick={closeSuccessModal}
-                    >
-                        X
-                    </button>
-                </div>
-                <div className={labelInfos.successModalContent}>
-                    <SuccessAnimation />
-                    <p className={labelInfos.successMessage}>{modalMessage}</p>
-                </div>
-            </Modal>
-            {/* 기존 테이블 */}
+      
+            {/* 카드 컨테이너 */}
             <div className={labelInfos.cardContainer}>
-                {Array.isArray(labelInfo) && labelInfo.length > 0 ? (
-                    labelInfo.map((item) => (
-                        <LabelInfoCard key={item.labelId} item={item} handleDetailModalOpen={handleDetailModalOpen} />
-                    ))
-                ) : (
-                    <div className={labelInfos.noLabelMessage}>
-                        라벨 정보가 없습니다.
-                    </div>
-                )}
+              {Array.isArray(labelInfo) && labelInfo.length > 0 ? (
+                labelInfo.map((item) => (
+                  <LabelInfoCard key={item.labelId} item={item} handleDetailModalOpen={handleDetailModalOpen} />
+                ))
+              ) : (
+                <div className={labelInfos.noLabelMessage}>
+                  라벨 정보가 없습니다.
+                </div>
+              )}
             </div>
-
-            {/* 페이지네이션 */}
-            <div style={{ position: "fixed", bottom: "80px", left: "58%", transform: "translateX(-50%)" }}>
-                <Pagination
-                    page={pageInfo.page}
-                    totalPages={pageInfo.totalPages}
-                    first={pageInfo.first}
-                    last={pageInfo.last}
-                    onPageChange={handlePageChange}
-                />
+      
+            {/* 페이지네이션 - fixed 위치 대신 컨테이너 안에 배치 */}
+            <div className={labelInfos.paginationContainer}>
+              <Pagination
+                page={pageInfo.page}
+                totalPages={pageInfo.totalPages}
+                first={pageInfo.first}
+                last={pageInfo.last}
+                onPageChange={handlePageChange}
+              />
             </div>
+          </div>
+          
+         
+      
+          {/* 상세조회 모달 */}
+          <Modal
+            isOpen={showDetailModal}
+            onRequestClose={handleDetailModalClose}
+            className={labelInfos.detailModalContent}
+            overlayClassName={labelInfos.detailModalOverlay}
+          >
+            <button
+              type="button"
+              onClick={handleDetailModalClose}
+              className={labelInfos.closeButton}
+            >
+              X
+            </button>
+            <h2>라벨 상세 정보</h2>
+            <div>
+              <img src={selectedLabel.labelImage} loading="lazy" alt="병 이미지" />
+              <p>
+                <strong>배치번호 :</strong> {selectedLabel.labelId}
+              </p>
+              <p>
+                <strong>제품명 :</strong> {selectedLabel.productName}
+              </p>
+              <p>
+                <strong>용량 :</strong> {selectedLabel.sizeSpec}
+              </p>
+              <p>
+                <strong>알코올도수 :</strong> {selectedLabel.alcPercent}%
+              </p>
+              <p>
+                <strong>생산일자 :</strong>{" "}
+                {new Date(selectedLabel.productionDate).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>납품업체 :</strong> {selectedLabel.beerSupplier}
+              </p>
+            </div>
+            <button className={labelInfos.delete} onClick={handleDeleteLabel}>
+              삭제
+            </button>
+          </Modal>
+      
+          {/* 성공 모달 */}
+         {/* 모달 등록창 */}
+<Modal
+  isOpen={showModal}
+  onRequestClose={handleModalClose}
+  className={labelInfos.modalContent}
+  overlayClassName={labelInfos.modalOverlay}
+>
+  <button
+    type="button"
+    onClick={handleModalClose}
+    className={labelInfos.closeButton}
+  >
+    X
+  </button>
+  <h2 className={labelInfos.modalTitle}>라벨 등록</h2>
+  
+  <div className={labelInfos.modalLayout}>
+    <div className={labelInfos.formContainer}>
+      <form onSubmit={handleSubmit}>
+        <div className={labelInfos.formGroup}>
+          <label>맥주 종류:</label>
+          <select
+            value={beerType}
+            onChange={(e) => setBeerType(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              선택하세요
+            </option>
+            <option value="아이유맥주">아이유맥주</option>
+            <option value="장원영맥주">장원영맥주</option>
+            <option value="카리나맥주">카리나맥주</option>
+          </select>
         </div>
-    );
+
+        <div className={labelInfos.formGroup}>
+          <label>생산일자:</label>
+          <input
+            type="date"
+            value={productionDate}
+            onChange={(e) => setProductionDate(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className={labelInfos.formGroup}>
+          <label>납품업체:</label>
+          <select
+            value={supplier}
+            onChange={(e) => setSupplier(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              선택하세요
+            </option>
+            {suppliers.map((supplierName, index) => (
+              <option key={index} value={supplierName}>
+                {supplierName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className={labelInfos.formActions}>
+          <button type="submit" className={labelInfos.createButton1}>
+            등록
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div className={labelInfos.previewContainer}>
+      {beerType && (
+        <div className={labelInfos.canvasContainer}>
+          <canvas
+            ref={canvasRef}
+            width={800}
+            height={600}
+          ></canvas>
+        </div>
+      )}
+    </div>
+  </div>
+</Modal>
+        </div>
+      );
 }
 
 export default LabelInfo;

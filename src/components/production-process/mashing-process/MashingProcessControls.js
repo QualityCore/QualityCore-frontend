@@ -363,26 +363,42 @@ const MashingProcessControls = ({ workOrder }) => {
           />
         </div>
 
-        {timer > 0 && (
-          <p>
-            남은시간: {Math.floor(timer / 60)}분 {timer % 60}초
-          </p>
-        )}
-
-        <div className={styles.mGridItem}>
-          <button
-            className={styles.mSaveButton}
-            onClick={() => {
-              if (buttonLabel === "등록하기") {
-                setShowConfirmModal(true); // ✅ "등록하기"일 때만 선택 모달창 띄움
-              } else {
-                handleNextProcess(); // ✅ "다음 공정 이동"일 때는 바로 실행
-              }
-            }}
-            disabled={isProcessing}
-          >
-            {buttonLabel}
-          </button>
+        {/* 타이머와 버튼을 포함하는 컨테이너 */}
+        <div className={styles.controlsContainer}>
+          {/* 타이머 영역 - 타이머가 있을 때만 표시 */}
+          {timer > 0 ? (
+            <div className={styles.timerContainer}>
+              <div className={styles.timerLabel}>당화 공정 진행 중</div>
+              <div className={styles.timerDisplay}>
+                <img src="/images/clock-un.gif" alt="타이머" className={styles.timerIcon} />
+                <div className={styles.timerValue}>
+                  {String(Math.floor(timer / 60)).padStart(2, '0')}:{String(timer % 60).padStart(2, '0')}
+                </div>
+              </div>
+              <div className={styles.timerStatus}>
+                {isProcessing ? "공정이 진행 중입니다" : ""}
+              </div>
+            </div>
+          ) : (
+            <div></div> /* 타이머가 없을 때 빈 공간 생성 */
+          )}
+          
+          {/* 버튼 영역 - 항상 오른쪽에 배치 */}
+          <div className={styles.buttonContainer}>
+            <button
+              className={styles.mSaveButton}
+              onClick={() => {
+                if (buttonLabel === "등록하기") {
+                  setShowConfirmModal(true);
+                } else {
+                  handleNextProcess();
+                }
+              }}
+              disabled={isProcessing}
+            >
+              {buttonLabel}
+            </button>
+          </div>
         </div>
 
         {/* ✅ "등록하기"일 때만 선택 모달창을 띄움 */}
