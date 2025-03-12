@@ -208,37 +208,73 @@ const CarbonationProcessControls = () => {
                     ></textarea>
                 </div>
 
-                {/* 타이머 표시 */}
-                {timeLeft > 0 && (
-                    <div className={styles.gridItem}>
-                        <p className={styles.timer}>
-                            남은 시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
-                        </p>
-                    </div>
-                )}
-
-                {/* 등록 버튼 */}
-                <div className={styles.gridItem}>
-                    <button
-                        className={styles.submitButton}
-                        onClick={() => {
+             {/* 타이머 표시 */}
+                    <div className={styles.gridItem} style={{ gridColumn: "1 / -1" }}>
+                    {timeLeft > 0 ? (
+                        <div className={styles.controlsContainer}>
+                        <div className={styles.timerContainer}>
+                            <div className={styles.timerLabel}>탄산 조정 공정 진행 중</div>
+                            <div className={styles.timerDisplay}>
+                            <img src="/images/clock-un.gif" alt="타이머" className={styles.timerIcon} />
+                            <div className={styles.timerValue}>
+                                {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
+                            </div>
+                            </div>
+                            <div className={styles.timerStatus}>
+                            {isTimerRunning ? "공정이 진행 중입니다" : ""}
+                            </div>
+                            <div className={styles.progressBar}>
+                            <div 
+                                className={styles.progressBarFill} 
+                                style={{ 
+                                width: `${(1 - timeLeft / (Number(carbonationData.carbonationTime) * 60)) * 100}%` 
+                                }}
+                            ></div>
+                            </div>
+                        </div>
+                        
+                        <div className={styles.buttonContainer}>
+                            <button
+                            className={styles.submitButton}
+                            onClick={() => {
+                                if (buttonLabel === "등록하기" && !confirmModalShown) {
+                                setShowConfirmModal(true);
+                                } else if (buttonLabel === "다음 공정으로 이동") {
+                                handleNextProcess();
+                                } else if (buttonLabel === "공정 진행 중" && !isTimerRunning) {
+                                handleCompleteProcess();
+                                }
+                            }}
+                            disabled={isProcessing || (buttonLabel === "공정 진행 중" && isTimerRunning) || !isNextProcessEnabled && buttonLabel === "다음 공정으로 이동"}
+                            >
+                            {buttonLabel === "등록하기"
+                                ? "등록하기"
+                                : buttonLabel === "공정 진행 중"
+                                ? `공정 진행 중 (${Math.floor(timeLeft / 60)}분 ${timeLeft % 60}초)`
+                                : "다음 공정으로 이동"}
+                            </button>
+                        </div>
+                        </div>
+                    ) : (
+                        <div className={styles.buttonContainer} style={{ display: "flex", justifyContent: "flex-end" }}>
+                        <button
+                            className={styles.submitButton}
+                            onClick={() => {
                             if (buttonLabel === "등록하기" && !confirmModalShown) {
                                 setShowConfirmModal(true);
                             } else if (buttonLabel === "다음 공정으로 이동") {
                                 handleNextProcess();
-                            } else if (buttonLabel === "공정 진행 중" && !isTimerRunning) {
+                            } else if (buttonLabel === "공정 완료") {
                                 handleCompleteProcess();
                             }
-                        }}
-                        disabled={isProcessing || (buttonLabel === "공정 진행 중" && isTimerRunning) || !isNextProcessEnabled && buttonLabel === "다음 공정으로 이동"}
-                    >
-                        {buttonLabel === "등록하기"
-                            ? "등록하기"
-                            : buttonLabel === "공정 진행 중"
-                                ? `공정 진행 중 (${Math.floor(timeLeft / 60)}분 ${timeLeft % 60}초)`
-                                : "다음 공정으로 이동"}
-                    </button>
-                </div>
+                            }}
+                            disabled={isProcessing || !isNextProcessEnabled && buttonLabel === "다음 공정으로 이동"}
+                        >
+                            {buttonLabel}
+                        </button>
+                        </div>
+                    )}
+                    </div>
             </div>
 
             {/* 모달 처리 */}
