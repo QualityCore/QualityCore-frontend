@@ -18,15 +18,13 @@ const FiltrationProcessControls = ({ workOrder }) => {
     notes: "",
   });
 
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(0); // 단일 타이머 상태 사용
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(null);
   const [filtrationId, setFiltrationId] = useState(null);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [buttonLabel, setButtonLabel] = useState("등록하기");
   const navigate = useNavigate();
 
@@ -37,32 +35,29 @@ const FiltrationProcessControls = ({ workOrder }) => {
     }
   }, []);
 
- 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFiltrationData((prev) => ({ ...prev, [name]: value }));
   };
 
-
   const handleSave = async () => {
     try {
       const saveData = {
         ...filtrationData,
-        processStatus:"진행중",
+        processStatus: "진행중",
       };
 
       const response = await filtrationProcessApi.saveFiltrationProcess(saveData);
       console.log("✅ 여과 공정 저장 성공:", response);
       
-       // ✅ 서버 응답에서 filtrationId를 받아서 저장해야 함
-       if (response?.result?.saveFiltrationProcess?.filtrationId) {
+      // ✅ 서버 응답에서 filtrationId를 받아서 저장해야 함
+      if (response?.result?.saveFiltrationProcess?.filtrationId) {
         setFiltrationId(response.result.saveFiltrationProcess.filtrationId);
-    } else {
+      } else {
         console.warn("⚠️ 서버 응답에 filtrationId가 없습니다.");
-    }
+      }
   
-      setFiltrationData((prev)=>({...prev,processStatus:"진행 중"}));
+      setFiltrationData((prev) => ({...prev, processStatus: "진행 중"}));
       setShowSuccessModal(true);
       setButtonLabel("다음 공정 이동");
     } catch (error) {
@@ -70,35 +65,30 @@ const FiltrationProcessControls = ({ workOrder }) => {
     }
   };
 
-
-
-
-   // ✅ 타이머 실행 함수
-   const startTimer = () => {
-    setIsTimerRunning(true);
+  // ✅ 타이머 실행 함수
+  const startTimer = () => {
+    setIsProcessing(true);
     const totalTime =
       process.env.NODE_ENV === "development"
         ? 5
         : Number(filtrationData.filtrationTime) * 60;
-        setTimeLeft(totalTime);
+    
+    setTimer(totalTime); // 타이머 상태 설정
 
-        const countdown = setInterval(() => {
-          setTimeLeft((prev) => {
-            const newTime = prev - 1;
-            if (newTime <= 0) {
-              clearInterval(countdown);
-              setIsProcessing(false);
-              setShowCompleteModal(true); // ✅ 완료 모달 표시
-              setButtonLabel("다음 공정 이동");
-              return 0;
-            }
-            return newTime;
-          });
-        }, 1000);
-      };
-
-  
-
+    const countdown = setInterval(() => {
+      setTimer((prev) => {
+        const newTime = prev - 1;
+        if (newTime <= 0) {
+          clearInterval(countdown);
+          setIsProcessing(false);
+          setShowCompleteModal(true); // ✅ 완료 모달 표시
+          setButtonLabel("다음 공정 이동");
+          return 0;
+        }
+        return newTime;
+      });
+    }, 1000);
+  };
 
   const handleNextProcess = async () => {
     if (!filtrationData.recoveredWortVolume || isNaN(Number(filtrationData.recoveredWortVolume))) {
@@ -123,29 +113,25 @@ const FiltrationProcessControls = ({ workOrder }) => {
       recoveredWortVolume: filtrationData.recoveredWortVolume,
       lossVolume: filtrationData.lossVolume,
       actualEndTime: new Date().toISOString(),
-  });
+    });
 
-  try {
+    try {
       await filtrationProcessApi.updateFiltrationProcess(filtrationId, {
-          recoveredWortVolume: Number(filtrationData.recoveredWortVolume),
-          lossVolume: Number(filtrationData.lossVolume),
-          actualEndTime: new Date().toISOString(),
+        recoveredWortVolume: Number(filtrationData.recoveredWortVolume),
+        lossVolume: Number(filtrationData.lossVolume),
+        actualEndTime: new Date().toISOString(),
       });
 
       navigate("/boiling-process");
-  } catch (error) {
+    } catch (error) {
       console.error(`❌ 여과공정 업데이트 실패 (FiltrationID: ${filtrationId}):`, error);
       setShowErrorModal(true);
-  }
-};
+    }
+  };
 
-
-
-useEffect(() => {
-  console.log("🟢 현재 filtrationId:", filtrationId);
-}, [filtrationId]);
-
-
+  useEffect(() => {
+    console.log("🟢 현재 filtrationId:", filtrationId);
+  }, [filtrationId]);
 
   useEffect(() => {
     const savedMashingData = sessionStorage.getItem("mashingData");
@@ -159,22 +145,19 @@ useEffect(() => {
         ? parsedData.waterInputVolume * 0.14
         : 0;
 
-
-       // ✅ 회수된 워트량 설정 (waterInputVolume 사용)
+      // ✅ 회수된 워트량 설정 (waterInputVolume 사용)
       const wortVolume = parsedData.waterInputVolume
-      ? parsedData.waterInputVolume - calculatedAbsorption
-      : 0;
+        ? parsedData.waterInputVolume - calculatedAbsorption
+        : 0;
 
       setFiltrationData((prev) => ({
         ...prev,
         lotNo: parsedData.lotNo || prev.lotNo,
         grainAbsorption: calculatedAbsorption.toFixed(1),
-        recoveredWortVolume: wortVolume.toFixed(1), // 소수점 2자리 고정
+        recoveredWortVolume: wortVolume.toFixed(1), // 소수점 1자리 고정
       }));
     }
   }, []);
-
-  
 
   useEffect(() => {
     if (!showCompleteModal) return; // ✅ 타이머가 끝난 후 실행
@@ -184,8 +167,8 @@ useEffect(() => {
         ? (prev.recoveredWortVolume * 0.05).toFixed(1) // ✅ 5% 계산 (소수점 1자리)
         : 0;
   
-        const updatedWortVolume = prev.recoveredWortVolume
-        ? (prev.recoveredWortVolume - lossVolume).toFixed(1) // ✅ 손실량 반영한 회수된 워트량
+      const updatedWortVolume = prev.recoveredWortVolume
+        ? (Number(prev.recoveredWortVolume) - Number(lossVolume)).toFixed(1) // ✅ 손실량 반영한 회수된 워트량
         : 0;
   
       console.log(`✅ 손실량 계산 완료: ${lossVolume} L`); // 🔍 로그 확인
@@ -193,10 +176,7 @@ useEffect(() => {
   
       return { ...prev, lossVolume, recoveredWortVolume: updatedWortVolume };
     });
-  }, [showCompleteModal]); // ✅ 완료 모달이 닫힐 때 실행
-
-
-  
+  }, [showCompleteModal]); // ✅ 완료 모달이 열릴 때 실행
 
   return (
     <form
@@ -281,12 +261,6 @@ useEffect(() => {
           />
         </div>
 
-        {timeLeft > 0 && (
-          <p>
-            남은시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
-          </p>
-        )}
-
         {/* 타이머와 버튼을 포함하는 컨테이너 */}
         <div className={styles.controlsContainer}>
           {/* 타이머 영역 - 타이머가 있을 때만 표시 */}
@@ -300,7 +274,7 @@ useEffect(() => {
                 </div>
               </div>
               <div className={styles.timerStatus}>
-              {isProcessing ? "공정이 진행 중입니다" : ""}
+                {isProcessing ? "공정이 진행 중입니다" : ""}
               </div>
             </div>
           ) : (
@@ -324,10 +298,7 @@ useEffect(() => {
             </button>
           </div>
         </div>
-
-
-
-       
+        
         {/* 모달 처리 */}
         <ConfirmModal
           isOpen={showConfirmModal}
@@ -336,7 +307,6 @@ useEffect(() => {
             setShowConfirmModal(false);
             setTimeout(() => {
               handleSave();
-              startTimer(); // 저장 후 타이머 시작
             }, 100);
           }}
           onClose={() => setShowConfirmModal(false)}
