@@ -1,12 +1,15 @@
+// src/apis/production-process/maturation-detail/maturationDetailApi.js
+
+const API_BASE = 'http://localhost:8080/maturationdetails';
+
 // 작업지시 ID 목록 조회
 export const fetchLineMaterial = async () => {
     try {
-        const response = await fetch('http://localhost:8080/maturationdetails/linematerial');
+        const response = await fetch(`${API_BASE}/linematerial`);
         if (!response.ok) {
-            throw new Error(`요청 실패: ${response.statusText}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('작업지시 ID 목록 조회:', data);
         return data.result.lineMaterials || [];
     } catch (error) {
         console.error('작업지시 ID 목록 조회 실패:', error);
@@ -14,60 +17,46 @@ export const fetchLineMaterial = async () => {
     }
 };
 
-// 숙성 상세 공정 등록 API
+// 숙성 상세 공정 등록
 export const createMaturationDetails = async (maturationDetailsDTO) => {
     try {
-        console.log("🔵 [API 요청 시작] POST /maturationdetails/register");
-        console.log("📤 요청 데이터:", maturationDetailsDTO);
-
-        const response = await fetch('http://localhost:8080/maturationdetails/register', {
+        const response = await fetch(`${API_BASE}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(maturationDetailsDTO),
         });
-
-        console.log("🟢 [API 응답 수신] 상태 코드:", response.status);
-
         if (!response.ok) {
-            const errorResponse = await response.json();
-            console.error("🔴 [API 오류 응답]:", errorResponse);
-            throw new Error(`요청 실패: ${errorResponse.message || response.statusText}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        const data = await response.json();
-        console.log("🟢 [API 성공 응답]:", data);
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error("🔴 [API 호출 실패]:", error);
+        console.error('숙성 상세 공정 등록 실패:', error);
         throw error;
     }
 };
 
-
-// 숙성 상세 공정 종료시간 수정
+// 실제 종료시간 업데이트
 export const completeEndTime = async (maturationId) => {
     try {
-        const response = await fetch(`http://localhost:8080/maturationdetails/update/${maturationId}`, {
+        const response = await fetch(`${API_BASE}/update/${maturationId}`, {
             method: 'PUT',
         });
         if (!response.ok) {
-            throw new Error(`요청 실패: ${response.statusText}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        console.log('숙성 상세 공정 종료시간 수정 성공:', data);
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error('숙성 상세 공정 종료시간 수정 실패:', error);
+        console.error('숙성 상세 공정 종료시간 업데이트 실패:', error);
         throw error;
     }
 };
 
-// LOT_NO에 따른 숙성 상세 공정 상태 업데이트
+// 숙성 상세 공정 상태 업데이트
 export const updateMaturationDetailsStatus = async (maturationDetailsDTO) => {
     try {
-        const response = await fetch('http://localhost:8080/maturationdetails/update', {
+        const response = await fetch(`${API_BASE}/update`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,72 +64,35 @@ export const updateMaturationDetailsStatus = async (maturationDetailsDTO) => {
             body: JSON.stringify(maturationDetailsDTO),
         });
         if (!response.ok) {
-            throw new Error(`요청 실패: ${response.statusText}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        console.log('숙성 상세 공정 상태 업데이트 성공:', data);
-        return data;
+        return await response.json();
     } catch (error) {
         console.error('숙성 상세 공정 상태 업데이트 실패:', error);
         throw error;
     }
 };
 
-// 숙성 시간대별 전체 조회
-export const fetchAllTimedLogs = async (maturationId = '') => {
+// 숙성 상세 공정 ID 목록 조회
+export const fetchMaturationIds = async () => {
     try {
-        const params = new URLSearchParams();
-        if (maturationId) params.append('maturationId', maturationId);
-
-        const url = `http://localhost:8080/maturationdetails/timed-logs?${params.toString()}`;
-        const response = await fetch(url);
+        const response = await fetch('http://localhost:8080/maturationtimedlog/maturation-ids');
         if (!response.ok) {
-            throw new Error(`요청 실패: ${response.statusText}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('숙성 시간대별 전체 조회 성공:', data);
-        return data.result.logs || [];
+        return data.result.maturationIds || [];
     } catch (error) {
-        console.error('숙성 시간대별 전체 조회 실패:', error);
+        console.error('숙성 상세 공정 ID 목록 조회 실패:', error);
         throw error;
     }
 };
 
-// 전체조회
-export const fetchAllMaturation = async () => {
-    try {
-        const url = "http://localhost:8080/maturationdetails/maturation";
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`요청 실패: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log("숙성 전체 조회 성공:", data);
-        return data.result.maturationDetail || [];
-    } catch (error) {
-        console.error("숙성 전체 조회 실패:", error);
-        throw error;
-    }
+// API 모듈 export
+export const maturationDetailApi = {
+    fetchLineMaterial,
+    createMaturationDetails,
+    completeEndTime,
+    updateMaturationDetailsStatus,
+    fetchMaturationIds,
 };
-
-// 상세조회
-export const fetchMaturationById = async (maturationId) => {
-    try {
-        const url = `http://localhost:8080/maturationdetails/maturation/${maturationId}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`요청 실패: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log("숙성 상세 조회 성공:", data);
-        return data.result.maturationDetail || null;
-    } catch (error) {
-        console.error("숙성 상세 조회 실패:", error);
-        throw error;
-    }
-};
-
