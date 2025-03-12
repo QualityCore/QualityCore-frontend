@@ -17,6 +17,7 @@ import FiltrationProcessPage from "./pages/production-process/filtration-process
 import ProcessTrackingPage from "./pages/routing/processTracking";
 import MaterialManagementPage from "./pages/productionPlan/Material";
 import BoilingProcessPage from "./pages/production-process/boiling-process/BoilingProcessPage";
+import CoolingProcessPage from "./pages/production-process/cooling-process/CoolingProcessPage";
 import ProcessStage from "./components/standard-information/ProcessStage";
 import EquipmentInfo from "./components/standard-information/EquipmentInfo";
 import LabelInfo from "./components/standard-information/LabelInfo";
@@ -122,6 +123,7 @@ const App = () => {
             <Route path="/carbonation-process" element={<ProtectedLayout><CarbonationProcessPage/></ProtectedLayout>}/>
             <Route path="/packaging_and-shipment" element={<ProtectedLayout><PackagingAndShipmentPage/></ProtectedLayout>}/>
             <Route path="/boiling-process" element={<ProtectedLayout><BoilingProcessPage /></ProtectedLayout>} />
+            <Route path="/cooling-process" element={<ProtectedLayout><CoolingProcessPage /></ProtectedLayout>} />
 
 
 

@@ -13,10 +13,14 @@ const BoilingProcessControls = ({ workOrder }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showTempReachedModal, setShowTempReachedModal] = useState(false); // 온도 도달 모달
   const [buttonLabel, setButtonLabel] = useState("등록하기");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [timer, setTimer] = useState(0); // 타이머 변수 통일
+  const [timer, setTimer] = useState(0);
+  const [temperature, setTemperature] = useState(20); // 초기 온도
+  const [isHeating, setIsHeating] = useState(false); // 온도 상승 여부
   const navigate = useNavigate();
+
   const [boilingData, setBoilingData] = useState({
     lotNo: "",
     boilingTime: 60,
@@ -138,6 +142,23 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
+  // ✅ 온도 상승 애니메이션 실행 함수
+  const startHeating = () => {
+    setIsHeating(true);
+    const heatingInterval = setInterval(() => {
+      setTemperature((prevTemp) => {
+        const newTemp = prevTemp + 5;
+        if (newTemp >= 100) {
+          clearInterval(heatingInterval);
+          setShowTempReachedModal(true); // ✅ 온도 도달 모달 표시
+          setIsHeating(false);
+          return 100;
+        }
+        return newTemp;
+      });
+    }, 1000);
+  };
+
   // ✅ 타이머 실행 함수
   const startTimer = () => {
     setIsProcessing(true);
@@ -163,6 +184,7 @@ const BoilingProcessControls = ({ workOrder }) => {
     }, 1000);
   };
 
+  // ✅ 끓임 손실량 및 끓임 후 워트량 계산
   const calculateLoss = () => {
     const initialVolume = Number(boilingData.initialWortVolume);
     const lossVolume = (initialVolume * 0.05).toFixed(2);
@@ -176,18 +198,12 @@ const BoilingProcessControls = ({ workOrder }) => {
 
   const handleNextProcess = async () => {
     try {
-      const { boilingId, postBoilWortVolume, boilLossVolume } = boilingData;
-  
-      if (!boilingId) {
-        throw new Error("Boiling ID is missing!");
-      }
-  
-      await boilingProcessApi.updateBoilingProcess(boilingId, {
-        postBoilWortVolume,
-        boilLossVolume,
+      await boilingProcessApi.updateBoilingProcess(boilingData.boilingId, {
+        postBoilWortVolume: boilingData.postBoilWortVolume,
+        boilLossVolume: boilingData.boilLossVolume,
         actualEndTime: new Date().toISOString(),
       });
-  
+
       navigate("/cooling-process");
     } catch (error) {
       setShowErrorModal(true);
@@ -342,9 +358,14 @@ const BoilingProcessControls = ({ workOrder }) => {
           <div className={styles.timerContainer}>
             <div className={styles.timerLabel}>끓임 공정 진행 중</div>
             <div className={styles.timerDisplay}>
-              <img src="/images/clock-un.gif" alt="타이머" className={styles.timerIcon} />
+              <img
+                src="/images/clock-un.gif"
+                alt="타이머"
+                className={styles.timerIcon}
+              />
               <div className={styles.timerValue}>
-                {String(Math.floor(timer / 60)).padStart(2, '0')}:{String(timer % 60).padStart(2, '0')}
+                {String(Math.floor(timer / 60)).padStart(2, "0")}:
+                {String(timer % 60).padStart(2, "0")}
               </div>
             </div>
             <div className={styles.timerStatus}>
@@ -354,7 +375,7 @@ const BoilingProcessControls = ({ workOrder }) => {
         ) : (
           <div></div> /* 타이머가 없을 때 빈 공간 생성 */
         )}
-        
+
         {/* 버튼 영역 - 항상 오른쪽에 배치 */}
         <div className={styles.buttonContainer}>
           <button
@@ -389,9 +410,19 @@ const BoilingProcessControls = ({ workOrder }) => {
         message="데이터가 성공적으로 저장되었습니다!"
         onClose={() => {
           setShowSuccessModal(false);
-          startTimer(); // 타이머 시작
+          startHeating(); // ✅ 온도 상승 시작
         }}
       />
+
+      <ConfirmModal
+        isOpen={showTempReachedModal}
+        message="설정한 온도에 도달하여 작업을 시작합니다."
+        onConfirm={() => {
+          setShowTempReachedModal(false);
+          startTimer(); // ✅ 타이머 시작
+        }}
+      />
+
       <ErrorModal
         isOpen={showErrorModal}
         message="데이터 저장에 실패했습니다. 다시 시도해주세요."
