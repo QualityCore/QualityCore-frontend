@@ -144,14 +144,12 @@ const BoilingProcessControls = ({ workOrder }) => {
 
   const startHeating = () => {
     if (isHeating) return; // 이미 실행 중이면 중복 실행 방지
-  
     setIsHeating(true);
-    console.log("🔥 온도 상승 시작!");
   
     const heatingInterval = setInterval(() => {
       setTemperature((prevTemp) => {
         const newTemp = prevTemp + 5;
-        console.log(`🌡️ 현재 온도: ${newTemp}°C`);
+       
   
         if (newTemp >= boilingData.temperature) {
           // ✅ 설정 온도 도달
@@ -454,6 +452,8 @@ const BoilingProcessControls = ({ workOrder }) => {
         message="데이터 저장에 실패했습니다. 다시 시도해주세요."
         onClose={() => setShowErrorModal(false)}
       />
+
+      
       <CompleteModal
         isOpen={showCompleteModal}
         message={["끓임 공정이 완료되었습니다.", "다음 공정으로 이동하세요."]}

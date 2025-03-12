@@ -135,7 +135,7 @@ const CoolingProcessControls = ({ workOrder }) => {
   const handleNextProcess = async () => {
     try {
      
-      navigate("/maturation-details");
+      navigate("/fermentation-details");
     } catch (error) {
       setShowErrorModal(true);
     }
@@ -184,7 +184,7 @@ const CoolingProcessControls = ({ workOrder }) => {
         </div>
 
         <div className={styles.gridItem}>
-          <label className={styles.cLabel03}>냉각 목표 온도 (°C):</label>
+          <label className={styles.cLabel03}>냉각 온도 (°C):</label>
           <input
             className={styles.cItem03}
             type="text"
