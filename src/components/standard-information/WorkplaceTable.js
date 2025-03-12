@@ -256,6 +256,7 @@ import "../../styles/standard-information/workplace-table.css";
             <th>작업 담당자</th>
             <th>생산가능 용량</th>
             <th>용량단위</th>
+            <th>작업</th>
           </tr>
         </thead>
         <tbody>
