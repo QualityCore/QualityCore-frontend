@@ -12,9 +12,12 @@ const CoolingProcessControls = ({ workOrder }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showCoolingCompleteModal, setShowCoolingCompleteModal] = useState(false);
   const [buttonLabel, setButtonLabel] = useState("등록하기");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isCooling, setIsCooling] = useState(false);
+  const [temperature, setTemperature] = useState(100); // 🔥 초기 온도 100°C
   const [timeLeft, setTimeLeft] = useState(false);
   const navigate = useNavigate();
   const [coolingData, setCoolingData] = useState({
@@ -68,6 +71,25 @@ const CoolingProcessControls = ({ workOrder }) => {
     }
   };
   
+
+   // ✅ 온도 감소 애니메이션 시작
+   const startCooling = () => {
+    if (isCooling) return; // 이미 실행 중이면 중복 실행 방지
+
+    setIsCooling(true);
+    const coolingInterval = setInterval(() => {
+      setTemperature((prevTemp) => {
+        const newTemp = prevTemp - 5; // 5°C씩 감소
+        if (newTemp <= coolingData.targetTemperature) {
+          clearInterval(coolingInterval);
+          setShowCoolingCompleteModal(true); // ✅ 목표 온도 도달 시 모달 표시
+          setIsCooling(false);
+          return coolingData.targetTemperature;
+        }
+        return newTemp;
+      });
+    }, 1000); // ✅ 1초마다 5°C 감소
+  };
 
 
 
@@ -147,9 +169,9 @@ const CoolingProcessControls = ({ workOrder }) => {
           <label className={styles.cLabel02}>냉각 소요 시간 (분):</label>
           <input
             className={styles.cItem02}
-            type="number"
+            type="text"
             name="coolingTime"
-            value={coolingData.coolingTime}
+            value={`${temperature}°C / ${coolingData.targetTemperature}°C`}
             onChange={handleChange}
           />
         </div>
@@ -181,7 +203,7 @@ const CoolingProcessControls = ({ workOrder }) => {
           <label className={styles.cLabel05}>공정 상태:</label>
           <input
             className={styles.cItem05}
-            type="number"
+            type="text"
             name="processStatus"
             value={coolingData.processStatus}
             onChange={handleChange}
@@ -238,11 +260,7 @@ const CoolingProcessControls = ({ workOrder }) => {
       <SuccessfulModal
         isOpen={showSuccessModal}
         message="데이터가 성공적으로 저장되었습니다!"
-        onClose={() => {
-          setShowSuccessModal(false);
-          startTimer();
-        }}
-      />
+        onClose={() => { setShowSuccessModal(false); startCooling(); }} />
       <ErrorModal
         isOpen={showErrorModal}
         message="데이터 저장에 실패했습니다. 다시 시도해주세요."
@@ -253,6 +271,9 @@ const CoolingProcessControls = ({ workOrder }) => {
         message={["끓임 공정이 완료되었습니다.", "다음 공정으로 이동하세요."]}
         onClose={() => setShowCompleteModal(false)}
       />
+
+<ConfirmModal isOpen={showCoolingCompleteModal} message="설정한 온도에 도달하여 작업을 시작합니다." onConfirm={() => { setShowCoolingCompleteModal(false); startTimer(); }} />
+
     </form>
   );
 };
