@@ -24,29 +24,50 @@ const CoolingProcessControls = ({ workOrder }) => {
     coolantTemperature: 2, //  냉각수 온도 (°C)
     notes: "",
     processStatus: "진행 중",
-  });
+  }); 
 
 
 // LOT_NO가 변경되면 데이터 로드
-useEffect(() => {
-    if (workOrder?.lotNo) {
-      setCoolingData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
-      fetchCoolingData(workOrder.lotNo);
+  useEffect(() => {
+    const savedLotNo = localStorage.getItem("selectedLotNo");
+    if (savedLotNo) {
+      setCoolingData((prev) => ({ ...prev, lotNo: savedLotNo }));
     }
-  }, [workOrder]);
+  }, []);
 
 
+  // LOT_NO가 변경되면 자재 정보 및 여과 공정 데이터 조회 실행
+    useEffect(() => {
+      if (coolingData.lotNo) {
+       fetchCoolingData(coolingData.lotNo);
+      }
+    }, [coolingData.lotNo]);
 
+    
    // 냉각 공정 데이터 가져오기
    const fetchCoolingData = async (lotNo) => {
     try {
-        const workOrders = await coolingProcessApi.getWorkOrderList();
-        console.log("✅ 가져온 작업 지시 목록:", workOrders);
+      console.log("✅ fetchCoolingData 실행 - LOT_NO:", lotNo);
+      const response = await coolingProcessApi.getCoolingProcessByLotNo(lotNo);
+  
+      if (response && response.result) {
+        console.log("✅ 서버에서 받은 냉각 공정 데이터:", response.result);
+        setCoolingData((prev) => ({
+          ...prev,
+          coolingTime: response.result.coolingTime || prev.coolingTime,
+          targetTemperature: response.result.targetTemperature || prev.targetTemperature,
+          coolantTemperature: response.result.coolantTemperature || prev.coolantTemperature,
+          notes: response.result.notes || prev.notes,
+          processStatus: response.result.processStatus || prev.processStatus,
+        }));
+      } else {
+        console.warn("⚠️ 서버에서 받은 냉각 공정 데이터가 없음:", response);
+      }
     } catch (error) {
-        console.error("❌ 냉각 공정 데이터 불러오기 실패:", error);
+      console.error("❌ 냉각 공정 데이터 불러오기 실패:", error);
     }
-};
-
+  };
+  
 
 
 
@@ -74,6 +95,21 @@ useEffect(() => {
     }, 1000);
   };
 
+ 
+
+  const handleSave = async () => {
+    try {
+      setIsProcessing(true);
+      await coolingProcessApi.createCoolingProcess(coolingData);
+      setShowSuccessModal(true);
+      setButtonLabel("다음 공정 이동");    
+    } catch (error) {
+      setShowErrorModal(true);
+    }
+  };
+
+
+
   const handleNextProcess = async () => {
     try {
       const { boilingId, postBoilWortVolume, boilLossVolume } = coolingData;
@@ -91,19 +127,6 @@ useEffect(() => {
       navigate("/cooling-process");
     } catch (error) {
       setShowErrorModal(true);
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      setIsProcessing(true);
-      await coolingProcessApi.updateBoilingProcess(coolingData);
-      setShowSuccessModal(true);
-      setIsTimerRunning(true); // 타이머 시작
-      setTimeLeft(Number(coolingData.coolingTime) * 60);
-    } catch (error) {
-      setShowErrorModal(true);
-      setIsProcessing(false);
     }
   };
 

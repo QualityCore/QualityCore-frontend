@@ -5,7 +5,8 @@ import CoolingProcessControls from "../../../components/production-process/cooli
 const CoolingProcessPage = () => {
     
         const [coolingDataList, setCoolingDataList] = useState([]);
-        const [selectedWorkOrder, setSelectedWorkOrder] = useState({});
+        const [selectedWorkOrder, setSelectedWorkOrder] = useState(null);
+
       
         useEffect(() => {
             const fetchCoolingData = async () => {

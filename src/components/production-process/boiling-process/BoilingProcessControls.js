@@ -301,7 +301,7 @@ const BoilingProcessControls = ({ workOrder }) => {
             value={boilingData.secondHopName}
             readOnly
           />
-        </div>
+        </div> 
 
         <div className={styles.gridItem}>
           <label className={styles.bLabel10}>두 번째 홉 투입량 (g)</label>
