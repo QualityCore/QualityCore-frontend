@@ -68,10 +68,12 @@ const FiltrationProcessControls = ({ workOrder }) => {
   // ✅ 타이머 실행 함수
   const startTimer = () => {
     setIsProcessing(true);
+
     const totalTime =
       process.env.NODE_ENV === "development"
         ? 5
         : Number(filtrationData.filtrationTime) * 60;
+
     
     setTimer(totalTime); // 타이머 상태 설정
 
@@ -89,6 +91,7 @@ const FiltrationProcessControls = ({ workOrder }) => {
       });
     }, 1000);
   };
+
 
   const handleNextProcess = async () => {
     if (!filtrationData.recoveredWortVolume || isNaN(Number(filtrationData.recoveredWortVolume))) {

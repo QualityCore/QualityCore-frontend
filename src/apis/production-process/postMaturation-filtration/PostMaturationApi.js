@@ -29,7 +29,7 @@ export const createPostMaturationFiltration = async (dto) => {
       const errorData = await response.json();
       throw new Error(errorData.message || '등록 실패');
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('공정 등록 실패:', error);
@@ -45,7 +45,7 @@ export const updatePostMaturationFiltration = async (mfiltrationId, updateData) 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         turbidity: updateData.turbidity,
-        actualEndTime: updateData.actualEndTime.toISOString()
+        actualEndTime: updateData.actualEndTime
       })
     });
 
@@ -53,7 +53,7 @@ export const updatePostMaturationFiltration = async (mfiltrationId, updateData) 
       const errorData = await response.json();
       throw new Error(errorData.message || '업데이트 실패');
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('탁도 업데이트 실패:', error);
@@ -61,20 +61,31 @@ export const updatePostMaturationFiltration = async (mfiltrationId, updateData) 
   }
 };
 
+const formatDateToISOStringWithoutMs = (date) => {
+  return date.toISOString().split(".")[0]; // 밀리초 제거
+};
+
 // 공정 상태 업데이트
 export const updatePostMaturationFiltrationStatus = async (dto) => {
   try {
+    // 날짜 필드가 있다면 변환
+    const updatedDto = {
+      ...dto,
+      actualEndTime: dto.actualEndTime ? formatDateToISOStringWithoutMs(new Date(dto.actualEndTime)) : null,
+      expectedEndTime: dto.expectedEndTime ? formatDateToISOStringWithoutMs(new Date(dto.expectedEndTime)) : null
+    };
+
     const response = await fetch(`${API_BASE}/update`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dto)
+      body: JSON.stringify(updatedDto)
     });
 
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || '상태 업데이트 실패');
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('상태 업데이트 실패:', error);
