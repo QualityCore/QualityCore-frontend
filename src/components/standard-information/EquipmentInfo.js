@@ -176,7 +176,6 @@ function EquipmentInfo() {
     };
 
     // 설비 등록 핸들러
-    // 설비 등록 핸들러
     const handleSubmit = async (event) => {
         event.preventDefault();
 

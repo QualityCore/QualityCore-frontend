@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/filtrationproess";
+const BASE_URL = "http://localhost:8080/filtrationprocess";
 
 const filtrationProcessApi = {
 
@@ -31,6 +31,29 @@ const filtrationProcessApi = {
   },
 
 
+   // 📌 여과 공정 전체 조회
+   getAllFiltrationProcesses: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/all`);
+      return response.data.result?.data || [];
+    } catch (error) {
+      console.error("❌ 여과 공정 전체 조회 실패:", error);
+      throw error;
+    }
+  },
+
+  // 📌 특정 LOT_NO의 여과 공정 상세 조회
+  getFiltrationProcessesByLotNo: async (lotNo) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/filtration/${lotNo}`);
+      return response.data.result?.data || [];
+    } catch (error) {
+      console.error(`❌ 여과 공정 상세 조회 실패 (LOT_NO: ${lotNo}):`, error);
+      throw error;
+    }
+  },
+
+
 
   // 📌 여과공정 데이터 저장 (CREATE)
   saveFiltrationProcess: async (filtrationRequestData) => {
@@ -49,20 +72,21 @@ const filtrationProcessApi = {
 
   // 📌 특정 FiltrationID의 회수된 워트량, 손실량 및 실제 종료시간 업데이트
   updateFiltrationProcess: async (filtrationId, updatePayload) => {
+    console.log("updatePayload : ", updatePayload)
     if (!filtrationId) {
       console.error("❌ updateFiltrationProcess 요청 실패: filtrationId가 없습니다.");
       throw new Error("Filtration ID is required");
     }
 
     try {
-      console.log(`📌 API 요청: PUT /filtrationproess/update/${filtrationId}`, updatePayload);
+      console.log(`📌 API 요청: PUT /filtrationprocess/update/${filtrationId}`, updatePayload);
 
       const response = await axios.put(
         `${BASE_URL}/update/${filtrationId}`,
         {
-          recoveredWortVolume: updatePayload.recoveredWortVolume || null,
-          lossVolume: updatePayload.lossVolume || null,
-          actualEndTime: updatePayload.actualEndTime || new Date().toISOString(),
+          recoveredWortVolume: updatePayload.recoveredWortVolume ? Number(updatePayload.recoveredWortVolume) : 0,
+          lossVolume: updatePayload.lossVolume ? Number(updatePayload.lossVolume) : 0,
+          actualEndTime: updatePayload.actualEndTime ? new Date(updatePayload.actualEndTime).toISOString() : new Date().toISOString(),
         },
         {
           headers: { "Content-Type": "application/json" },
