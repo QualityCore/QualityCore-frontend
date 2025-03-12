@@ -17,6 +17,7 @@ const FiltrationProcessControls = ({ workOrder }) => {
     notes: "",
   });
 
+  const [timer, setTimer] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -24,19 +25,40 @@ const FiltrationProcessControls = ({ workOrder }) => {
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [buttonLabel, setButtonLabel] = useState("등록하기");
 
-useEffect(() => {
-  const savedLotNo = localStorage.getItem("selectedLotNo");
-  if (savedLotNo) {
-    setFiltrationData((prev) => ({ ...prev, lotNo: savedLotNo }));
-  }
-}, []);
-
-
-
+  useEffect(() => {
+    const savedLotNo = localStorage.getItem("selectedLotNo");
+    if (savedLotNo) {
+      setFiltrationData((prev) => ({ ...prev, lotNo: savedLotNo }));
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFiltrationData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // 타이머 시작 (테스트 환경에서는 5초)
+  const startTimer = () => {
+    setIsProcessing(true);
+    const totalTime =
+      process.env.NODE_ENV === "development"
+        ? 5
+        : Number(filtrationData.filtrationTime) * 60;
+    setTimer(totalTime);
+
+    const countdown = setInterval(() => {
+      setTimer((prev) => {
+        const newTime = prev - 1;
+        if (newTime <= 0) {
+          clearInterval(countdown);
+          setIsProcessing(false);
+          setShowCompleteModal(true); // ✅ 완료 모달 표시
+          setButtonLabel("다음 공정 이동");
+          return 0;
+        }
+        return newTime;
+      });
+    }, 1000);
   };
 
   const handleSave = async () => {
@@ -111,8 +133,6 @@ useEffect(() => {
           />
         </div>
 
-      
-
         <div className={styles.fGridItem}>
           <label className={styles.fLabel07}>공정 상태</label>
           <input className={styles.fItem07} type="text" value={filtrationData.processStatus} readOnly />
@@ -129,20 +149,42 @@ useEffect(() => {
           />
         </div>
 
-        <div className={styles.fGridItem}>
-          <button
-            className={styles.fSaveButton}
-            onClick={() => {
-              if (buttonLabel === "등록하기") {
-                setShowConfirmModal(true);
-              } else {
-                handleNextProcess();
-              }
-            }}
-            disabled={isProcessing}
-          >
-            {buttonLabel}
-          </button>
+        {/* 타이머와 버튼을 포함하는 컨테이너 */}
+        <div className={styles.controlsContainer}>
+          {/* 타이머 영역 - 타이머가 있을 때만 표시 */}
+          {timer > 0 ? (
+            <div className={styles.timerContainer}>
+              <div className={styles.timerLabel}>여과 공정 진행 중</div>
+              <div className={styles.timerDisplay}>
+                <img src="/images/clock-un.gif" alt="타이머" className={styles.timerIcon} />
+                <div className={styles.timerValue}>
+                  {String(Math.floor(timer / 60)).padStart(2, '0')}:{String(timer % 60).padStart(2, '0')}
+                </div>
+              </div>
+              <div className={styles.timerStatus}>
+              {isProcessing ? "공정이 진행 중입니다" : ""}
+              </div>
+            </div>
+          ) : (
+            <div></div> /* 타이머가 없을 때 빈 공간 생성 */
+          )}
+          
+          {/* 버튼 영역 - 항상 오른쪽에 배치 */}
+          <div className={styles.buttonContainer}>
+            <button
+              className={styles.fSaveButton}
+              onClick={() => {
+                if (buttonLabel === "등록하기") {
+                  setShowConfirmModal(true);
+                } else {
+                  handleNextProcess();
+                }
+              }}
+              disabled={isProcessing}
+            >
+              {buttonLabel}
+            </button>
+          </div>
         </div>
 
         {/* 모달 처리 */}
@@ -151,7 +193,10 @@ useEffect(() => {
           message="등록하시겠습니까?"
           onConfirm={() => {
             setShowConfirmModal(false);
-            setTimeout(handleSave, 100);
+            setTimeout(() => {
+              handleSave();
+              startTimer(); // 저장 후 타이머 시작
+            }, 100);
           }}
           onClose={() => setShowConfirmModal(false)}
         />
@@ -159,7 +204,9 @@ useEffect(() => {
         <SuccessfulModal
           isOpen={showSuccessModal}
           message="데이터가 성공적으로 저장되었습니다!"
-          onClose={() => setShowSuccessModal(false)}
+          onClose={() => {
+            setShowSuccessModal(false);
+          }}
         />
 
         <ErrorModal

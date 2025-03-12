@@ -1,328 +1,476 @@
 @font-face {
-    font-family: 'Pretendard-Regular'; /* 폰트 이름 */
+    font-family: 'Pretendard-Regular';
     src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
-}
-
-body {
-    font-family: 'Pretendard-Regular', sans-serif; 
-}
-
-.mainBar {
-    border: none;
-    background-color: white;
-    width: 1430px;
-    height: 700px;
-    margin-left: 65px;
-    margin-top: 40px;
-    border-radius: 20px;
-    padding-top: 45px;
-    overflow: auto;
-}
-
-
-/* 메인 테이블 */
-.workTable {
-    width: 80%;
-    height: 15%;
-    margin-left: 135px;
-    border-spacing: 0;
-    border-collapse: collapse;
-}
-
-.workTable th,
-.workTable td {
-    border: 1px solid #000;
-    text-align: center;
-}
-
-.workTable th {
-    background-color: #D9D9D9;
-}
-
-.workTable th:nth-child(1),
-.workTable td:nth-child(1) {
-    width: 100px;
-}
-
-.workTable th:nth-child(2),
-.workTable td:nth-child(2) {
-    width: 100px;
-}
-
-.workTable th:nth-child(3),
-.workTable td:nth-child(3) {
-    width: 100px;
-}
-
-.workTable th:nth-child(4),
-.workTable td:nth-child(4) {
-    width: 100px;
-}
-
-.tableName {
-    margin-left: 135px;
-    margin-top: -20px;
-}
-
-/* BOM쪽  */
-
-.bomCreateButton {
-    float: right;
-    margin-top: 30px;
-    margin-right: 150px;
-    padding: 5px 15px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    transition: background-color 0.3sease, transform 0.2sease;
-}
-
-.bomCreateButton:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-}
-
-/* 클릭 시 효과 */
-.bomCreateButton:active {
-    background-color: #3e8e41;
-    transform: scale(0.95);
-}
-
-
-.bomTable {
-    border: 1px solid;
-    margin-left: 132px;
-    width: 1150px;
-    border-spacing: 0;
-    border-collapse: collapse;
-    margin-top: 70px;
-}
-
-.bomTable th,
-.bomTable td {
-    border: 1px solid;
-    text-align: center;
-}
-
-.bomTable th {
-    background-color: #D9D9D9;
-}
-
-/* 특이사항쪽 */
-.footName {
-    margin-left: 130px;
-    margin-top: 20px;
-}
-
-.etc {
-    width: 1145px;
-    height: 140px;
-    margin-left: 130px;
-}
-
-.createButton {
-    float: right;
-    margin-top: 10px;
-    margin-right: 150px;
-    padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    transition: background-color 0.3sease, transform 0.2sease;
-}
-
-.createButton:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-}
-
-/* 클릭 시 효과 */
-.createButton:active {
-    background-color: #3e8e41;
-    transform: scale(0.95);
-}
-
-.planInfoName {
-    display: flex;
-}
-
-.planSelect {
-    height: 25px;
-}
-
-.planH3 {
-    margin: 0;
-    margin-bottom: 20px;
-    margin-left: 130px;
-}
-
-.bomTable th:nth-child(1),
-.bomTable td:nth-child(1) {
-    width: 180px;
-}
-
-.bomTable th:nth-child(2),
-.bomTable td:nth-child(2) {
-    width: 180px;
-}
-
-.bomTable th:nth-child(3),
-.bomTable td:nth-child(3) {
-    width: 180px;
-}
-
-.bomTable th:nth-child(4),
-.bomTable td:nth-child(4) {
-    width: 180px;
-}
-
-.bomTable th:nth-child(5),
-.bomTable td:nth-child(5) {
-    width: 180px;
-}
-
-/* 성공 알림 모달 */
-.successModal {
+  }
+  
+  body {
+    font-family: 'Pretendard-Regular', sans-serif;
+  }
+  
+  /* 메인 컨테이너 */
+  .mainBar {
     width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
+    height: calc(100vh - 160px);
+    padding: 1.5rem;
+    background-color: white;
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    overflow-x: hidden; /* 가로 스크롤바 제거 */
+    box-sizing: border-box;
+    margin: 1rem auto;
+    max-width: 1450px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  /* 생산계획 선택 영역 */
+  .planInfoName {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #edf2f7;
+    background-color: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 10px;
+  }
+  
+  .planH3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2C5282;
+    font-weight: 600;
+    white-space: nowrap;
+    position: relative;
+    padding-left: 1rem;
+  }
+  
+  .planH3::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.2em;
+    background: linear-gradient(to bottom, #4776E0, #8BB3FF);
+    border-radius: 2px;
+  }
+  
+  .planSelect {
+    flex: 1;
+    height: 40px;
+    padding: 0 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e0;
+    font-size: 0.95rem;
+    color: #2D3748;
+    background-color: white;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+    max-width: 500px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .planSelect:focus {
+    border-color: #5687F2;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+  }
+  
+  /* 작업지시 정보 테이블 */
+  .workTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 2.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .workTable th,
+  .workTable td {
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .workTable th {
+    background: linear-gradient(to right, #EBF4FF, #EBF8FF);
+    color: #2B6CB0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    width: 150px;
+    position: relative;
+  }
+  
+  .workTable tr:nth-child(even) {
+    background-color: #F7FAFC;
+  }
+  
+  .workTable tr:nth-child(odd) {
+    background-color: white;
+  }
+  
+  .workTable td {
+    color: #2D3748;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  /* BOM 테이블 */
+  .bomTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .bomTable th,
+  .bomTable td {
+    padding: 0.8rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+  }
+  
+  .bomTable th {
+    background: linear-gradient(to right, #2B6CB0, #4299E1);
+    color: white;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bomTable tr:nth-child(even) {
+    background-color: #F0F5FF;
+  }
+  
+  .bomTable tr:nth-child(odd) {
+    background-color: white;
+  }
+  
+  .bomTable tr:hover {
+    background-color: #EBF8FF;
+  }
+  
+  .bomTable td:first-child {
+    font-weight: 600;
+    color: #2B6CB0;
+  }
+  
+  /* 특이사항 영역 */
+  .footName {
+    font-size: 1.2rem;
+    color: #2C5282;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 1rem;
+  }
+  
+  .footName::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.2em;
+    background: linear-gradient(to bottom, #4776E0, #8BB3FF);
+    border-radius: 2px;
+  }
+  
+  .etc {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    font-family: 'Pretendard-Regular', sans-serif;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .etc:focus {
+    border-color: #5687F2;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+    background-color: white;
+  }
+  
+  /* 등록 버튼 */
+  .createButton {
+    align-self: flex-end;
+    padding: 0.9rem 2.2rem;
+    background: linear-gradient(to right, #4C51BF, #6875F5);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(66, 153, 225, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .createButton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  
+  .createButton:hover {
+    background: linear-gradient(to right, #434190, #5A67D8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(66, 153, 225, 0.4);
+  }
+  
+  .createButton:hover::after {
+    transform: translateX(100%);
+  }
+  
+  .createButton:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+  }
+  
+  /* 성공 모달 */
+  .successModal {
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     position: fixed;
-    top: 30%;
-    left: 55%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1050;
-}
-
-
-.successModalOverlay {
-    background: rgba(0, 0, 0, 0.5);
+    border-top: 4px solid #48BB78;
+  }
+  
+  .successModalHeader {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+  
+  .successCloseButton {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #718096;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .successCloseButton:hover {
+    background-color: #F7FAFC;
+    color: #2D3748;
+  }
+  
+  .successModalContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .successMessage {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2D3748;
+    margin-top: 1rem;
+  }
+  
+  /* 경고 모달 */
+  .warningModal {
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    border-top: 4px solid #F56565;
+  }
+  
+  .warningModalOverlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.successModalHeader {
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+  }
+  
+  .warningModalHeader {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-.successCloseButton {
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+  
+  .warningCloseButton {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 1.2rem;
     cursor: pointer;
-}
-
-.successModalTitle {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.successModalContent {
-    padding: 20px;
-}
-
-.successCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    margin-left: 375px;
-}
-
-.successMessage {
-    margin-left: 35px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
-}
-
-/* 경고 알림 모달 */
-.warningModal {
-    width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 1500;
-}
-
-.warningModalOverlay {
-    position: fixed;  /* 화면에 고정 */
-    top: 0; left: 0; right: 0; bottom: 0;  /* 전체 화면을 덮도록 */
-    display: flex;  /* 모달을 중앙 정렬 */
-    justify-content: center;  /* 수평 중앙 */
-    align-items: center;  /* 수직 중앙 */
-    background: none;  /* 배경을 제거 */
-}
-
-.warningModalHeader {
+    color: #718096;
+    width: 30px;
+    height: 30px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
-}
-
-.warningCloseButton {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.warningModalTitle {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.warningModalContent {
-    padding: 20px;
-}
-
-.warningCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    margin-left: 375px;
-}
-
-.warningMessage {
-    margin-left: 80px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
-}
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .warningCloseButton:hover {
+    background-color: #F7FAFC;
+    color: #2D3748;
+  }
+  
+  .warningModalContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .warningMessage {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2D3748;
+    margin-top: 1rem;
+  }
+  
+  /* 반응형 디자인 */
+  @media (max-width: 1200px) {
+    .mainBar {
+      max-width: 95%;
+      padding: 1.2rem;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .planInfoName {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+    
+    .planSelect {
+      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
+    }
+    
+    .workTable th,
+    .workTable td,
+    .bomTable th,
+    .bomTable td {
+      padding: 0.8rem;
+      font-size: 0.85rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .mainBar {
+      padding: 1rem;
+      height: auto;
+      min-height: calc(100vh - 80px);
+    }
+    
+    .workTable {
+      width: 100%;
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .bomTable {
+      width: 100%;
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .createButton {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .successModal,
+    .warningModal {
+      width: 90%;
+      max-width: 350px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .workTable th,
+    .workTable td,
+    .bomTable th,
+    .bomTable td {
+      padding: 0.6rem;
+      font-size: 0.8rem;
+    }
+    
+    .footName {
+      font-size: 1rem;
+    }
+    
+    .etc {
+      min-height: 100px;
+    }
+    
+    .createButton {
+      padding: 0.7rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }
