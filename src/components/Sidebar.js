@@ -192,8 +192,8 @@ const Sidebar = () => {
               <li><Link to="/filtration-process">여과공정</Link></li>
               <li><Link to="/boiling-process">끓임공정</Link></li>
               <li><Link to="/cooling-process">냉각공정</Link></li>
-              <li><Link to="/fermentation_details ">발효상세공정</Link></li>
-              <li><Link to="/maturation-details">숙성상세공정</Link></li>
+              <li><Link to="/fermentation-details ">발효공정</Link></li>
+              <li><Link to="/maturation-details">숙성공정</Link></li>
               <li><Link to="/post-maturation-filtration">숙성 후 여과공정</Link></li>
               <li><Link to="/carbonation-process">탄산조정공정</Link></li>
               <li><Link to="/packaging_and-shipment">패키징 및 출하 공정</Link></li>
