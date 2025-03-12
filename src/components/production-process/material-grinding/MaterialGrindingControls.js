@@ -28,6 +28,10 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData, lineMaterial,
 
 
 
+
+  
+
+
   // 🔹 타이머 설정: 공정 완료까지 남은 시간 카운트다운
   useEffect(() => {
     if (timer > 0) {

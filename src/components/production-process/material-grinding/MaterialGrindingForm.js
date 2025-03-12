@@ -6,10 +6,21 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
   const [formData, setFormData] = useState(grindingData);
   const [lineMaterial, setLineMaterial] = useState([]);
   const [selectedMaterial, setSelectedMaterial] = useState("");
+  const [uniqueLotNos, setUniqueLotNos] = useState([]);
 
   useEffect(() => {
     setFormData(grindingData); // ✅ grindingData 변경 시 formData를 최신 상태로 업데이트
   }, [grindingData]);
+
+
+  useEffect(() => {
+    if (lineMaterial) {
+      // 중복 제거한 LOT_NO 목록 설정
+      const uniqueLots = [...new Set(lineMaterial.map((item) => item.lotNo))];
+      setUniqueLotNos(uniqueLots);
+    }
+  }, [lineMaterial])
+
 
   // 작업지시 ID 목록 가져오기 (중복 제거 추가)
   useEffect(() => {
@@ -18,34 +29,37 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         // ✅ 작업지시 목록 조회
         const response = await materialGrindingApi.getLineMaterial();
         console.log("📌 작업지시 목록 API 응답:", response);
-  
+
         const data = response.result?.lineMaterials || [];
         console.log("📌 추출된 작업지시 목록:", data);
-  
+
         if (!Array.isArray(data) || data.length === 0) {
           console.warn("⚠️ 작업지시 ID 데이터 없음!");
           return;
         }
-  
+
         // ✅ 분쇄공정에 등록된 작업지시 ID 조회
-        const grindingResponse = await materialGrindingApi.getMaterialGrindingList();
+        const grindingResponse =
+          await materialGrindingApi.getMaterialGrindingList();
         console.log("📌 분쇄 공정 등록된 ID 목록 응답:", grindingResponse);
-  
+
         const registeredLotNos = new Set(
           grindingResponse.result?.data?.map((item) => item.lotNo) || []
         );
         console.log("📌 분쇄 공정에 등록된 LOT_NO 목록:", registeredLotNos);
-  
+
         // ✅ 분쇄 공정에 등록되지 않은 작업지시 ID만 필터링
-        const filteredData = data.filter((item) => !registeredLotNos.has(item.lotNo));
-  
+        const filteredData = data.filter(
+          (item) => !registeredLotNos.has(item.lotNo)
+        );
+
         console.log("📌 필터링된 작업지시 목록:", filteredData);
         setLineMaterial(filteredData);
       } catch (error) {
         console.error("❌ 작업지시 ID 목록 불러오기 실패:", error);
       }
     };
-  
+
     fetchLineMaterial();
   }, []);
 
@@ -178,11 +192,37 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
     });
   };
 
+  useEffect(() => {
+    if (
+      grindingData &&
+      grindingData.lotNo &&
+      grindingData.mainMaterialInputVolume
+    ) {
+      const existingData = sessionStorage.getItem("mashingData");
+      const parsedData = existingData ? JSON.parse(existingData) : {};
+
+      if (
+        parsedData.lotNo !== grindingData.lotNo ||
+        parsedData.grainRatio !== grindingData.mainMaterialInputVolume
+      ) {
+        const newData = {
+          lotNo: grindingData.lotNo,
+          grainRatio: grindingData.mainMaterialInputVolume,
+          waterRatio: grindingData.waterRatio || 0,
+          waterInputVolume: grindingData.waterInputVolume || 0,
+        };
+        sessionStorage.setItem("mashingData", JSON.stringify(newData));
+        console.log("✅ mashingData 저장 완료:", newData);
+      }
+    } else {
+      console.warn(
+        "⚠️ grindingData가 불완전하거나 아직 로드되지 않음:",
+        grindingData
+      );
+    }
+  }, [grindingData]);
+
   return (
-
-
-
-    
     <div className={styles.materialGrindingTableContainer}>
       <h2 className={styles.grindingTitle}>분쇄 공정 원재료 투입 공정</h2>
 
@@ -191,16 +231,13 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           <label className={styles.gLabel01}>작업지시 ID </label>
           <select
             className={styles.gItem01}
-            name="lotNo"
-            value={formData.lotNo}
+            value={grindingData.lotNo || ""}
             onChange={handleLotNoChange}
           >
             <option value="">ID 선택</option>
-            {lineMaterial.map((item) => (
-              <option key={item.lineMaterialId} value={item.lotNo}>
-                {item.lotNo}
-              </option>
-            ))}
+             {uniqueLotNos.map((lotNo) => (
+            <option key={lotNo} value={lotNo}>{lotNo}</option>
+          ))}
           </select>
         </div>
 
@@ -286,7 +323,6 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           분
         </div>
 
-    
         <div className={styles.gGridItem}>
           <label className={styles.gLabel10}>공정 상태</label>
           <input
