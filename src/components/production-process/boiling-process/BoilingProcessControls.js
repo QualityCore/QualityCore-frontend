@@ -142,22 +142,30 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
-  // ✅ 온도 상승 애니메이션 실행 함수
   const startHeating = () => {
+    if (isHeating) return; // 이미 실행 중이면 중복 실행 방지
+  
     setIsHeating(true);
+    console.log("🔥 온도 상승 시작!");
+  
     const heatingInterval = setInterval(() => {
       setTemperature((prevTemp) => {
         const newTemp = prevTemp + 5;
-        if (newTemp >= 100) {
+        console.log(`🌡️ 현재 온도: ${newTemp}°C`);
+  
+        if (newTemp >= boilingData.temperature) {
+          // ✅ 설정 온도 도달
           clearInterval(heatingInterval);
-          setShowTempReachedModal(true); // ✅ 온도 도달 모달 표시
+          setShowTempReachedModal(true); // ✅ 목표 온도 도달 시 모달 표시
           setIsHeating(false);
-          return 100;
+          return boilingData.temperature;
         }
         return newTemp;
       });
-    }, 1000);
+    }, 1000); // ✅ 1초마다 5°C 상승
   };
+
+
 
   // ✅ 타이머 실행 함수
   const startTimer = () => {
@@ -210,6 +218,20 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
+  useEffect(() => {
+    if (boilingData.temperature === undefined) {
+      console.log("🚨 boilingData.temperature 값이 없음! 기본값 설정");
+      setBoilingData((prev) => ({ ...prev, temperature: 100 })); // 기본 100°C 설정
+    }
+    if (temperature === undefined) {
+      console.log("🚨 temperature 값이 없음! 기본값 설정");
+      setTemperature(20); // 기본 20°C 설정
+    }
+  }, [boilingData.temperature, temperature]);
+
+
+
+  
   return (
     <form
       className={styles.boilingProcessForm}
@@ -244,10 +266,14 @@ const BoilingProcessControls = ({ workOrder }) => {
           <label className={styles.bLabel03}>끓임 온도 (°C)</label>
           <input
             className={styles.bItem03}
-            type="number"
+            type="text"
             name="temperature"
-            value={boilingData.temperature}
-            onChange={handleChange}
+            value={
+              temperature !== undefined && boilingData.temperature !== undefined
+                ? `${temperature}°C / ${boilingData.temperature}°C`
+                : "온도 설정 중..."
+            }
+            readOnly
           />
         </div>
 
