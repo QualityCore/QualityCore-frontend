@@ -1,154 +1,140 @@
-.mainBar {
-    border: none;
-    width: 1450px;
-    height: 710px;
-    margin-left: 55px;
-    margin-bottom: 0px;
-    border-radius: 10px;
-    background: white;
-    padding-top: 10px;
-}
-
 /* Equipment.module.css */
-
-.equipmentTable {
-    width: 97%;
-    margin-top: 5px;
-    border-collapse: collapse;
-    margin-left: 15px;
-    cursor: pointer;
-    font-size: 18px;
-    text-align: center;
-    background: transparent;
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
-.equipmentTable th,
-.equipmentTable td {
-    padding: 10px;
-    text-align: center;
-    border: none;
+body {
+    font-family: 'Pretendard-Regular', sans-serif;
 }
 
-.equipmentTable thead {
+.mainBar {
+    width: 100%;
+    height: calc(100vh - 235px);
+    padding: 1.5rem;
     background-color: white;
-    font-weight: bold;
-}
-
-.equipmentTable th {
-    color: #000000;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-.equipmentTable td {
-    color: #000000;
-    font-size: 17px;
-}
-
-/* 각 열의 너비 설정 */
-.equipmentTable th:nth-child(1),
-.equipmentTable td:nth-child(1) {
-    width: 120px;
-    /* 작업장 */
-}
-
-.equipmentTable th:nth-child(2),
-.equipmentTable td:nth-child(2) {
-    width: 100px;
-    /* 공정 */
-}
-
-.equipmentTable th:nth-child(3),
-.equipmentTable td:nth-child(3) {
-    width: 130px;
-    /* 설비 */
-}
-
-.equipmentTable th:nth-child(4),
-.equipmentTable td:nth-child(4) {
-    width: 140px;
-    /* 모델명 */
-}
-
-.equipmentTable th:nth-child(5),
-.equipmentTable td:nth-child(5) {
-    width: 120px;
-    /* 제조사 */
-}
-
-.equipmentTable th:nth-child(6),
-.equipmentTable td:nth-child(6) {
-    width: 100px;
-    /* 상태 */
-}
-
-.equipmentTable th:nth-child(7),
-.equipmentTable td:nth-child(7) {
-    width: 110px;
-    /* 설치일 */
-}
-
-.searchBarInput {
-    margin-bottom: 9px;
-    padding: 8px;
-    width: 200px;
-    border-radius: 4px;
-    border: 1px solid #d1d1d1;
-}
-
-.searchButton,
-.createButton {
-    padding: 8px 25px;
-    height: 32px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 20px;
-}
-
-.searchButton:hover,
-.createButton:hover {
-    background-color: #45a049;
-    /* hover시 색상 변경 */
-    transform: translateY(-2px);
-    /* 마우스 올렸을 때 살짝 올라오는 효과 */
-}
-
-.searchButton:active,
-.createButton:active {
-    background-color: #388e3c;
-    /* 클릭했을 때 색상 변경 */
-    transform: translateY(1px);
-    /* 클릭시 눌리는 느낌 추가 */
+    border-radius: 20px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    margin: 1rem auto;
+    max-width: 1450px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
 .titleBar {
-    margin-top: 25px;
     display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(to right, #f8fafc, #f0f4f8);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .createButton {
-    margin-left: 55px;
-}
-
-.createButton1 {
-    padding: 8px 20px;
-    background-color: #4CAF50;
+    padding: 0.9rem 2rem;
+    background: linear-gradient(to right, #4C51BF, #6875F5);
     color: white;
-    font-size: 14px;
-    font-weight: 600;
     border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 325px;
-    transition: background-color 0.3sease, transform 0.2sease;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(76, 81, 191, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* 전체 모달 오버레이 */
+.createButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 81, 191, 0.4);
+    background: linear-gradient(to right, #434190, #5A67D8);
+}
+
+.createSelect,
+.searchBarInput,
+.searchButton {
+    height: 48px;
+    padding: 0 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.createSelect {
+    width: 120px;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+}
+
+.searchBarInput {
+    flex-grow: 1;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    margin: 0 1rem;
+}
+
+.searchButton {
+    width: 100px;
+    background: linear-gradient(to right, #4C51BF, #6875F5);
+    color: white;
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.searchButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 81, 191, 0.4);
+    background: linear-gradient(to right, #434190, #5A67D8);
+}
+
+.equipmentTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.equipmentTable th {
+    background: linear-gradient(to right, #EBF4FF, #E6FFFA);
+    color: #2C5282;
+    padding: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.equipmentTable td {
+    padding: 1.2rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+    color: #2D3748;
+}
+
+.equipmentRow {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.equipmentRow:hover {
+    background-color: #F0F4F8;
+    transform: scale(1.01);
+}
+
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -156,577 +142,323 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    /* 반투명 배경 */
     display: flex;
     justify-content: center;
-    /* 수평 중앙 정렬 */
     align-items: center;
-    /* 수직 중앙 정렬 */
-    z-index: 9999;
-    /* 다른 요소들 위에 표시 */
-}
-
-/* 모달 헤더 */
-.modalHeader {
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    margin-top: -25px;
-    margin-right: -35px;
-}
-
-.closeButton {
-    background-color: transparent;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    color: #000000;
-    cursor: pointer;
+    z-index: 1000;
+    padding: 1rem;
 }
 
 .modal {
-    width: 900px;
-    /* 명확하게 너비를 900px로 설정 */
-    height: 600px;
-    /* 높이를 600px로 설정 */
-    margin: 50px auto;
-    padding: 40px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 모달 내용 */
+.modalHeader {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #718096;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.closeButton:hover {
+    color: #2D3748;
+}
+
 .modalContent {
-    margin-top: 20px;
-    padding-bottom: 20px;
-    /* 하단 여백을 좀 더 추가 */
+    padding: 2rem;
+    overflow-y: auto;
+    max-height: 70vh;
 }
 
-/* 타이틀 */
-h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 30px;
+.modalContent h1 {
+    font-size: 1.5rem;
+    color: #2C5282;
+    margin-bottom: 1.5rem;
     text-align: center;
 }
 
-/* 작은 화면에 대응하는 반응형 디자인 */
-@media (max-width: 768px) {
-    .modal {
-        padding: 20px;
-        max-width: 90%;
-    }
-
-    .detailLabel {
-        font-size: 14px;
-    }
-
-    .detailValue {
-        font-size: 14px;
-    }
-}
-
-/* titleContainer에 flexbox 적용 */
 .titleContainer {
     display: flex;
-    justify-content: flex-start;
-    gap: 30px;
-    margin-bottom: 35px;
-    margin-top: 38px;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .imageContainer {
+    width: 100%;
+    height: 250px;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    border-radius: 5px;
-    width: 900px;
-    /* 고정된 너비 */
-    height: 250px;
-    /* 고정된 높이 */
+    background-color: #f8fafc;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
 }
 
 .equipmentImage {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
 }
 
-
-/* 공통 테이블 스타일 */
 .leftTable,
-.rightTable,
 .centerTable {
     width: 100%;
+    border-collapse: separate;
     border-spacing: 0;
-    /* 테이블 셀 간격 제거 */
+    margin-bottom: 1.5rem;
 }
 
-/* 테이블 헤더 스타일링 */
-.leftTable th,
-.rightTable th,
-.centerTable th {
-    padding: 12px 15px;
-    /* 셀 안의 여백 */
-    text-align: center;
-    /* 텍스트 왼쪽 정렬 */
-    font-size: 16px;
-    /* 폰트 크기 */
-    font-weight: bold;
-    /* 두꺼운 글씨 */
-    color: #000000;
-    /* 어두운 회색 글씨 */
-    border: 1px solid #ddd;
-    /* 얇은 회색 테두리 */
-}
-
-/* 테이블 셀 스타일링 */
-.leftTable td,
-.rightTable td,
-.centerTable td {
-    padding: 12px 15px;
-    /* 셀 안의 여백 */
-    text-align: center;
-    /* 텍스트 왼쪽 정렬 */
-    border: 1px solid #ddd;
-    /* 얇은 회색 테두리 */
-    background-color: #fff;
-    /* 흰색 배경 추가 */
-}
-
-/* 셀 상단과 하단에 구분선 추가 */
-.leftTable td,
-.rightTable td,
-.centerTable td {
-    border-top: 1px solid #e0e0e0;
-    /* 셀 상단 구분선 */
-    border-bottom: 1px solid #e0e0e0;
-    /* 셀 하단 구분선 */
-}
-
-/* 호버 효과 */
-.leftTable tr:hover,
-.rightTable tr:hover,
-.centerTable tr:hover {
-    background-color: #f1f1f1;
-    /* 마우스 오버 시 배경색 */
-}
-
-/* 첫 번째 열에 텍스트 볼드 처리 */
-.leftTable td:first-child,
-.rightTable td:first-child,
-.centerTable td:first-child {
-    color: #000000;
-}
-
-/* 테이블 간격 및 구분선 */
-.leftTable tr,
-.rightTable tr,
-.centerTable tr {
-    border-bottom: 1px solid #f5f5f5;
-    /* 각 행의 구분선 */
-}
-
-/* 추가적인 공간 설정 */
-.rightTable,
-.centerTable {
-    margin-bottom: 15px;
-    /* 테이블의 아래 여백 */
-}
-
-/* 오른쪽 테이블을 왼쪽 테이블과 맞춰서 정렬 */
-.titleContainer {
-    gap: 30px;
-    /* 테이블 사이에 여백 추가 */
-}
-
-/* centerTable 테이블 스타일링 */
-.centerTable {
-    width: 100%;
-    /* 테이블 너비 */
-    border-spacing: 0;
-    /* 테이블 셀 간격 제거 */
-    margin-top: 20px;
-}
-
-/* 테이블 데이터 셀 스타일 */
-.centerTable td {
-    padding: 12px 15px;
-    text-align: center;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-/* 호버 효과 */
-.centerTable tr:hover {
-    background-color: #f1f1f1;
-    /* 마우스 오버 시 배경색 */
-}
-
-/* 첫 번째 열에 대해 텍스트를 볼드 처리 */
-.centerTable td:first-child {
-    color: #000000;
-}
-
-/* 텍스트 영역 컨테이너 */
-.textareaContainer {
-    margin-bottom: 20px;
-    /* 여백 추가 */
-}
-
-/* 행 레이아웃 */
-.textareaRow {
-    display: flex;
-    gap: 15px;
-    /* 항목 사이의 여백 */
-    align-items: center;
-}
-
-/* 레이블 스타일 */
 .detailLabel {
-    font-size: 16px;
-    /* 폰트 크기 */
-    font-weight: bold;
-    /* 글씨 두께 */
-    color: #000000;
-    /* 텍스트 색상 */
-    width: 100px;
-    /* 고정 너비 */
-    text-align: center;
+    background-color: #f0f4f8;
+    color: #2C5282;
+    font-weight: 600;
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid #e2e8f0;
 }
 
-/* 텍스트 영역 셀 */
-.textareaCell {
-    flex: 1;
-    /* 가용 공간을 모두 차지 */
+.detailValue {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    background-color: white;
 }
 
-/* 텍스트 영역 스타일 */
-.textarea {
-    width: 97.5%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    resize: none;
+.tableContainer {
+    margin-bottom: 1.5rem;
 }
 
-/* 호버 시 배경색 변화 */
-.textareaCell textarea:focus {
-    background-color: #f1f1f1;
-    /* 포커스 시 배경 색 */
+.textareaContainer {
+    margin-bottom: 1.5rem;
 }
 
 .detailLabelText {
-    margin-bottom: 25px;
-}
-
-/* Modal 배경 */
-.createModal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    overflow: auto;
-}
-
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-}
-
-/* Modal 내부 */
-.createModalContent {
-    background-color: #fff;
-    padding: 20px;
-    width: 400px;
-    max-width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-}
-
-.createCloseButton {
-    font-size: 24px;
-    /* Increase the size */
-    font-weight: bold;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: #000000;
-    /* Adjust color */
-}
-
-/* 폼 레이아웃 */
-.createInputContainer {
-    margin-bottom: 15px;
-}
-
-.createInputLabel {
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.createInputField {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.createInputField[type="file"] {
-    padding: 0;
-    border: none;
-}
-
-.createInputField[type="date"] {
-    padding: 6px;
-}
-
-/* 제출 버튼 */
-.createSubmitButton {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-.createSubmitButton:hover {
-    background-color: #45a049;
-}
-
-/* 텍스트영역 스타일 */
-.createInputField[type="textarea"] {
-    resize: vertical;
-    min-height: 100px;
-}
-
-/* 폼 제목 */
-h1 {
-    font-size: 24px;
     font-weight: 600;
-    margin-bottom: 20px;
-    text-align: center;
+    color: #2C5282;
+    margin-bottom: 0.75rem;
 }
 
-.deleteButton {
-    padding: 7px 9px;
-    width: 131px;
-    height: 40px;
-    background-color: #f44336;
-    color: white;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.deleteButton:hover {
-    background-color: #e53935;
-}
-
-.editButton {
-    padding: 7px 9px;
-    width: 131px;
-    height: 40px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.editButton:hover {
-    background-color: #45a049;
+.textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 0.95rem;
 }
 
 .buttonLayout {
     display: flex;
-    gap: 10px;
     justify-content: flex-end;
-    width: 100%;
-    padding: 0 10px;
-
+    gap: 1rem;
 }
 
-/* 성공 알림 모달 */
-.successModal {
-    width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
+.editButton,
+.deleteButton {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.editButton {
+    background-color: #48BB78;
+    color: white;
+}
+
+.editButton:hover {
+    background-color: #38A169;
+}
+
+.deleteButton {
+    background-color: #E53E3E;
+    color: white;
+}
+
+.deleteButton:hover {
+    background-color: #C53030;
+}
+
+.createModal {
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    margin: 2rem auto;
+    background-color: white;
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* 변경된 부분 */
+    position: relative;
 }
 
-
-.successModalOverlay {
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.createModalContent {
+    padding: 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden; /* 가로 스크롤바 제거 */
 }
 
-.successModalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-.successCloseButton {
+.createCloseButton {
+    position: absolute;
+    top: -1rem;
+    right: -1rem;
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 1.5rem;
+    color: #718096;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.successModalTitle {
-    font-size: 20px;
-    font-weight: bold;
+.createCloseButton:hover {
+    color: #2D3748;
 }
 
-.successModalContent {
-    padding: 20px;
+.createInputContainer {
+    margin-bottom: 1rem;
 }
 
-.successCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    margin-left: 375px;
+.createInputLabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2C5282;
+    font-weight: 600;
 }
 
-.successMessage {
-    margin-left: 67px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
-}
-
-.createSelect {
-    margin-left: 948px;
-    width: 80px;
-    height: 33px;
-}
-
-/* 경고 알림 모달 */
-.warningModal {
+.createInputField {
     width: 100%;
-    max-width: 390px;
-    margin: auto;
-    padding: 15px;
-    background-color: #fff;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.createButton1 {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(to right, #4C51BF, #6875F5);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.createButton1:hover {
+    background: linear-gradient(to right, #434190, #5A67D8);
+}
+
+.successModal,
+.warningModal {
+    max-width: 400px;
+    width: 90%;
+    margin: 2rem auto;
+    background-color: white;
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 80px;
-    position: fixed;
-    top: 30%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
 }
 
-.warningModalOverlay {
-    position: fixed;
-    /* 화면에 고정 */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* 전체 화면을 덮도록 */
-    display: flex;
-    /* 모달을 중앙 정렬 */
-    justify-content: center;
-    /* 수평 중앙 */
-    align-items: center;
-    /* 수직 중앙 */
-    background: rgba(0, 0, 0, 0.5);
-
-}
-
+.successModalHeader,
 .warningModalHeader {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
 }
 
+.successCloseButton,
 .warningCloseButton {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 1.5rem;
+    color: #718096;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.warningModalTitle {
-    font-size: 20px;
-    font-weight: bold;
+.successCloseButton:hover,
+.warningCloseButton:hover {
+    color: #2D3748;
 }
 
+.successModalContent,
 .warningModalContent {
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.warningCloseButton {
-    color: black;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    border-radius: 5px;
-    margin-left: 375px;
-    font-weight: bold;
-}
-
+.successMessage,
 .warningMessage {
-    margin-left: 55px;
-    font-size: large;
-    font-family: emoji;
-    font-weight: bold;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2D3748;
 }
+
+/* 반응형 디자인 강화 */
+@media (max-width: 1200px) {
+    .mainBar {
+        max-width: 95%;
+        padding: 1.2rem;
+        height: calc(100vh - 120px);
+    }
+
+    .modal,
+    .createModal {
+        width: 95%;
+        max-width: none;
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainBar {
+        padding: 1rem;
+        height: auto;
+        min-height: calc(100vh - 80px);
+    }
+
+    .titleBar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .modal,
+    .createModal {
+        width: 95%;
+        margin: 0.5rem;
+    }
+
+    .modalContent,
+    .createModalContent {
+        padding: 1rem;
+    }
+}
+

@@ -8,6 +8,7 @@ import styles from '../../styles/productionPlan/ProductionPlanStep3.module.css';
 import { aggregateMaterialsByBeer, aggregateMaterials } from '../../utils/materialUtils';
 import MaterialRequestModal from './MaterialRequestModal';
 import { useNavigate } from "react-router-dom";
+import SuccessAnimation from "../../lottie/SuccessNotification"; // ✅ 성공 애니메이션 추가
 
 const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 }) => {
     const [rawMaterials, setRawMaterials] = useState([]);
@@ -16,6 +17,7 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
     const [packagingMaterialsByBeer, setPackagingMaterialsByBeer] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [selectedBeer, setSelectedBeer] = useState(null);
+    const [showSuccess, setShowSuccess] = useState(false); // ✅ 성공 애니메이션 상태 추가
     const navigate = useNavigate(); 
 
     console.log("formData : ",formData);
@@ -133,18 +135,20 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
         return preparedData;
     };
 
-      const handleSave = async () => {
+    const handleSave = async () => {
         const preparedData = prepareDataForSave(formData);
         console.log("Prepared data for save:", preparedData);
         try {
-          await saveMaterialPlan(preparedData);
-          alert('생산 계획이 성공적으로 저장되었습니다!');
-          navigate('/plan-overview');
+            await saveMaterialPlan(preparedData);
+            setShowSuccess(true);  // ✅ 성공 애니메이션 표시
+            setTimeout(() => {
+                navigate('/plan-overview');  // ✅ 애니메이션 후 페이지 이동
+            }, 2000); // 2초 후 이동
         } catch (error) {
-          console.error("저장 중 오류 발생:", error.response?.data);
-          alert('저장 중 오류가 발생했습니다.');
+            console.error("저장 중 오류 발생:", error.response?.data);
+            alert('저장 중 오류가 발생했습니다.');
         }
-      };
+    };
 
     if (isLoading) {
         return <div>자재 정보를 불러오는 중...</div>;
@@ -153,135 +157,147 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
       
     return (
         <div className={styles.container}>
-            <div className={styles.stepsContainer}>
-                <div className={`step ${currentStep === 1 ? 'active' : ''}`}>
-                    <div className="step-number">1</div>
-                    <span>기본정보</span>
-                </div>
-                <div className={`step ${currentStep === 2 ? 'active' : ''}`}>
-                    <div className="step-number">2</div>
-                    <span>공정정보</span>
-                </div>
-                <div className={`step ${currentStep === 3 ? 'active' : ''}`}>
-                    <div className="step-number">3</div>
-                    <span>자재정보</span>
+        {/* ✅ 성공 애니메이션 모달 */}
+        {showSuccess && (
+            <div className={styles.modalOverlay}>
+                <div className={styles.modalContent}>
+                    <SuccessAnimation />
+                    <p className={styles.successText}>생산 계획이 성공적으로 저장되었습니다!</p>
                 </div>
             </div>
+        )}
 
-            <h2 className={styles.title}>자재 정보</h2>
-
-            {hasShortageMaterilas && (
-                <div className={styles.alertBanner}>
-                    <span>❗ 일부 자재의 재고가 부족합니다. 구매신청이 필요합니다.</span>
-                </div>
-             )}
-
-            {/* 맥주 선택 버튼 추가 */}
-            <div className={styles.beerButtonGroup}>
-                <button 
-                    className={selectedBeer === null ? styles.activeButton : ''}
-                    onClick={() => setSelectedBeer(null)}
-                >
-                    전체
-                </button>
-                {uniqueBeers.map(beer => (
-                    <button
-                        key={beer}
-                        className={selectedBeer === beer ? styles.activeButton : ''}
-                        onClick={() => setSelectedBeer(beer)}
-                    >
-                        {beer}
-                    </button>
-                ))}
-            </div>
-
-       
-{/* 원자재 테이블 */}
-<div className={styles.materialSection}>
-    <h3>{selectedBeer ? `${selectedBeer} 원자재` : "원자재"}</h3>
-    <table className={styles.materialTable}>
-        <thead>
-            <tr>
-                <th>자재명</th>
-                <th>단위</th>
-                <th>기준소요량</th>  
-                <th>계획소요량</th>
-                {!selectedBeer && <th>현재재고</th>}
-                {!selectedBeer && <th>상태</th>}
-            </tr>
-        </thead>
-        <tbody>
-            {filteredRawMaterials.map((material, index) => (
-                <tr key={index}>
-                    <td>{material.materialName}</td>
-                    <td>{material.unit}</td>
-                    <td>{formatNumber(material.stdQty)}</td>
-                    <td>{formatNumber(material.planQty)}</td>
-                    {!selectedBeer && <td>{formatNumber(material.currentStock)}</td>}
-                    {!selectedBeer && (
-                        <td>
-                            <span className={`${styles.statusBadge} ${material.status === '부족' ? styles.shortage : styles.sufficient}`}>
-                                {material.status}
-                            </span>
-                        </td>
+        {/* ✅ 기존 UI (showSuccess가 false일 때만 보이게 함) */}
+        {!showSuccess && (
+            <>
+                    <div className={styles.stepsContainer}>
+                        <div className={`step ${currentStep === 1 ? 'active' : ''}`}>
+                            <div className="step-number">1</div>
+                            <span>기본정보</span>
+                        </div>
+                        <div className={`step ${currentStep === 2 ? 'active' : ''}`}>
+                            <div className="step-number">2</div>
+                            <span>공정정보</span>
+                        </div>
+                        <div className={`step ${currentStep === 3 ? 'active' : ''}`}>
+                            <div className="step-number">3</div>
+                            <span>자재정보</span>
+                        </div>
+                    </div>
+    
+                    <h2 className={styles.title}>자재 정보</h2>
+    
+                    {hasShortageMaterilas && (
+                        <div className={styles.alertBanner}>
+                            <span>❗ 일부 자재의 재고가 부족합니다. 구매신청이 필요합니다.</span>
+                        </div>
                     )}
-                </tr>
-            ))}
-        </tbody>
-    </table>
-</div>
-
-
-{/* 부자재 (포장재) */}
-<div className={styles.materialSection}>
-    <h3>{selectedBeer ? `${selectedBeer} 부자재` : "부자재"}</h3>
-    <table className={styles.materialTable}>
-        <thead>
-            <tr>
-                <th>자재명</th>
-                <th>단위</th>
-                <th>기준소요량</th>
-                <th>계획소요량</th>
-                {!selectedBeer && <th>현재재고</th>}
-                {!selectedBeer && <th>상태</th>}
-            </tr>
-        </thead>
-        <tbody>
-            {filteredPackagingMaterials.map((material, index) => (
-                <tr key={index}>
-                    <td>{material.materialName}</td>
-                    <td>{material.unit}</td>
-                    <td>{formatNumber(material.stdQty)}</td> {/* ✅ 기준 소요량 다르면 분리 */}
-                    <td>{formatNumber(material.planQty)}</td>
-                    {!selectedBeer && <td>{formatNumber(material.currentStock)}</td>}
-                    {!selectedBeer && (
-                        <td>
-                            <span className={`${styles.statusBadge} ${material.status === '부족' ? styles.shortage : styles.sufficient}`}>
-                                {material.status}
-                            </span>
-                        </td>
-                    )}
-                </tr>
-            ))}
-        </tbody>
-    </table>
-</div>
-
-
-
-            {/* 버튼 */}
-            <div className={styles.buttonGroup}>
-                <button onClick={() => goToStep(2)} className={styles.prevButton}>이전</button>
-                <div className={styles.rightButtons}>
-                <MaterialRequestModal 
-                    shortageMaterials={[...rawMaterials, ...packagingMaterials].filter(m => m.status === '부족')} 
-                    onSave={handleMaterialRequestSave}
-                    />
-                    <button onClick={handleSave} className={styles.nextButton}>저장</button>
-                </div>
-            </div>
+    
+                    {/* 맥주 선택 버튼 추가 */}
+                    <div className={styles.beerButtonGroup}>
+                        <button 
+                            className={selectedBeer === null ? styles.activeButton : ''}
+                            onClick={() => setSelectedBeer(null)}
+                        >
+                            전체
+                        </button>
+                        {uniqueBeers.map(beer => (
+                            <button
+                                key={beer}
+                                className={selectedBeer === beer ? styles.activeButton : ''}
+                                onClick={() => setSelectedBeer(beer)}
+                            >
+                                {beer}
+                            </button>
+                        ))}
+                    </div>
+    
+                    {/* 원자재 테이블 */}
+                    <div className={styles.materialSection}>
+                        <h3>{selectedBeer ? `${selectedBeer} 원자재` : "원자재"}</h3>
+                        <table className={styles.materialTable}>
+                            <thead>
+                                <tr>
+                                    <th>자재명</th>
+                                    <th>단위</th>
+                                    <th>기준소요량</th>  
+                                    <th>계획소요량</th>
+                                    {!selectedBeer && <th>현재재고</th>}
+                                    {!selectedBeer && <th>상태</th>}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredRawMaterials.map((material, index) => (
+                                    <tr key={index}>
+                                        <td>{material.materialName}</td>
+                                        <td>{material.unit}</td>
+                                        <td>{formatNumber(material.stdQty)}</td>
+                                        <td>{formatNumber(material.planQty)}</td>
+                                        {!selectedBeer && <td>{formatNumber(material.currentStock)}</td>}
+                                        {!selectedBeer && (
+                                            <td>
+                                                <span className={`${styles.statusBadge} ${material.status === '부족' ? styles.shortage : styles.sufficient}`}>
+                                                    {material.status}
+                                                </span>
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    {/* 부자재 (포장재) */}
+                    <div className={styles.materialSection}>
+                        <h3>{selectedBeer ? `${selectedBeer} 부자재` : "부자재"}</h3>
+                        <table className={styles.materialTable}>
+                            <thead>
+                                <tr>
+                                    <th>자재명</th>
+                                    <th>단위</th>
+                                    <th>기준소요량</th>
+                                    <th>계획소요량</th>
+                                    {!selectedBeer && <th>현재재고</th>}
+                                    {!selectedBeer && <th>상태</th>}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredPackagingMaterials.map((material, index) => (
+                                    <tr key={index}>
+                                        <td>{material.materialName}</td>
+                                        <td>{material.unit}</td>
+                                        <td>{formatNumber(material.stdQty)}</td>
+                                        <td>{formatNumber(material.planQty)}</td>
+                                        {!selectedBeer && <td>{formatNumber(material.currentStock)}</td>}
+                                        {!selectedBeer && (
+                                            <td>
+                                                <span className={`${styles.statusBadge} ${material.status === '부족' ? styles.shortage : styles.sufficient}`}>
+                                                    {material.status}
+                                                </span>
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    {/* 버튼 */}
+                    <div className={styles.buttonGroup}>
+                        <button onClick={() => goToStep(2)} className={styles.prevButton}>이전</button>
+                        <div className={styles.rightButtons}>
+                            <MaterialRequestModal 
+                                shortageMaterials={[...rawMaterials, ...packagingMaterials].filter(m => m.status === '부족')} 
+                                onSave={handleMaterialRequestSave}
+                            />
+                            <button onClick={handleSave} className={styles.nextButton}>저장</button>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
+    
 };
 
 export default ProductionPlanStep3;

@@ -19,22 +19,24 @@
 /* 회차별 섹션 스타일 */
 .roundSection {
     background-color: #F4F7FE;
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    border-radius: 16px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #5687F2;
 }
 
 .roundSection:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
 }
 
 .roundTitle {
-    color: #5687F2;
-    font-size: 1.2rem;
+    color: #2B6CB0;
+    font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     display: flex;
     align-items: center;
 }
@@ -53,28 +55,47 @@
     background: white;
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
 .table thead th {
-    background-color: #F8FAFF;
-    color: #2D3748;
+    background: linear-gradient(to right, #2B6CB0, #4299E1);
+    color: white;
     font-weight: 600;
     padding: 1rem;
     text-align: left;
     border-bottom: 2px solid #E2E8F0;
     font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table tbody tr:nth-child(even) td {
+    background-color: #F0F5FF;
+}
+
+.table tbody tr:nth-child(odd) td {
+    background-color: white;
+}
+
+.table tbody tr:hover td {
+    background-color: #EBF8FF;
+    transition: background-color 0.2s ease;
 }
 
 .table tbody td {
     padding: 1rem;
     border-bottom: 1px solid #E2E8F0;
-    background-color: white;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     vertical-align: middle;
+    transition: all 0.2s ease;
 }
 
-.table tbody tr:hover td {
-    background-color: #F8FAFF;
+.table tbody td:first-child {
+    font-weight: 600;
+    color: #2B6CB0;
 }
 
 .table tbody tr:last-child td {
@@ -83,12 +104,13 @@
 
 /* 입력 필드 공통 스타일 */
 .input {
-    padding: 0.5rem;
-    border: 1px solid #E2E8F0;
+    padding: 0.7rem;
+    border: 1px solid #CBD5E0;
     border-radius: 8px;
     font-size: 0.9rem;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     background-color: white;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* 수량 입력 필드 */
@@ -116,7 +138,7 @@ input[type="date"].input::-webkit-calendar-picker-indicator {
 .input:focus {
     outline: none;
     border-color: #5687F2;
-    box-shadow: 0 0 0 3px rgba(86, 135, 242, 0.1);
+    box-shadow: 0 0 0 3px rgba(86, 135, 242, 0.15);
 }
 
 /* 버튼 그룹 */
@@ -386,13 +408,14 @@ input[type="date"].input::-webkit-calendar-picker-indicator {
 }
 
 .batchInfo {
-    font-size: 0.9rem;
-    background: rgba(86, 135, 242, 0.1);
-    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    background: rgba(43, 108, 176, 0.1);
+    padding: 0.6rem 1.2rem;
     border-radius: 20px;
     margin-left: 1rem;
-    color: #5687F2;
+    color: #2B6CB0;
     font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* 경고메시지 */
