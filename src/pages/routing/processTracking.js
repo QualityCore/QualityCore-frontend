@@ -189,8 +189,8 @@ const ProcessTrackingPage = () => {
                       </div>
                       <div className={styles.cardContent}>
                         <div className={styles.timeInfo}>
-                          <p>시작: {formatDate(tracking.startTime)}</p>
-                          <p>예상 종료: {formatDate(tracking.expectedEndTime)}</p>
+                        <p><strong>시작:</strong> <span>{formatDate(tracking.startTime)}</span></p>
+                        <p><strong>예상 종료:</strong> <span>{formatDate(tracking.expectedEndTime)}</span></p>
                         </div>
                       </div>
                     </div>

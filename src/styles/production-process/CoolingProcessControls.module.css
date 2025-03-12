@@ -1,0 +1,363 @@
+.boilingProcessForm {
+    background-color: #f8faff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .boilingProcessForm::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, #6366F1, #818cf8);
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2B3674;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #E2E8F0;
+    position: relative;
+  }
+  
+  .title::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(to right, #6366F1, #818cf8);
+    border-radius: 2px;
+  }
+  
+  .formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .gridItem {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* 라벨 스타일 */
+  .cLabel01, .cLabel02, .cLabel03, .cLabel04, .cLabel05, .cLabel06 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4A5568;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* 냉각 공정 관련 라벨에 아이콘 추가 */
+  .cLabel03::before {
+    content: '🌡️';
+    font-size: 1.2rem;
+  }
+  
+  .cLabel02::before {
+    content: '⏱️';
+    font-size: 1.2rem;
+  }
+  
+  /* 입력 필드 스타일 */
+  .cItem01, .cItem02, .cItem04, .cItem05, .cItem06 {
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .cItem01:focus, .cItem02:focus, .cItem04:focus, .cItem05:focus, .cItem06:focus {
+    border-color: #6366F1;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+  
+  /* 냉각 온도 필드 강조 스타일 */
+  .cItem03 {
+    background: linear-gradient(to right, #6366F1, #818cf8);
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 1rem 1.2rem;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .cItem03:focus {
+    outline: none;
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+  }
+  
+  /* 온도 변화 애니메이션 효과 */
+  .cItem03::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    z-index: 1;
+    animation: shine 3s infinite;
+  }
+  
+  @keyframes shine {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  /* 버튼 컨테이너 스타일 */
+  .fGridItem {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  
+  /* 저장 버튼 스타일 */
+  .fSaveButton {
+    padding: 1rem 2.5rem;
+    background: linear-gradient(to right, #6366F1, #818cf8);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .fSaveButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+  }
+  
+  .fSaveButton:active {
+    transform: translateY(-1px);
+  }
+  
+  .fSaveButton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    z-index: 1;
+    transition: all 0.4s ease;
+    transform: translateX(-100%);
+  }
+  
+  .fSaveButton:hover::after {
+    transform: translateX(100%);
+  }
+  
+  /* 비활성화된 버튼 스타일 */
+  .fSaveButton:disabled {
+    background: linear-gradient(to right, #A0AEC0, #CBD5E0);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* 온도 변화 시각화를 위한 추가 스타일 */
+  /* 냉각 중 애니메이션 */
+  @keyframes cooling {
+    0% {
+      background: linear-gradient(to right, #EF4444, #F87171);
+    }
+    50% {
+      background: linear-gradient(to right, #8B5CF6, #A78BFA);
+    }
+    100% {
+      background: linear-gradient(to right, #0EA5E9, #38BDF8);
+    }
+  }
+  
+  /* 냉각 중일 때 온도 입력 필드에 적용될 애니메이션 */
+  .cooling .cItem03 {
+    animation: cooling 8s ease-in-out forwards;
+    transition: color 0.5s ease;
+  }
+  
+  /* 온도값 큰 표시 (추가 요소) */
+  .temperatureDisplay {
+    position: relative;
+    background: linear-gradient(to right, #6366F1, #818cf8);
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    margin: 2rem 0;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+    overflow: hidden;
+  }
+  
+  .temperatureDisplay::before {
+    content: '🌡️';
+    font-size: 2rem;
+    margin-right: 1rem;
+  }
+  
+  .temperatureDisplay .current {
+    font-size: 3.5rem;
+    display: block;
+  }
+  
+  .temperatureDisplay .target {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+  }
+  
+  /* 개선된 타이머 디스플레이 */
+  .timerDisplay {
+    background: linear-gradient(135deg, #6366F1, #818cf8);
+    color: white;
+    border-radius: 16px;
+    padding: 0.5rem;
+    margin: 2rem auto;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+    animation: pulse 2s infinite;
+  }
+  
+  .timerContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .timerContent::before {
+    content: '⏱️';
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .timerLabel {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .timerValue {
+    font-size: 2.8rem;
+    font-weight: 700;
+    font-family: 'Digital', monospace;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    margin-top: 0.5rem;
+  }
+  
+  /* 타이머 애니메이션 */
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+  }
+  
+  /* 배경 파동 효과 */
+  .timerDisplay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    z-index: 0;
+    animation: wave 3s infinite;
+  }
+  
+  @keyframes wave {
+    0%, 100% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(100%);
+    }
+  }
+  
+  /* 미디어 쿼리 */
+  @media (max-width: 768px) {
+    .formGrid {
+      grid-template-columns: 1fr;
+    }
+    
+    .title {
+      font-size: 1.5rem;
+    }
+    
+    .temperatureDisplay {
+      font-size: 2rem;
+      padding: 1.5rem;
+    }
+    
+    .temperatureDisplay .current {
+      font-size: 2.5rem;
+    }
+    
+    .timerValue {
+      font-size: 2.2rem;
+    }
+  }

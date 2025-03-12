@@ -185,9 +185,9 @@ const ProductionPlanDetailAccordion = ({ planDetail }) => {
                         <td className="table-cell">{material.materialName}</td>
                         <td className="table-cell">{material.beerName}</td>
                         <td className="table-cell">{material.unit}</td>
-                        <td className="table-cell text-right">{material.stdQty?.toFixed(4) || 0}</td>
-                        <td className="table-cell text-right">{material.planQty?.toFixed(4) || 0}</td>
-                        <td className="table-cell text-right">{material.currentStock?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-right">{material.stdQty ? parseFloat(material.stdQty).toLocaleString(undefined, { maximumFractionDigits: 3 }) : 0}</td>
+                        <td className="table-cell text-right">{material.planQty ? parseFloat(material.planQty).toLocaleString(undefined, { maximumFractionDigits: 3 }) : 0}</td>
+                        <td className="table-cell text-right">{material.currentStock ? parseFloat(material.currentStock).toLocaleString(undefined, { maximumFractionDigits: 3 }) : 0}</td>
                         <td className="table-cell text-center">
                           <span 
                             className={`status-badge ${
@@ -226,9 +226,15 @@ const ProductionPlanDetailAccordion = ({ planDetail }) => {
                         <td className="table-cell">{material.materialName}</td>
                         <td className="table-cell">{material.beerName}</td>
                         <td className="table-cell">{material.unit}</td>
-                        <td className="table-cell text-right">{material.stdQty?.toFixed(4) || 0}</td>
-                        <td className="table-cell text-right">{material.planQty?.toFixed(4) || 0}</td>
-                        <td className="table-cell text-right">{material.currentStock?.toFixed(4) || 0}</td>
+                        <td className="table-cell text-right">
+            {material.stdQty ? parseFloat(material.stdQty).toLocaleString(undefined, { maximumFractionDigits: 3 }) : 0}
+          </td>
+          <td className="table-cell text-right">
+            {material.planQty ? parseFloat(material.planQty).toLocaleString(undefined, { maximumFractionDigits: 3 }) : 0}
+          </td>
+          <td className="table-cell text-right">
+            {material.currentStock ? parseFloat(material.currentStock).toLocaleString(undefined, { maximumFractionDigits: 3 }) : 0}
+          </td>
                         <td className="table-cell text-center">
                           <span 
                             className={`status-badge ${

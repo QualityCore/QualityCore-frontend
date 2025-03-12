@@ -146,9 +146,16 @@ const CoolingProcessControls = ({ workOrder }) => {
     setCoolingData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // 타이머 표시 형식 변환 함수
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <form
-      className={styles.boilingProcessForm}
+      className={`${styles.boilingProcessForm} ${isCooling ? styles.cooling : ''}`}
       onSubmit={(e) => e.preventDefault()}
     >
       <h2 className={styles.title}>냉각 공정</h2>
@@ -183,7 +190,7 @@ const CoolingProcessControls = ({ workOrder }) => {
             type="text"
             name="targetTemperature"
             value={`${temperature}°C / ${coolingData.targetTemperature}°C`}
-            onChange={handleChange}
+            readOnly
           />
         </div>
 
@@ -198,7 +205,6 @@ const CoolingProcessControls = ({ workOrder }) => {
           />
         </div>
 
-
         <div className={styles.gridItem}>
           <label className={styles.cLabel05}>공정 상태:</label>
           <input
@@ -210,13 +216,11 @@ const CoolingProcessControls = ({ workOrder }) => {
           />
         </div>
 
-
-
         <div className={styles.gridItem}>
           <label className={styles.cLabel06}>메모 사항:</label>
           <input
             className={styles.cItem06}
-            type="number"
+            type="text"
             name="notes"
             value={coolingData.notes}
             onChange={handleChange}
@@ -224,10 +228,22 @@ const CoolingProcessControls = ({ workOrder }) => {
         </div>
       </div>
 
+      {/* 온도 정보 시각화 (추가) */}
+      {isCooling && (
+        <div className={styles.temperatureDisplay}>
+          <span className={styles.current}>{temperature}°C</span>
+          <span className={styles.target}>목표: {coolingData.targetTemperature}°C</span>
+        </div>
+      )}
+
+      {/* 타이머 표시 개선 */}
       {timeLeft > 0 && (
-        <p>
-          남은시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
-        </p>
+        <div className={styles.timerDisplay}>
+          <div className={styles.timerContent}>
+            <span className={styles.timerLabel}>남은 시간</span>
+            <span className={styles.timerValue}>{formatTime(timeLeft)}</span>
+          </div>
+        </div>
       )}
 
       <div className={styles.fGridItem}>
@@ -268,11 +284,15 @@ const CoolingProcessControls = ({ workOrder }) => {
       />
       <CompleteModal
         isOpen={showCompleteModal}
-        message={["끓임 공정이 완료되었습니다.", "다음 공정으로 이동하세요."]}
+        message={["냉각 공정이 완료되었습니다.", "다음 공정으로 이동하세요."]}
         onClose={() => setShowCompleteModal(false)}
       />
 
-<ConfirmModal isOpen={showCoolingCompleteModal} message="설정한 온도에 도달하여 작업을 시작합니다." onConfirm={() => { setShowCoolingCompleteModal(false); startTimer(); }} />
+      <ConfirmModal 
+        isOpen={showCoolingCompleteModal} 
+        message="설정한 온도에 도달하여 작업을 시작합니다." 
+        onConfirm={() => { setShowCoolingCompleteModal(false); startTimer(); }} 
+      />
 
     </form>
   );
