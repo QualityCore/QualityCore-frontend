@@ -171,7 +171,7 @@ const CoolingProcessControls = ({ workOrder }) => {
             className={styles.cItem02}
             type="text"
             name="coolingTime"
-            value={`${temperature}°C / ${coolingData.targetTemperature}°C`}
+            value={coolingData.coolingTime}
             onChange={handleChange}
           />
         </div>
@@ -182,7 +182,7 @@ const CoolingProcessControls = ({ workOrder }) => {
             className={styles.cItem03}
             type="number"
             name="targetTemperature"
-            value={coolingData.targetTemperature}
+            value={`${temperature}°C / ${coolingData.targetTemperature}°C`}
             onChange={handleChange}
           />
         </div>
