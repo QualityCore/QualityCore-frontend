@@ -169,7 +169,7 @@ const CoolingProcessControls = ({ workOrder }) => {
           <label className={styles.cLabel02}>냉각 소요 시간 (분):</label>
           <input
             className={styles.cItem02}
-            type="text"
+            type="number"
             name="coolingTime"
             value={coolingData.coolingTime}
             onChange={handleChange}
@@ -180,7 +180,7 @@ const CoolingProcessControls = ({ workOrder }) => {
           <label className={styles.cLabel03}>냉각 목표 온도 (°C):</label>
           <input
             className={styles.cItem03}
-            type="number"
+            type="text"
             name="targetTemperature"
             value={`${temperature}°C / ${coolingData.targetTemperature}°C`}
             onChange={handleChange}
