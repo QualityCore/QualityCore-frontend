@@ -32,7 +32,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/login/ProtectedRoute";
 import AccessDenied from "./pages/AccessDenied";
 import MaturationPage from "./pages/production-process/maturation-detail/MaturationPage";
-import MaturationDetail from "./pages/production-process/maturation-detail/MaturationDetail";
 import PostMaturationFiltrationPage from "./pages/postMaturation-filtration/PostMaturationFiltrationPage";
 import CarbonationProcessPage from "./pages/production-process/carbonation-process/CarbonationProcessPage";
 import PackagingAndShipmentPage from "./pages/production-process/packaging-and-shipment/PackagingAndShipmentPage";
@@ -118,10 +117,9 @@ const App = () => {
             <Route path="/board-create" element={<ProtectedLayout><BoardCreate /></ProtectedLayout>} />
             <Route path="/board/:boardId" element={<ProtectedLayout><BoardDetail /></ProtectedLayout>} />
             <Route path="/maturation-details" element={<ProtectedLayout><MaturationPage /></ProtectedLayout>} />
-            <Route path="/maturation-details/:maturationId" element={<ProtectedLayout><MaturationDetail /></ProtectedLayout>} />
-            <Route path="/post-maturation-filtration" element={<ProtectedLayout><PostMaturationFiltrationPage /></ProtectedLayout>}/>
-            <Route path="/carbonation-process" element={<ProtectedLayout><CarbonationProcessPage/></ProtectedLayout>}/>
-            <Route path="/packaging_and-shipment" element={<ProtectedLayout><PackagingAndShipmentPage/></ProtectedLayout>}/>
+            <Route path="/post-maturation-filtration" element={<ProtectedLayout><PostMaturationFiltrationPage /></ProtectedLayout>} />
+            <Route path="/carbonation-process" element={<ProtectedLayout><CarbonationProcessPage /></ProtectedLayout>} />
+            <Route path="/packaging_and-shipment" element={<ProtectedLayout><PackagingAndShipmentPage /></ProtectedLayout>} />
             <Route path="/boiling-process" element={<ProtectedLayout><BoilingProcessPage /></ProtectedLayout>} />
             <Route path="/cooling-process" element={<ProtectedLayout><CoolingProcessPage /></ProtectedLayout>} />
 
