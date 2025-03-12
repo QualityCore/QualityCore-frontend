@@ -7,17 +7,17 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
   const [calendarView, setCalendarView] = useState('week');
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  
+
   // 날짜 관련 유틸리티 함수
   const formatDate = (date) => {
     return new Date(date).toISOString().split('T')[0];
   };
-  
+
   const getDayName = (date) => {
     const days = ['일', '월', '화', '수', '목', '금', '토'];
     return days[new Date(date).getDay()];
   };
-  
+
   const generateWeekDays = (startDate) => {
     const result = [];
     const start = new Date(startDate);
@@ -25,28 +25,28 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     const dayOfWeek = start.getDay();
     const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
     start.setDate(start.getDate() + diff);
-    
+
     for (let i = 0; i < 7; i++) {
       const current = new Date(start);
       current.setDate(current.getDate() + i);
       result.push(formatDate(current));
     }
-    
+
     return result;
   };
-  
+
   // 주간 뷰 일자 생성
   const weekDays = generateWeekDays(currentDate);
 
   // 주간 뷰의 시간 범위 (0:00 ~ 23:00)로 확장
   const hourRange = Array.from({ length: 24 }, (_, i) => i);
-  
+
   // 이벤트 클릭 핸들러
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setShowDetailModal(true);
   };
-  
+
   // 다음/이전 주 이동 핸들러
   const navigatePrevious = () => {
     const newDate = new Date(currentDate);
@@ -57,7 +57,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     }
     setCurrentDate(newDate);
   };
-  
+
   const navigateNext = () => {
     const newDate = new Date(currentDate);
     if (calendarView === 'week') {
@@ -72,34 +72,34 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     try {
       // 기본 Date 객체 생성
       const date = new Date(dateString);
-      
+
       // 모든 날짜를 하루 뒤로 조정 (시간대 문제 일괄 해결)
       date.setDate(date.getDate() + 1);
-      
+
       return date;
     } catch (error) {
       console.error('날짜 파싱 오류:', error);
       return new Date();
     }
   };
-  
+
   // 특정 날짜/시간에 해당하는 이벤트 찾기
   const getEventsForTimeSlot = (date, hour) => {
     const slotStart = new Date(`${date}T${hour.toString().padStart(2, '0')}:00:00`);
     const slotEnd = new Date(`${date}T${hour.toString().padStart(2, '0')}:59:59`);
-    
+
     return events.filter(event => {
       const eventStart = parseEventDate(event.start);
       const eventEnd = parseEventDate(event.end);
-      
+
       // 날짜만 비교 (시간은 무시)
       const eventDate = eventStart.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식
       const slotDate = date;
-      
+
       // 짧은 공정(분쇄, 당화 등)은 날짜만 일치하면 표시
       if (['분쇄', '당화', '여과', '끓임', '냉각', '숙성후여과', '탄산조정'].includes(event.process)) {
         const isCorrectDay = eventDate === slotDate
-        
+
         // 날짜가 일치하면 특정 시간대에 표시
         if (isCorrectDay) {
           // 분쇄: 8-9시, 당화: 9-10시 등으로 할당
@@ -112,12 +112,12 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
             '숙성후여과': 14,
             '탄산조정': 16
           };
-          
+
           return processHourMap[event.process] === hour;
         }
         return false;
       }
-      
+
       // 발효, 숙성 등 장기 공정은 기존 방식대로 처리
       return (
         (eventStart >= slotStart && eventStart < slotEnd) ||
@@ -126,7 +126,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
       );
     });
   };
-  
+
   // 시간 포맷팅
   const formatTimeDisplay = (date) => {
     const d = new Date(date);
@@ -134,7 +134,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     const minutes = d.getMinutes();
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   };
-  
+
   // 공정별 색상 매핑
   const processColors = {
     '분쇄': '#E3F2FD',
@@ -147,7 +147,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
     '숙성후여과': '#FFE0B2',
     '탄산조정': '#D1C4E9'
   };
-  
+
   return (
     <div className={styles.calendarContainer}>
       {/* 캘린더 헤더 */}
@@ -157,23 +157,23 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
             <Calendar className={styles.calendarIcon} />
             <h3>생산 공정 일정</h3>
           </div>
-          
+
           <div className={styles.calendarControls}>
-            <button 
+            <button
               onClick={navigatePrevious}
               className={styles.calendarButton}
             >
               <ChevronLeft />
             </button>
-            
+
             <button
               onClick={() => setCurrentDate(new Date())}
               className={styles.todayButton}
             >
               오늘
             </button>
-            
-            <button 
+
+            <button
               onClick={navigateNext}
               className={styles.calendarButton}
             >
@@ -181,23 +181,23 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
             </button>
           </div>
         </div>
-        
+
         <div className={styles.calendarHeaderBottom}>
           <div className={styles.viewButtons}>
-            <button 
+            <button
               onClick={() => setCalendarView('day')}
               className={`${styles.viewButton} ${calendarView === 'day' ? styles.active : ''}`}
             >
               일간
             </button>
-            <button 
+            <button
               onClick={() => setCalendarView('week')}
               className={`${styles.viewButton} ${calendarView === 'week' ? styles.active : ''}`}
             >
               주간
             </button>
           </div>
-          
+
           <div>
             <span className={styles.dateRange}>
               {calendarView === 'week'
@@ -208,7 +208,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
           </div>
         </div>
       </div>
-      
+
       {/* 주간 뷰 */}
       {calendarView === 'week' && (
         <div className={styles.calendarContent}>
@@ -222,7 +222,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
                 </div>
               ))}
             </div>
-            
+
             {/* 시간 행 */}
             {hourRange.map(hour => (
               <div key={hour} className={styles.timeRow}>
@@ -230,11 +230,11 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
                 <div className={styles.timeCell}>
                   {hour}:00
                 </div>
-                
+
                 {/* 각 요일에 대한 셀 */}
                 {weekDays.map(day => {
                   const timeSlotEvents = getEventsForTimeSlot(day, hour);
-                  
+
                   return (
                     <div key={`${day}-${hour}`} className={styles.dayCell}>
                       {timeSlotEvents.length > 0 && (
@@ -243,12 +243,12 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
                             // 짧은 공정에 대해 더 두드러진 스타일 적용
                             const isShortProcess = ['분쇄', '당화', '여과', '끓임', '냉각', '숙성후여과', '탄산조정'].includes(event.process);
                             const bgColor = processColors[event.process] || '#E3F2FD';
-                            
+
                             return (
-                              <div 
+                              <div
                                 key={event.id}
                                 className={`${styles.event} ${isShortProcess ? styles.shortProcess : ''}`}
-                                style={{ 
+                                style={{
                                   backgroundColor: bgColor,
                                   color: event.textColor || '#1E40AF',
                                   border: isShortProcess ? '2px solid #000' : 'none',
@@ -273,7 +273,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
           </div>
         </div>
       )}
-      
+
       {/* 일간 뷰 */}
       {calendarView === 'day' && (
         <div className={styles.dayView}>
@@ -281,11 +281,11 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
             <div className={styles.dayHeader}>
               {formatDate(currentDate)} ({getDayName(currentDate)})
             </div>
-            
+
             <div className={styles.dayContent}>
               {hourRange.map(hour => {
                 const timeSlotEvents = getEventsForTimeSlot(formatDate(currentDate), hour);
-                
+
                 return (
                   <div key={hour} className={styles.timeSlot}>
                     <div className={styles.timeLabel}>
@@ -296,12 +296,12 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
                         <div className={styles.timeEventList}>
                           {timeSlotEvents.map(event => {
                             const bgColor = processColors[event.process] || '#E3F2FD';
-                            
+
                             return (
-                              <div 
+                              <div
                                 key={event.id}
                                 className={styles.timeEvent}
-                                style={{ 
+                                style={{
                                   backgroundColor: bgColor,
                                   color: event.textColor || '#1E40AF'
                                 }}
@@ -329,7 +329,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
           </div>
         </div>
       )}
-      
+
       {/* 범례 */}
       <div className={styles.legend}>
         <div className={styles.legendHeader}>
@@ -375,11 +375,11 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
           </div>
         </div>
       </div>
-      
+
       {/* 이벤트 상세 모달 */}
       {showDetailModal && selectedEvent && (
         <>
-          <div 
+          <div
             className={styles.modalBackdrop}
             onClick={() => setShowDetailModal(false)}
           ></div>
@@ -392,7 +392,7 @@ const PremiumBreweryCalendar = ({ events = [] }) => {
               <p><span className={styles.modalLabel}>시작:</span> {new Date(selectedEvent.start).toLocaleString()}</p>
               <p><span className={styles.modalLabel}>종료:</span> {new Date(selectedEvent.end).toLocaleString()}</p>
             </div>
-            <button 
+            <button
               className={styles.modalButton}
               onClick={() => setShowDetailModal(false)}
             >
