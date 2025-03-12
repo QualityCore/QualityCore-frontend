@@ -86,10 +86,12 @@ function BoardMain() {
                         ) : (
                             boards.map((board) => (
                                 <tr
-                                    key={board.boardId}
-                                    onClick={() => handleRowClick(board.boardId)}
-                                    style={{ cursor: "pointer" }}
-                                >
+                                key={board.boardId}
+                                className={`${board.boardCategory === "중요" ? boardMain.importantRow : 
+                                            board.boardCategory === "공지" ? boardMain.noticeRow : ""}`}
+                                onClick={() => handleRowClick(board.boardId)}
+                                style={{ cursor: "pointer" }}
+                            >
                                     {/* 카테고리 태그 */}
                                     <td>
                                         <span
@@ -116,68 +118,8 @@ function BoardMain() {
                 </table>
             </div>
 
-            {/* 페이징 컴포넌트 */}
-            {paginationInfo.totalElements > 0 && (
-                <div className={boardMain.pagination}>
-                    {paginationInfo.totalPages > 1 && (
-                        <button
-                            onClick={() => loadBoards(0)}
-                            disabled={paginationInfo.first}
-                            className={boardMain.button}
-                        >
-                            <FaFastBackward size={10} /> {/* << 아이콘 */}
-                        </button>
-                    )}
-                    {paginationInfo.totalPages > 1 && (
-                        <button
-                            onClick={() => loadBoards(paginationInfo.page - 1)}
-                            disabled={paginationInfo.first}
-                            className={boardMain.button}
-                        >
-                            <FaAngleLeft size={10} /> {/* < 아이콘 */}
-                        </button>
-                    )}
-                    {paginationInfo.totalPages > 1 && (
-                        [...Array(paginationInfo.totalPages)].map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => loadBoards(index)}
-                                disabled={paginationInfo.page === index}
-                                className={`${boardMain.button} ${paginationInfo.page === index ? boardMain.active : ""}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))
-                    )}
-                    {paginationInfo.totalPages > 1 && (
-                        <button
-                            onClick={() => loadBoards(paginationInfo.page + 1)}
-                            disabled={paginationInfo.last}
-                            className={boardMain.button}
-                        >
-                            <FaAngleRight size={10} /> {/* > 아이콘 */}
-                        </button>
-                    )}
-                    {paginationInfo.totalPages > 1 && (
-                        <button
-                            onClick={() => loadBoards(paginationInfo.totalPages - 1)}
-                            disabled={paginationInfo.last}
-                            className={boardMain.button}
-                        >
-                            <FaFastForward size={10} /> {/* >> 아이콘 */}
-                        </button>
-                    )}
-                    {paginationInfo.totalPages === 1 && (
-                        <button
-                            key={0}
-                            disabled={true}
-                            className={`${boardMain.button} ${boardMain.active}`}
-                        >
-                            1
-                        </button>
-                    )}
-                </div>
-            )}
+         
+     
         </div>
     );
 }

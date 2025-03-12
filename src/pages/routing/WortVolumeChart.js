@@ -1,16 +1,39 @@
-
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import styles from '../../styles/routing/WortVolumeChart.module.css';
 
-
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const WortVolumeChart = ({ data }) => {
+  const chartRef = useRef(null);
+
+  // 차트 크기 조정을 위한 useEffect
+  useEffect(() => {
+    const resizeChart = () => {
+      if (chartRef && chartRef.current) {
+        // 차트 인스턴스에 접근하여 resize 메소드 호출
+        chartRef.current.resize();
+      }
+    };
+
+    // 리사이즈 이벤트 리스너 추가
+    window.addEventListener('resize', resizeChart);
+    
+    // 컴포넌트가 마운트된 후 약간의 지연 시간을 두고 차트 크기 조정
+    const timer = setTimeout(() => {
+      resizeChart();
+    }, 200);
+
+    // cleanup 함수
+    return () => {
+      window.removeEventListener('resize', resizeChart);
+      clearTimeout(timer);
+    };
+  }, []);
 
   const prepareChartData = () => {
-   
+    // 기존 코드 유지
     const labels = data.map(item => item.lotNo);
     
     // 효율 데이터 계산
@@ -73,6 +96,7 @@ const WortVolumeChart = ({ data }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    // 높이 명시적으로 설정하지 않음 (CSS에서 처리)
     plugins: {
       legend: {
         position: 'top',
@@ -178,7 +202,7 @@ const WortVolumeChart = ({ data }) => {
 
   return (
     <div className={styles.chartContainer}>
-      <Bar data={chartData} options={options} />
+      <Bar ref={chartRef} data={chartData} options={options} />
     </div>
   );
 };

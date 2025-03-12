@@ -1,149 +1,249 @@
-/* Main Container */
-.boardMainContainer {
-    background-color: #F4F7FE;
-    /* 배경색 추가 */
-    border-radius: 12px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+/* 중요와 공지 행 스타일 */
+.boardTable tbody tr.importantRow {
+    background-color: rgba(245, 101, 101, 0.08);
+  }
+  
+  .boardTable tbody tr.noticeRow {
+    background-color: rgba(94, 75, 255, 0.08);
+  }
+  
+  /* 호버 시에도 색상 유지하면서 강조 */
+  .boardTable tbody tr.importantRow:hover {
+    background-color: rgba(245, 101, 101, 0.15);
+  }
+  
+  .boardTable tbody tr.noticeRow:hover {
+    background-color: rgba(94, 75, 255, 0.15);
+  }/* Main Container */
+  .boardMainContainer {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     height: 100%;
     max-height: 100%;
-    padding: 0;
-}
-
-/* Table Container */
-.boardTableContainer {
-    height: calc(90% - 35px);
+    padding: 1.5rem;
+  }
+  
+  /* Table Container */
+  .boardTableContainer {
+    height: calc(90% - 40px);
     overflow: auto;
     margin-top: 0px;
-}
-
-/* Table Style */
-.boardTable {
+  }
+  
+  /* Table Style */
+  .boardTable {
     width: 100%;
-    border-collapse: collapse;
-}
-
-/* Table Header */
-.tableHeader {
-    padding: 10px;
-    background-color: #63B3ED;
-}
-
-.tableHeader th {
-    padding: 14px;
-    text-align: center;
-    border-bottom: 2px solid #bbb;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Table Header */
+  .tableHeader {
+    background: linear-gradient(to right, #5E4BFF, #8BB3FF);
+  }
+  
+  .tableHeader th {
     color: white;
-    font-weight: normal;
-}
-
-/* Table Body */
-.boardTable td {
-    padding: 12px;
+    padding: 1rem;
     text-align: center;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-    color: #333;
-}
-
-/* First Row Top Border Removal */
-.boardTable tr:first-child td {
-    border-top: none;
-}
-
-/* No Left/Right Border on First and Last Column */
-.boardTable th:first-child,
-.boardTable td:first-child {
-    border-left: none;
-}
-
-.boardTable th:last-child,
-.boardTable td:last-child {
-    border-right: none;
-}
-
-.boardTable th:nth-child(1),
-.boardTable td:nth-child(1) {
-    width: 50px;
-}
-
-.boardTable th:nth-child(2),
-.boardTable td:nth-child(2) {
-    width: 300px;
-}
-
-.boardTable th:nth-child(3),
-.boardTable td:nth-child(3) {
-    width: 100px;
-}
-
-.boardTable th:nth-child(4),
-.boardTable td:nth-child(4) {
-    width: 100px;
-}
-
-/* Category Tag */
-.importantTag {
-    background-color: #ff6b6b;
-    padding: 2px 6px;
-    color: white;
-    border-radius: 4px;
-}
-
-.noticeTag {
-    background-color: #007bff;
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: white;
-}
-
-/* Pagination */
-.pagination {
-    margin-top: 0;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+    font-size: 0.95rem;
+  }
+  
+  /* Table Body */
+  .boardTable td {
+    padding: 1rem;
     text-align: center;
-    padding: 10px;
-    border: none;
-}
-
-.pagination button {
-    margin: 5px;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.pagination button:hover {
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+  
+  .boardTable tbody tr {
+    transition: all 0.2s ease;
+  }
+  
+  .boardTable tbody tr:nth-child(even):not(.importantRow):not(.noticeRow) {
+    background-color: #F0F5FF;
+  }
+  
+  .boardTable tbody tr:nth-child(odd):not(.importantRow):not(.noticeRow) {
+    background-color: white;
+  }
+  
+  .boardTable tbody tr:hover {
     transform: translateY(-2px);
-}
-
-.pagination button:disabled {
-    color: #666;
+    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.15);
+    position: relative;
+    z-index: 5;
+  }
+  
+  /* 테이블 열 너비 설정 */
+  .boardTable th:nth-child(1),
+  .boardTable td:nth-child(1) {
+    width: 80px;
+  }
+  
+  .boardTable th:nth-child(2),
+  .boardTable td:nth-child(2) {
+    width: 300px;
+    text-align: left;
+  }
+  
+  .boardTable th:nth-child(3),
+  .boardTable td:nth-child(3) {
+    width: 100px;
+  }
+  
+  .boardTable th:nth-child(4),
+  .boardTable td:nth-child(4) {
+    width: 100px;
+  }
+  
+  /* Category Tag */
+  .importantTag, .noticeTag, .normalTag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 70px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .importantTag {
+    background: linear-gradient(to right, #F56565, #FC8181);
+    color: white;
+    box-shadow: 0 2px 5px rgba(245, 101, 101, 0.3);
+  }
+  
+  .normalTag {
+    background: linear-gradient(to right, #A0AEC0, #CBD5E0);
+    color: white;
+    box-shadow: 0 2px 5px rgba(160, 174, 192, 0.3);
+  }
+  
+  .noticeTag {
+    background: linear-gradient(to right, #5E4BFF, #8BB3FF);
+    color: white;
+    box-shadow: 0 2px 5px rgba(94, 75, 255, 0.3);
+  }
+  
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.5rem;
+  }
+  
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    background-color: white;
+    color: #4A5568;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .button:hover:not(:disabled) {
+    background-color: #F0F5FF;
+    color: #5E4BFF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(94, 75, 255, 0.1);
+  }
+  
+  .button:disabled {
+    opacity: 0.6;
     cursor: not-allowed;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .boardMainContainer {
-        padding: 1rem;
+  }
+  
+  .button.active {
+    background: linear-gradient(to right, #5E4BFF, #8BB3FF);
+    color: white;
+    border-color: transparent;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(94, 75, 255, 0.2);
+  }
+  
+  /* 로딩 및 에러 메시지 */
+  .boardTable tbody tr td[colspan="4"] {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #718096;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  /* 애니메이션 효과 */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
     }
-
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .boardTable tbody tr {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  /* 반응형 디자인 */
+  @media (max-width: 768px) {
+    .boardMainContainer {
+      padding: 1rem;
+    }
+  
     .boardTable th,
     .boardTable td {
-        padding: 10px;
-        font-size: 12px;
+      padding: 0.8rem 0.5rem;
+      font-size: 0.9rem;
     }
-}
-
-@media (max-width: 480px) {
+    
+    .importantTag, .noticeTag, .normalTag {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      min-width: 60px;
+    }
+  }
+  
+  @media (max-width: 480px) {
     .boardMainContainer {
-        padding: 0.5rem;
+      padding: 0.8rem;
     }
-
+  
     .boardTable td {
-        padding: 5px;
+      padding: 0.6rem 0.4rem;
     }
-}
+    
+    .boardTable th:nth-child(3),
+    .boardTable td:nth-child(3) {
+      display: none;
+    }
+  }
