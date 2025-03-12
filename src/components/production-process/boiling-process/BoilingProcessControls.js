@@ -222,6 +222,7 @@ const fetchBoilingData = async (lotNo) => {
       if (!boilingId) {
         throw new Error("Boiling ID is missing!");
       }
+      console.log("📌 업데이트 요청 데이터:", { boilingId, postBoilWortVolume, boilLossVolume });
   
       await boilingProcessApi.updateBoilingProcess(boilingId, {
         postBoilWortVolume,
@@ -248,6 +249,7 @@ const fetchBoilingData = async (lotNo) => {
       <h2 className={styles.boilingTitle}>끓임 공정</h2>
 
       <div className={styles.formGrid}>
+        
         <div className={styles.gridItem}>
           <label className={styles.bLabel01}>작업지시 ID</label>
           <input
