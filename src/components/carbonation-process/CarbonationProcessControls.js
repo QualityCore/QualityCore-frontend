@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { carbonationProcessApi } from "../../apis/production-process/carbonation-process/carbonationProcessApi";
 import ConfirmModal from "../standard-information/common/ConfirmModal";
 import SuccessfulModal from "../standard-information/common/SuccessfulModal";
@@ -6,7 +7,7 @@ import ErrorModal from "../standard-information/common/ErrorModal";
 import CompleteModal from "../standard-information/common/CompleteModal";
 import styles from "../../styles/production-process/CarbonationProcess.module.css";
 
-const CarbonationProcessControls = ({ workOrder, workOrderList, setSelectedWorkOrder }) => {
+const CarbonationProcessControls = () => {
     const [carbonationData, setCarbonationData] = useState({
         lotNo: "",
         carbonationTime: "",
@@ -25,29 +26,79 @@ const CarbonationProcessControls = ({ workOrder, workOrderList, setSelectedWorkO
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [showCompleteModal, setShowCompleteModal] = useState(false);
     const [buttonLabel, setButtonLabel] = useState("등록하기");
+    const [timeLeft, setTimeLeft] = useState(0);
+    const [isTimerRunning, setIsTimerRunning] = useState(false);
+    const [isProcessStarted, setIsProcessStarted] = useState(false);
+    const [confirmModalShown, setConfirmModalShown] = useState(false);
+    const [isNextProcessEnabled, setIsNextProcessEnabled] = useState(false);
+    const navigate = useNavigate();
 
-    // 작업지시 선택 시 데이터 초기화
     useEffect(() => {
-        if (workOrder?.lotNo) {
-            setCarbonationData((prev) => ({
-                ...prev,
-                lotNo: workOrder.lotNo,
-                startTime: new Date().toISOString(),
-            }));
+        const savedLotNo = localStorage.getItem("selectedLotNo");
+        if (savedLotNo) {
+            setCarbonationData((prev) => ({ ...prev, lotNo: savedLotNo }));
         }
-    }, [workOrder]);
+    }, []);
+
+    useEffect(() => {
+        if (isTimerRunning && timeLeft > 0) {
+            const timer = setInterval(() => {
+                setTimeLeft(prev => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        } else if (timeLeft <= 0 && isTimerRunning) {
+            setIsTimerRunning(false);
+            setButtonLabel("공정 완료");
+            setShowCompleteModal(true);
+
+        }
+    }, [isTimerRunning, timeLeft]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setCarbonationData((prev) => ({ ...prev, [name]: value }));
+        setCarbonationData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const formatDateToISOStringWithoutMs = (date) => {
+        return date.toISOString().split(".")[0];
     };
 
     const handleSave = async () => {
         try {
             setIsProcessing(true);
-            await carbonationProcessApi.createCarbonationProcess(carbonationData);
+            console.log("📤 등록 요청 데이터:", carbonationData);
+
+            if (!carbonationData.carbonationTime) {
+                alert("탄산화 시간을 입력해주세요.");
+                setIsProcessing(false);
+                return;
+            }
+
+            const startTime = formatDateToISOStringWithoutMs(new Date());
+            //테스트용으로 5초만 되게하고, 해제하면 입력한 시간대로 설정되도록 주석 처리
+            const totalSeconds = 5;
+            //const totalSeconds = carbonationData.carbonationTime * 60;
+            const expectedEndTime = formatDateToISOStringWithoutMs(
+                new Date(Date.now() + totalSeconds * 1000)
+            );
+
+            const response = await carbonationProcessApi.createCarbonationProcess({
+                ...carbonationData,
+                startTime,
+                expectedEndTime
+            });
+
+            setCarbonationData(prev => ({
+                ...prev,
+                carbonationId: response?.carbonationId
+            }));
+
             setShowSuccessModal(true);
-            setButtonLabel("공정 완료");
+            setButtonLabel("공정 진행 중");
+            setTimeLeft(totalSeconds);
+            setIsTimerRunning(true);
+            setIsProcessStarted(true);
+            setConfirmModalShown(true);
         } catch (error) {
             console.error("공정 등록 실패:", error);
             setShowErrorModal(true);
@@ -58,12 +109,33 @@ const CarbonationProcessControls = ({ workOrder, workOrderList, setSelectedWorkO
 
     const handleCompleteProcess = async () => {
         try {
-            await carbonationProcessApi.completeEndTime(carbonationData.carbonationId);
-            setShowCompleteModal(true);
+            const actualEndTime = formatDateToISOStringWithoutMs(new Date());
+            console.log("🚀 공정 완료 요청 시작 - carbonationId:", carbonationData.carbonationId);
+            console.log("⏰ actualEndTime:", new Date());
+
+            const response = await carbonationProcessApi.completeEndTime(carbonationData.carbonationId, {
+                actualEndTime,
+                co2CarbonationPercent: Number(carbonationData.co2CarbonationPercent),
+                processTemperature: Number(carbonationData.processTemperature),
+                processPressure: Number(carbonationData.processPressure),
+                notes: carbonationData.notes
+            });
+
         } catch (error) {
             console.error("공정 완료 처리 실패:", error);
             setShowErrorModal(true);
         }
+    };
+
+    const handleNextProcess = () => {
+        navigate("/packaging_and-shipment");
+    };
+
+    const handleCloseCompleteModal = () => {
+
+        setShowCompleteModal(false);
+        setIsNextProcessEnabled(true)
+        setButtonLabel("다음 공정으로 이동");
     };
 
     return (
@@ -74,18 +146,11 @@ const CarbonationProcessControls = ({ workOrder, workOrderList, setSelectedWorkO
                 {/* 작업지시 ID */}
                 <div className={styles.gridItem}>
                     <label>작업지시 ID</label>
-                    <select
+                    <input
+                        type="text"
                         value={carbonationData.lotNo}
-                        onChange={(e) =>
-                            setSelectedWorkOrder(workOrderList.find((wo) => wo.lotNo === e.target.value))
-                        }
-                    >
-                        {workOrderList.map((wo) => (
-                            <option key={wo.lotNo} value={wo.lotNo}>
-                                {wo.lotNo}
-                            </option>
-                        ))}
-                    </select>
+                        readOnly
+                    />
                 </div>
 
                 {/* 탄산 조정 소요 시간 */}
@@ -96,6 +161,7 @@ const CarbonationProcessControls = ({ workOrder, workOrderList, setSelectedWorkO
                         name="carbonationTime"
                         value={carbonationData.carbonationTime}
                         onChange={handleChange}
+                        disabled={isProcessStarted}
                     />
                 </div>
 
@@ -142,26 +208,46 @@ const CarbonationProcessControls = ({ workOrder, workOrderList, setSelectedWorkO
                     ></textarea>
                 </div>
 
+                {/* 타이머 표시 */}
+                {timeLeft > 0 && (
+                    <div className={styles.gridItem}>
+                        <p className={styles.timer}>
+                            남은 시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
+                        </p>
+                    </div>
+                )}
+
                 {/* 등록 버튼 */}
                 <div className={styles.gridItem}>
                     <button
-                        onClick={() =>
-                            buttonLabel === "등록하기" ? setShowConfirmModal(true) : handleCompleteProcess()
-                        }
-                        disabled={isProcessing}
+                        className={styles.submitButton}
+                        onClick={() => {
+                            if (buttonLabel === "등록하기" && !confirmModalShown) {
+                                setShowConfirmModal(true);
+                            } else if (buttonLabel === "다음 공정으로 이동") {
+                                handleNextProcess();
+                            } else if (buttonLabel === "공정 진행 중" && !isTimerRunning) {
+                                handleCompleteProcess();
+                            }
+                        }}
+                        disabled={isProcessing || (buttonLabel === "공정 진행 중" && isTimerRunning) || !isNextProcessEnabled && buttonLabel === "다음 공정으로 이동"}
                     >
-                        {buttonLabel}
+                        {buttonLabel === "등록하기"
+                            ? "등록하기"
+                            : buttonLabel === "공정 진행 중"
+                                ? `공정 진행 중 (${Math.floor(timeLeft / 60)}분 ${timeLeft % 60}초)`
+                                : "다음 공정으로 이동"}
                     </button>
                 </div>
             </div>
 
             {/* 모달 처리 */}
             <ConfirmModal
-                isOpen={showConfirmModal}
-                message="등록하시겠습니까?"
+                isOpen={showConfirmModal && !confirmModalShown}
+                message="공정을 시작하시겠습니까?"
                 onConfirm={() => {
-                    setShowConfirmModal(false);
                     handleSave();
+                    setShowConfirmModal(false);
                 }}
                 onClose={() => setShowConfirmModal(false)}
             />
@@ -172,16 +258,18 @@ const CarbonationProcessControls = ({ workOrder, workOrderList, setSelectedWorkO
                 onClose={() => setShowSuccessModal(false)}
             />
 
-            <ErrorModal
-                isOpen={showErrorModal}
-                message="오류가 발생했습니다. 다시 시도해주세요."
-                onClose={() => setShowErrorModal(false)}
-            />
-
             <CompleteModal
                 isOpen={showCompleteModal}
                 message="공정이 완료되었습니다."
-                onClose={() => setShowCompleteModal(false)}
+                onClose={() => {
+                    handleCloseCompleteModal()
+                }}
+            />
+
+            <ErrorModal
+                isOpen={showErrorModal}
+                message="처리 중 오류가 발생했습니다."
+                onClose={() => setShowErrorModal(false)}
             />
         </form>
     );

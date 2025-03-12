@@ -1,223 +1,211 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { packagingAndShipmentApi } from "../../apis/production-process/packaging-and-shipment/packagingAndShipmentApi";
 import ConfirmModal from "../standard-information/common/ConfirmModal";
 import SuccessfulModal from "../standard-information/common/SuccessfulModal";
 import ErrorModal from "../standard-information/common/ErrorModal";
+import CompleteModal from "../standard-information/common/CompleteModal";
 import styles from "../../styles/production-process/PackagingAndShipment.module.css";
 
-const PackagingAndShipmentControls = ({ workOrder, workOrderList, setSelectedWorkOrder }) => {
+const PackagingAndShipmentControls = () => {
     const [shipmentData, setShipmentData] = useState({
         lotNo: "",
-        cleaningAndSterilization: "양호",
-        filling: "정상",
-        sealing: "양호",
-        labelAttachment: "양호",
-        packagingCondition: "양호",
+        cleaningAndSanitation: "양호",
+        labelingAndCoding: "양호",
+        fillingStatus: "정상",
+        sealingStatus: "양호",
+        packagingStatus: "양호",
         shipmentDate: new Date().toISOString().split("T")[0],
-        shipmentVolume: "",
         productName: "",
+        shipmentQuantity: 0, // Double 타입
         destination: "",
+        notes: "", // 메모 필드 추가
     });
 
     const [isProcessing, setIsProcessing] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showCompleteModal, setShowCompleteModal] = useState(false);
+    const [buttonLabel, setButtonLabel] = useState("등록하기");
+    const [confirmModalShown, setConfirmModalShown] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (workOrder?.lotNo) {
-            setShipmentData((prev) => ({
-                ...prev,
-                lotNo: workOrder.lotNo,
-            }));
+        const savedLotNo = localStorage.getItem("selectedLotNo");
+        if (savedLotNo) {
+            setShipmentData((prev) => ({ ...prev, lotNo: savedLotNo }));
         }
-    }, [workOrder]);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setShipmentData((prev) => ({ ...prev, [name]: value }));
+        setShipmentData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleRadioChange = (groupName, value) => {
-        setShipmentData((prev) => ({ ...prev, [groupName]: value }));
+    // 폼 초기화 함수
+    const resetForm = () => {
+        setShipmentData({
+            lotNo: "", // lotNo 초기화
+            cleaningAndSanitation: "양호",
+            labelingAndCoding: "양호",
+            fillingStatus: "정상",
+            sealingStatus: "양호",
+            packagingStatus: "양호",
+            shipmentDate: new Date().toISOString().split("T")[0],
+            productName: "",
+            shipmentQuantity: 0,
+            destination: "",
+            notes: "",
+        });
     };
 
     const handleSave = async () => {
         try {
+            console.group('🚀 handleSave 함수 실행');
             setIsProcessing(true);
-            await packagingAndShipmentApi.createPackagingAndShipment(shipmentData);
+
+            // 1. 데이터 변환 및 유효성 검증
+            const { productName, destination, shipmentQuantity, shipmentDate } = shipmentData;
+
+            if (!productName || !destination || shipmentQuantity === null || shipmentQuantity === undefined) {
+                console.error('⛔ 필수 필드 누락:', { productName, destination, shipmentQuantity });
+                alert("제품명, 목적지, 출하 수량은 필수 입력 항목입니다.");
+                setIsProcessing(false);
+                return;
+            }
+
+            const parsedQuantity = Number(shipmentQuantity);
+            if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+                console.error('⛔ 유효하지 않은 출하 수량:', shipmentQuantity);
+                alert("출하 수량은 숫자로 입력해야 합니다.");
+                setIsProcessing(false);
+                return;
+            }
+
+            // 2. API 호출을 위한 데이터 준비
+            const transformedData = {
+                ...shipmentData,
+                shipmentQuantity: parsedQuantity, // shipmentQuantity를 숫자로 변환
+            };
+
+            console.log('🔄 변환된 데이터:', transformedData);
+
+            // 3. API 호출
+            console.log('📡 API 요청 시작:', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: transformedData
+            });
+
+            const response = await packagingAndShipmentApi.createPackagingAndShipment(transformedData);
+
+            console.log('🎉 저장 성공 응답:', response);
             setShowSuccessModal(true);
+            setButtonLabel("공정 완료");
+            resetForm(); // 폼 초기화
+
         } catch (error) {
-            console.error("공정 등록 실패:", error);
+            console.error('💥 저장 실패 상세:', {
+                errorMessage: error.message,
+                errorStack: error.stack,
+                originalData: shipmentData
+            });
             setShowErrorModal(true);
         } finally {
             setIsProcessing(false);
+            console.groupEnd();
         }
+    };
+
+    const handleCompleteProcess = async () => {
+        setShowCompleteModal(true);
+    };
+
+    const handleCloseCompleteModal = () => {
+        setShowCompleteModal(false);
     };
 
     return (
         <form className={styles.packagingForm} onSubmit={(e) => e.preventDefault()}>
-            <h2 className={styles.packagingTitle}>패키징 및 출하</h2>
+            <h2 className={styles.packagingTitle}>포장 및 출하 공정</h2>
 
             <div className={styles.formGrid}>
-
                 {/* 작업지시 ID */}
                 <div className={styles.gridItem}>
                     <label>작업지시 ID</label>
-                    <select
+                    <input
+                        type="text"
                         name="lotNo"
                         value={shipmentData.lotNo}
-                        onChange={(e) => {
-                            handleChange(e);
-                            const selected = workOrderList.find(wo => wo.lotNo === e.target.value);
-                            setSelectedWorkOrder(selected);
-                        }}
-                    >
-                        <option value="">선택하세요</option>
-                        {workOrderList.map((wo) => (
-                            <option key={wo.lotNo} value={wo.lotNo}>
-                                {wo.lotNo}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* 세척 및 살균 */}
+                        readOnly
+                    />
+                </div>... {/* 세척 및 살균 */}
                 <div className={styles.gridItem}>
                     <label>세척 및 살균</label>
-                    <div className={styles.radioGroup}>
-                        <label>
-                            <input
-                                type="radio"
-                                name="cleaningAndSterilization"
-                                value="양호"
-                                checked={shipmentData.cleaningAndSterilization === "양호"}
-                                onChange={handleChange}
-                            />
-                            양호
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="cleaningAndSterilization"
-                                value="불량"
-                                checked={shipmentData.cleaningAndSterilization === "불량"}
-                                onChange={handleChange}
-                            />
-                            불량
-                        </label>
-                    </div>
+                    <select
+                        name="cleaningAndSanitation"
+                        value={shipmentData.cleaningAndSanitation}
+                        onChange={handleChange}
+                    >
+                        <option value="양호">양호</option>
+                        <option value="불량">불량</option>
+                    </select>
                 </div>
 
                 {/* 충전 */}
                 <div className={styles.gridItem}>
                     <label>충전</label>
-                    <div className={styles.radioGroup}>
-                        <label>
-                            <input
-                                type="radio"
-                                name="filling"
-                                value="정상"
-                                checked={shipmentData.filling === "정상"}
-                                onChange={handleChange}
-                            />
-                            정상
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="filling"
-                                value="과충전"
-                                checked={shipmentData.filling === "과충전"}
-                                onChange={handleChange}
-                            />
-                            과충전
-                        </label>
-                    </div>
+                    <select
+                        name="fillingStatus"
+                        value={shipmentData.fillingStatus}
+                        onChange={handleChange}
+                    >
+                        <option value="정상">정상</option>
+                        <option value="과충전">과충전</option>
+                    </select>
                     <p className={styles.subLabel}>산소 농도 0.05% 이하</p>
                 </div>
 
                 {/* 밀봉 */}
                 <div className={styles.gridItem}>
                     <label>밀봉</label>
-                    <div className={styles.radioGroup}>
-                        <label>
-                            <input
-                                type="radio"
-                                name="sealing"
-                                value="양호"
-                                checked={shipmentData.sealing === "양호"}
-                                onChange={handleChange}
-                            />
-                            양호
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="sealing"
-                                value="불량"
-                                checked={shipmentData.sealing === "불량"}
-                                onChange={handleChange}
-                            />
-                            불량
-                        </label>
-                    </div>
+                    <select
+                        name="sealingStatus"
+                        value={shipmentData.sealingStatus}
+                        onChange={handleChange}
+                    >
+                        <option value="양호">양호</option>
+                        <option value="불량">불량</option>
+                    </select>
                     <p className={styles.subLabel}>밀봉 압력 1.0~1.5 bar</p>
                 </div>
 
                 {/* 라벨링 및 코딩 */}
                 <div className={styles.gridItem}>
                     <label>라벨링 및 코딩</label>
-                    <div className={styles.radioGroup}>
-                        <label>
-                            <input
-                                type="radio"
-                                name="labelAttachment"
-                                value="양호"
-                                checked={shipmentData.labelAttachment === "양호"}
-                                onChange={handleChange}
-                            />
-                            양호
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="labelAttachment"
-                                value="불량"
-                                checked={shipmentData.labelAttachment === "불량"}
-                                onChange={handleChange}
-                            />
-                            불량
-                        </label>
-                    </div>
+                    <select
+                        name="labelingAndCoding"
+                        value={shipmentData.labelingAndCoding}
+                        onChange={handleChange}
+                    >
+                        <option value="양호">양호</option>
+                        <option value="불량">불량</option>
+                    </select>
                     <p className={styles.subLabel}>라벨 부착 여부, 날짜, 배치번호 확인</p>
                 </div>
 
                 {/* 포장 */}
                 <div className={styles.gridItem}>
                     <label>포장</label>
-                    <div className={styles.radioGroup}>
-                        <label>
-                            <input
-                                type="radio"
-                                name="packagingCondition"
-                                value="양호"
-                                checked={shipmentData.packagingCondition === "양호"}
-                                onChange={handleChange}
-                            />
-                            양호
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="packagingCondition"
-                                value="불량"
-                                checked={shipmentData.packagingCondition === "불량"}
-                                onChange={handleChange}
-                            />
-                            불량
-                        </label>
-                    </div>
+                    <select
+                        name="packagingStatus"
+                        value={shipmentData.packagingStatus}
+                        onChange={handleChange}
+                    >
+                        <option value="양호">양호</option>
+                        <option value="불량">불량</option>
+                    </select>
                     <p className={styles.subLabel}>부족 갯수 확인, 팔레트단위 포장</p>
                 </div>
 
@@ -261,28 +249,44 @@ const PackagingAndShipmentControls = ({ workOrder, workOrderList, setSelectedWor
                     <label>출하 수량</label>
                     <input
                         type="number"
-                        name="shipmentVolume"
-                        value={shipmentData.shipmentVolume}
+                        name="shipmentQuantity"
+                        value={shipmentData.shipmentQuantity}
                         onChange={handleChange}
                         placeholder="수량"
                     />
+                </div>... {/* 메모 */}
+                <div className={styles.gridItem}>
+                    <label>메모</label>
+                    <textarea
+                        name="notes"
+                        value={shipmentData.notes}
+                        onChange={handleChange}
+                    ></textarea>
                 </div>
 
                 {/* 등록 버튼 */}
                 <div className={styles.gridItem}>
-                    <button onClick={() => setShowConfirmModal(true)} disabled={isProcessing}>
-                        등록하기
+                    <button
+                        className={styles.submitButton}
+                        onClick={() => {
+                            if (buttonLabel === "등록하기" && !confirmModalShown) {
+                                setShowConfirmModal(true);
+                            } else if (buttonLabel === "공정 완료") {
+                                handleCompleteProcess();
+                            }
+                        }}
+                        disabled={isProcessing}
+                    >
+                        {buttonLabel}
                     </button>
                 </div>
-            </div>
-
-            {/* 모달 처리 */}
+            </div>... {/* 모달 처리 */}
             <ConfirmModal
-                isOpen={showConfirmModal}
+                isOpen={showConfirmModal && !confirmModalShown}
                 message="등록하시겠습니까?"
                 onConfirm={() => {
-                    setShowConfirmModal(false);
                     handleSave();
+                    setShowConfirmModal(false);
                 }}
                 onClose={() => setShowConfirmModal(false)}
             />
@@ -295,8 +299,14 @@ const PackagingAndShipmentControls = ({ workOrder, workOrderList, setSelectedWor
 
             <ErrorModal
                 isOpen={showErrorModal}
-                message="오류가 발생했습니다. 다시 시도해주세요."
+                message="처리 중 오류가 발생했습니다."
                 onClose={() => setShowErrorModal(false)}
+            />
+
+            <CompleteModal
+                isOpen={showCompleteModal}
+                message="출하가 완료되었습니다."
+                onClose={() => handleCloseCompleteModal()}
             />
         </form>
     );
