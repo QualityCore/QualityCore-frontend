@@ -13,7 +13,6 @@ import beerImage3 from "./images/1.png"; // 장원영 맥주
 import beerImage3_1 from "./images/1-1.png"; // 장원영 병
 import beerImage1_1 from "./images/2-1.png"; // 아이유 병
 import beerImage2_1 from "./images/3-1.png"; // 카리나 병
-import Pagination from "../../Pagination/Pagination";
 import SuccessAnimation from "../../lottie/SuccessNotification"; // 성공 애니메이션 import
 
 Modal.setAppElement("#root"); // 모달 접근성 설정
@@ -88,53 +87,24 @@ function LabelInfo() {
 
     const suppliers = ["호텔델루나", "까멜리아", "단밤", "쌍갑포차"];
 
-    const [pageInfo, setPageInfo] = useState({
-        page: 0,
-        totalPages: 1,
-        totalElements: 0,
-        first: true,
-        last: true,
-    });
-
-    const fetchData = async (page = 0, search = "") => {
+    const fetchData = async (search = "") => {
         try {
-            const data = await fetchLabelInfo(page, 8, search);
+            const data = await fetchLabelInfo(0, 1000, search); // 페이지네이션 없이 많은 수의 데이터 가져오기
 
             if (data && data.content) {
                 setLabelInfo(data.content);
-                setPageInfo({
-                    page: data.pageInfo.page,
-                    totalPages: data.pageInfo.totalPages,
-                    totalElements: data.pageInfo.totalElements,
-                    first: data.pageInfo.first,
-                    last: data.pageInfo.last,
-                });
             } else {
                 console.error("Data format error:", data);
                 setLabelInfo([]);
-                setPageInfo({
-                    page: 0,
-                    totalPages: 0,
-                    totalElements: 0,
-                    first: true,
-                    last: true,
-                });
             }
         } catch (error) {
             console.error("Error fetching label info:", error);
             setLabelInfo([]);
-            setPageInfo({
-                page: 0,
-                totalPages: 0,
-                totalElements: 0,
-                first: true,
-                last: true,
-            });
         }
     };
 
     useEffect(() => {
-        fetchData(0, searchKeyword);
+        fetchData(searchKeyword);
     }, [searchKeyword]);
 
     const drawLabel = () => {
@@ -250,7 +220,7 @@ function LabelInfo() {
             await createLabelInfo(formData);
             openSuccessModal("라벨이 성공적으로 등록되었습니다!");
             handleModalClose();
-            fetchData(0, searchKeyword);
+            fetchData(searchKeyword);
         } catch (error) {
             console.error("라벨 등록 실패:", error);
         }
@@ -260,19 +230,15 @@ function LabelInfo() {
         try {
             await deleteLabelInfo(selectedLabel.labelId);
             openSuccessModal("라벨이 성공적으로 삭제되었습니다!");
-            fetchData(0, searchKeyword);
+            fetchData(searchKeyword);
             setShowDetailModal(false);
         } catch (error) {
             console.error("라벨 삭제 실패:", error);
         }
     };
 
-    const handlePageChange = (newPage) => {
-        fetchData(newPage, searchKeyword);
-    };
-
     const handleSearchClick = () => {
-        fetchData(0, searchKeyword);
+        fetchData(searchKeyword);
     };
 
     return (
@@ -312,21 +278,8 @@ function LabelInfo() {
                 </div>
               )}
             </div>
-      
-            {/* 페이지네이션 - fixed 위치 대신 컨테이너 안에 배치 */}
-            <div className={labelInfos.paginationContainer}>
-              <Pagination
-                page={pageInfo.page}
-                totalPages={pageInfo.totalPages}
-                first={pageInfo.first}
-                last={pageInfo.last}
-                onPageChange={handlePageChange}
-              />
-            </div>
           </div>
           
-         
-      
           {/* 상세조회 모달 */}
           <Modal
             isOpen={showDetailModal}
@@ -369,91 +322,109 @@ function LabelInfo() {
             </button>
           </Modal>
       
+          {/* 라벨 등록 모달 */}
+          <Modal
+            isOpen={showModal}
+            onRequestClose={handleModalClose}
+            className={labelInfos.modalContent}
+            overlayClassName={labelInfos.modalOverlay}
+          >
+            <button
+              type="button"
+              onClick={handleModalClose}
+              className={labelInfos.closeButton}
+            >
+              X
+            </button>
+            <h2 className={labelInfos.modalTitle}>라벨 등록</h2>
+            
+            <div className={labelInfos.modalLayout}>
+              <div className={labelInfos.formContainer}>
+                <form onSubmit={handleSubmit}>
+                  <div className={labelInfos.formGroup}>
+                    <label>맥주 종류:</label>
+                    <select
+                      value={beerType}
+                      onChange={(e) => setBeerType(e.target.value)}
+                      required
+                    >
+                      <option value="" disabled>
+                        선택하세요
+                      </option>
+                      <option value="아이유맥주">아이유맥주</option>
+                      <option value="장원영맥주">장원영맥주</option>
+                      <option value="카리나맥주">카리나맥주</option>
+                    </select>
+                  </div>
+
+                  <div className={labelInfos.formGroup}>
+                    <label>생산일자:</label>
+                    <input
+                      type="date"
+                      value={productionDate}
+                      onChange={(e) => setProductionDate(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className={labelInfos.formGroup}>
+                    <label>납품업체:</label>
+                    <select
+                      value={supplier}
+                      onChange={(e) => setSupplier(e.target.value)}
+                      required
+                    >
+                      <option value="" disabled>
+                        선택하세요
+                      </option>
+                      {suppliers.map((supplierName, index) => (
+                        <option key={index} value={supplierName}>
+                          {supplierName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className={labelInfos.formActions}>
+                    <button type="submit" className={labelInfos.createButton1}>
+                      등록
+                    </button>
+                  </div>
+                </form>
+              </div>
+              
+              <div className={labelInfos.previewContainer}>
+                {beerType && (
+                  <div className={labelInfos.canvasContainer}>
+                    <canvas
+                      ref={canvasRef}
+                      width={800}
+                      height={600}
+                    ></canvas>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Modal>
+          
           {/* 성공 모달 */}
-         {/* 모달 등록창 */}
-<Modal
-  isOpen={showModal}
-  onRequestClose={handleModalClose}
-  className={labelInfos.modalContent}
-  overlayClassName={labelInfos.modalOverlay}
->
-  <button
-    type="button"
-    onClick={handleModalClose}
-    className={labelInfos.closeButton}
-  >
-    X
-  </button>
-  <h2 className={labelInfos.modalTitle}>라벨 등록</h2>
-  
-  <div className={labelInfos.modalLayout}>
-    <div className={labelInfos.formContainer}>
-      <form onSubmit={handleSubmit}>
-        <div className={labelInfos.formGroup}>
-          <label>맥주 종류:</label>
-          <select
-            value={beerType}
-            onChange={(e) => setBeerType(e.target.value)}
-            required
+          <Modal
+            isOpen={isSuccessModal}
+            onRequestClose={closeSuccessModal}
+            className={labelInfos.successModal}
+            overlayClassName={labelInfos.modalOverlay}
           >
-            <option value="" disabled>
-              선택하세요
-            </option>
-            <option value="아이유맥주">아이유맥주</option>
-            <option value="장원영맥주">장원영맥주</option>
-            <option value="카리나맥주">카리나맥주</option>
-          </select>
-        </div>
-
-        <div className={labelInfos.formGroup}>
-          <label>생산일자:</label>
-          <input
-            type="date"
-            value={productionDate}
-            onChange={(e) => setProductionDate(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className={labelInfos.formGroup}>
-          <label>납품업체:</label>
-          <select
-            value={supplier}
-            onChange={(e) => setSupplier(e.target.value)}
-            required
-          >
-            <option value="" disabled>
-              선택하세요
-            </option>
-            {suppliers.map((supplierName, index) => (
-              <option key={index} value={supplierName}>
-                {supplierName}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className={labelInfos.formActions}>
-          <button type="submit" className={labelInfos.createButton1}>
-            등록
-          </button>
-        </div>
-      </form>
-    </div>
-    
-    <div className={labelInfos.previewContainer}>
-      {beerType && (
-        <div className={labelInfos.canvasContainer}>
-          <canvas
-            ref={canvasRef}
-            width={800}
-            height={600}
-          ></canvas>
-        </div>
-      )}
-    </div>
-  </div>
-</Modal>
+            <div className={labelInfos.successModalContent}>
+              <SuccessAnimation />
+              <p className={labelInfos.successMessage}>{modalMessage}</p>
+              <button 
+                onClick={closeSuccessModal} 
+                className={labelInfos.successButton}
+              >
+                확인
+              </button>
+            </div>
+          </Modal>
         </div>
       );
 }
