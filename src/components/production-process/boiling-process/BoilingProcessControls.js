@@ -49,7 +49,6 @@ const BoilingProcessControls = ({ workOrder }) => {
     if (boilingData.lotNo) {
       fetchMaterials(boilingData.lotNo);
       fetchFiltrationData(boilingData.lotNo);
-      fetchBoilingData(boilingData.lotNo);
     }
   }, [boilingData.lotNo]);
 
@@ -69,28 +68,8 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
-  // ✅ 끓임 공정 데이터 불러올 때 boilingId 포함
-  const fetchBoilingData = async (lotNo) => {
-    try {
-      const response = await boilingProcessApi.getBoilingProcessByLotNo(lotNo);
-      console.log("✅ 가져온 끓임 공정 데이터:", response);
+ 
 
-      if (response.boilingProcesses && response.boilingProcesses.length > 0) {
-        const latestBoilingProcess = response.boilingProcesses[0]; // ✅ 첫 번째 데이터 선택
-        setBoilingData((prev) => ({
-          ...prev,
-          boilingId: latestBoilingProcess.boilingId,
-          postBoilWortVolume: latestBoilingProcess.postBoilWortVolume || "",
-          boilLossVolume: latestBoilingProcess.boilLossVolume || "",
-          processStatus: latestBoilingProcess.processStatus || "진행 중",
-        }));
-      } else {
-        console.warn("⚠️ 끓임 공정 데이터가 없습니다.");
-      }
-    } catch (error) {
-      console.error(`❌ 끓임 공정 데이터 조회 실패 (LOT_NO: ${lotNo}):`, error);
-    }
-  };
 
   // 자재 정보 조회 함수 (API 주소를 참고하여 수정)
   const fetchMaterials = async (lotNo) => {
@@ -125,6 +104,11 @@ const BoilingProcessControls = ({ workOrder }) => {
       console.error(`❌ 자재 정보 조회 실패 (LOT_NO: ${lotNo}):`, error);
     }
   };
+
+
+
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -202,32 +186,39 @@ const BoilingProcessControls = ({ workOrder }) => {
     }));
   };
 
+
+
+
   const handleNextProcess = async () => {
     try {
-      await boilingProcessApi.updateBoilingProcess(boilingData.boilingId, {
-        postBoilWortVolume: boilingData.postBoilWortVolume,
-        boilLossVolume: boilingData.boilLossVolume,
+      console.log("🛠️ handleNextProcess 실행 - 기존 데이터:", boilingData);
+  
+      // ❌ null 방지: 데이터가 없으면 기본값 할당
+      const postBoilWortVolume = boilingData.postBoilWortVolume ?? 0; // 기본값 0
+      const boilLossVolume = boilingData.boilLossVolume ?? 0;
+  
+      // ✅ null이 아닌 값으로 API 요청
+      console.log("🛠️ API 요청 데이터:", {
+        lotNo: boilingData.lotNo, // ✅ boilingId 대신 lotNo 사용
+        postBoilWortVolume,
+        boilLossVolume,
         actualEndTime: new Date().toISOString(),
       });
-
+  
+      await boilingProcessApi.updateBoilingProcessByLotNo(boilingData.lotNo, {
+        postBoilWortVolume,
+        boilLossVolume,
+        actualEndTime: new Date().toISOString(),
+      });
+  
+      console.log("✅ 끓임 공정 업데이트 성공");
       navigate("/cooling-process");
     } catch (error) {
+      console.error("❌ 다음 공정 이동 중 오류 발생:", error);
       setShowErrorModal(true);
     }
   };
-
-  useEffect(() => {
-    if (boilingData.temperature === undefined) {
-      console.log("🚨 boilingData.temperature 값이 없음! 기본값 설정");
-      setBoilingData((prev) => ({ ...prev, temperature: 100 })); // 기본 100°C 설정
-    }
-    if (temperature === undefined) {
-      console.log("🚨 temperature 값이 없음! 기본값 설정");
-      setTemperature(20); // 기본 20°C 설정
-    }
-  }, [boilingData.temperature, temperature]);
-
-
+  
 
   
   return (

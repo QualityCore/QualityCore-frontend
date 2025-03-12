@@ -10,13 +10,10 @@ import styles from "../../styles/production-process/CarbonationProcess.module.cs
 const CarbonationProcessControls = () => {
     const [carbonationData, setCarbonationData] = useState({
         lotNo: "",
-        carbonationTime: "",
-        co2CarbonationPercent: "",
-        processTemperature: "",
-        processPressure: "",
-        startTime: "",
-        expectedEndTime: "",
-        actualEndTime: "",
+        carbonationTime: "120",
+        co2CarbonationPercent: "12",
+        processTemperature: "1",
+        processPressure: "1.4",
         notes: "",
     });
 
