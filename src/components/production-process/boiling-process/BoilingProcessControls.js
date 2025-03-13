@@ -181,8 +181,8 @@ const BoilingProcessControls = ({ workOrder }) => {
     const postBoilVolume = (initialVolume - lossVolume).toFixed(2);
     setBoilingData((prev) => ({
       ...prev,
-      boilLossVolume: lossVolume,
-      postBoilWortVolume: postBoilVolume,
+      boilLossVolume: Number(lossVolume), // 🔹 반드시 숫자로 변환
+      postBoilWortVolume: Number(postBoilVolume),
     }));
   };
 
@@ -191,10 +191,8 @@ const BoilingProcessControls = ({ workOrder }) => {
 
   const handleNextProcess = async () => {
     try {
-  
-      // ❌ null 방지: 데이터가 없으면 기본값 할당
-      const postBoilWortVolume = boilingData.postBoilWortVolume ?? 0; // 기본값 0
-      const boilLossVolume = boilingData.boilLossVolume ?? 0;
+      const postBoilWortVolume = Number(boilingData.postBoilWortVolume) || 0; 
+      const boilLossVolume = Number(boilingData.boilLossVolume) || 0;
   
       await boilingProcessApi.updateBoilingProcessByLotNo(boilingData.lotNo, {
         postBoilWortVolume,
