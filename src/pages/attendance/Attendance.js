@@ -28,7 +28,7 @@ const ProductionSchedule = () => {
   // 추가: 사용자별 프로필 이미지 매핑
   const userImages = {
     'admin': '../images/admin.jpg',
-    'plan': '../images/pla.jpg',
+    'plan': '../images/plan.jpg',
     'work': '../images/work.jpg',
     'EMP001': '../images/emp001.jpg',
     'iu': '../images/iublack.jpg'
