@@ -168,9 +168,9 @@ function WorkOrder() {
     return (
         <div className={workOrder.container}>
             <div className={workOrder.searchBar}>
-                <select 
-                    className={workOrder.selectSearch} 
-                    value={workTeam} 
+                <select
+                    className={workOrder.selectSearch}
+                    value={workTeam}
                     onChange={(e) => setWorkTeam(e.target.value)}
                 >
                     <option value="" disabled>작업조</option>
@@ -178,9 +178,9 @@ function WorkOrder() {
                     <option value="B조">B조</option>
                     <option value="C조">C조</option>
                 </select>
-                <select 
-                    className={workOrder.selectSearch} 
-                    value={productName} 
+                <select
+                    className={workOrder.selectSearch}
+                    value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                 >
                     <option value="" disabled>맥주명</option>
@@ -188,9 +188,9 @@ function WorkOrder() {
                     <option value="카리나 맥주">카리나 맥주</option>
                     <option value="장원영 맥주">장원영 맥주</option>
                 </select>
-                <select 
-                    className={workOrder.selectSearch} 
-                    value={lineNo} 
+                <select
+                    className={workOrder.selectSearch}
+                    value={lineNo}
                     onChange={(e) => setLineNo(e.target.value)}
                 >
                     <option value="" disabled>생산라인</option>
@@ -227,7 +227,7 @@ function WorkOrder() {
                     <FaSync />
                 </button>
             </div>
-            
+
             <div className={workOrder.mainbar}>
                 {noResults ? (
                     <p className={workOrder.noResults}>작업지시서가 없습니다.</p>
@@ -259,9 +259,9 @@ function WorkOrder() {
                                     <td>{work.processStatus}</td>
                                     <td>
                                         <div className={workOrder.progressBar}>
-                                            <div 
+                                            <div
                                                 className={workOrder.progressBarFill}
-                                                style={{width: `${getWorkProgress(work.statusCode)}%`}}
+                                                style={{ width: `${getWorkProgress(work.statusCode)}%` }}
                                             ></div>
                                             <div className={workOrder.progressBarLabel}>
                                                 {getWorkProgress(work.statusCode)}%
@@ -273,7 +273,7 @@ function WorkOrder() {
                         </tbody>
                     </table>
                 )}
-                
+
                 <div className={workOrder.paginationWrapper}>
                     <Pagination
                         page={pageInfo.page}
@@ -284,7 +284,7 @@ function WorkOrder() {
                     />
                 </div>
             </div>
-            
+
             {/* 작업지시서 상세조회 모달 */}
             <Modal
                 isOpen={isModalOpen}
@@ -310,7 +310,7 @@ function WorkOrder() {
                                 <FaFileExport /> PDF 추출
                             </button>
                         </div>
-                        
+
                         <div className={workOrder.tableWrapper}>
                             <table className={workOrder.detailTable}>
                                 <tbody>
@@ -384,16 +384,16 @@ function WorkOrder() {
                         ) : (
                             <p>자재 정보가 없습니다.</p>
                         )}
-                        
+
                         <h2>특이사항</h2>
-                        <textarea 
-                            value={selectedWorkOrder.workEtc || ''} 
-                            className={workOrder.etc} 
+                        <textarea
+                            value={selectedWorkOrder.workEtc || ''}
+                            className={workOrder.etc}
                             readOnly
                         ></textarea>
-                        
-                        <button 
-                            className={workOrder.deleteButton} 
+
+                        <button
+                            className={workOrder.deleteButton}
                             onClick={() => handleDelete(selectedWorkOrder.lotNo)}
                         >
                             <FaTrashAlt /> 삭제
@@ -401,7 +401,7 @@ function WorkOrder() {
                     </div>
                 )}
             </Modal>
-            
+
             {/* 성공 모달 */}
             <Modal
                 isOpen={isSuccessModalOpen}
@@ -417,7 +417,7 @@ function WorkOrder() {
                     <p className={workOrder.successMessage}>{modalMessage}</p>
                 </div>
             </Modal>
-            
+
             {/* 경고 모달 */}
             <Modal
                 isOpen={isWarningModal}

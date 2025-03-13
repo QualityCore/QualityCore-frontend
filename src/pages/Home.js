@@ -3,6 +3,7 @@ import styles from "../styles/Home.module.css";
 import BoardMain from "./board/BoardMain";
 import ProductionPlanCard from "../components/home/ProductionPlanCard";
 import BeerPodium from "../pages/work/BeerPodium";
+import WorkMain from "./work/WorkMain";
 
 
 const Home = () => {
@@ -10,7 +11,7 @@ const Home = () => {
     <div className={styles.homeContainer}>
       <div className={styles.gridContainer}>
         <div className={`${styles.gridItem} ${styles.workOrderCard}`}>
-
+          <WorkMain />
         </div>
 
         <div className={`${styles.gridItem} ${styles.processManagementCard}`}>
