@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/filtrationprocess";
+const BASE_URL = "http://localhost:8080/fermentationdetails";
 
 const filtrationProcessApi = {
 
@@ -22,7 +22,7 @@ const filtrationProcessApi = {
   // 📌 특정 LOT_NO에 대한 자재 정보 조회
   getMaterialsByLotNo: async (lotNo) => {
     try {
-      const response = await axios.get(`${BASE_URL}/${lotNo}`);
+      const response = await axios.get(`${BASE_URL}/ferment/${lotNo}`);
       return response.data.result?.materials || [];
     } catch (error) {
       console.error(`❌ 자재 정보 조회 실패 (LOT_NO: ${lotNo}):`, error);

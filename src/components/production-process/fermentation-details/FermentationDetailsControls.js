@@ -35,10 +35,11 @@ const FermentationDetailsControls = ({ workOrder }) => {
 
   // ✅ workOrder가 변경될 때 lotNo 업데이트
   useEffect(() => {
-    if (workOrder?.lotNo) {
-      setFermentationData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
-    }
-  }, [workOrder]);
+     const savedLotNo = localStorage.getItem("selectedLotNo");
+     if (savedLotNo) {
+       setFermentationData((prev) => ({ ...prev, lotNo: savedLotNo }));
+     }
+   }, []);
   
   // ✅ LOT_NO 가져오기 (이전 공정과 연동)
   useEffect(() => {
