@@ -26,6 +26,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
       try {
         // 작업지시 목록 API 호출
         const response = await materialGrindingApi.getLineMaterial();
+
         const data = response.result?.lineMaterials || [];
 
         if (!Array.isArray(data) || data.length === 0) {
@@ -33,13 +34,18 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           return;
         }
 
+
         // 분쇄 공정 등록된 LOT_NO 목록 조회
         const grindingResponse = await materialGrindingApi.getMaterialGrindingList();
+
         const registeredLotNos = new Set(
           grindingResponse.result?.data?.map((item) => item.lotNo) || []
         );
 
-        // 분쇄 공정에 등록되지 않은 작업지시 ID만 필터링
+
+
+        // ✅ 분쇄 공정에 등록되지 않은 작업지시 ID만 필터링
+
         const filteredData = data.filter(
           (item) => !registeredLotNos.has(item.lotNo)
         );

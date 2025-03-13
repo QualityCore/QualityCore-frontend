@@ -259,7 +259,7 @@ const Sidebar = () => {
               <div className="profile-role">{getUserRole()}</div>
               <div className="profile-actions">
                 <button className="profile-btn" onClick={handleLogout}>로그아웃</button>
-                <button className="profile-btn" onClick={handleAttendance}>스케줄 관리</button>
+                <button className="profile-btn" onClick={handleAttendance}>생산스케줄</button>
               </div>
             </div>
           </div>
