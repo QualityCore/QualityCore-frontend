@@ -19,6 +19,7 @@ const BoilingProcessControls = ({ workOrder }) => {
   const [timer, setTimer] = useState(0);
   const [temperature, setTemperature] = useState(20); // 초기 온도
   const [isHeating, setIsHeating] = useState(false); // 온도 상승 여부
+  const [tempAnimation, setTempAnimation] = useState(false); // 온도 변화 애니메이션 상태
   const navigate = useNavigate();
 
   const [boilingData, setBoilingData] = useState({
@@ -68,9 +69,6 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
- 
-
-
   // 자재 정보 조회 함수 (API 주소를 참고하여 수정)
   const fetchMaterials = async (lotNo) => {
     try {
@@ -105,11 +103,6 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
-
-
-
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBoilingData((prev) => ({ ...prev, [name]: value }));
@@ -126,28 +119,44 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
 
+  // 온도에 따른 색상 클래스 계산 함수 추가
+  const getTemperatureClass = () => {
+    const percentage = (temperature - 20) / (boilingData.temperature - 20);
+    
+    if (percentage < 0.3) return styles.tempCold;
+    if (percentage < 0.6) return styles.tempWarm;
+    if (percentage < 0.9) return styles.tempHot;
+    return styles.tempBoiling;
+  };
+
+  // 개선된 온도 상승 함수
   const startHeating = () => {
     if (isHeating) return; // 이미 실행 중이면 중복 실행 방지
     setIsHeating(true);
-  
+
     const heatingInterval = setInterval(() => {
       setTemperature((prevTemp) => {
-        const newTemp = prevTemp + 5;
-       
-  
-        if (newTemp >= boilingData.temperature) {
-          // ✅ 설정 온도 도달
+        // 온도 변화 애니메이션 트리거
+        setTempAnimation(true);
+        setTimeout(() => setTempAnimation(false), 400);
+        
+        // 비선형적인 상승 속도 (처음에 빠르게, 나중에 천천히)
+        const remainingTemp = boilingData.temperature - prevTemp;
+        const incrementAmount = Math.max(0.5, (remainingTemp / 5));
+        
+        const newTemp = prevTemp + incrementAmount;
+        
+        // 목표 온도에 도달하거나 거의 도달했을 때
+        if (newTemp >= boilingData.temperature - 0.5) {
           clearInterval(heatingInterval);
           setShowTempReachedModal(true); // ✅ 목표 온도 도달 시 모달 표시
           setIsHeating(false);
           return boilingData.temperature;
         }
-        return newTemp;
+        return Math.round(newTemp * 10) / 10; // 소수점 첫째 자리까지
       });
-    }, 1000); // ✅ 1초마다 5°C 상승
+    }, 500); // 0.5초마다 업데이트
   };
-
-
 
   // ✅ 타이머 실행 함수
   const startTimer = () => {
@@ -186,9 +195,6 @@ const BoilingProcessControls = ({ workOrder }) => {
     }));
   };
 
-
-
-
   const handleNextProcess = async () => {
     try {
       console.log("🛠️ handleNextProcess 실행 - 기존 데이터:", boilingData);
@@ -219,8 +225,13 @@ const BoilingProcessControls = ({ workOrder }) => {
     }
   };
   
+  // 타이머 형식 변환 함수
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
-  
   return (
     <form
       className={styles.boilingProcessForm}
@@ -253,17 +264,14 @@ const BoilingProcessControls = ({ workOrder }) => {
 
         <div className={styles.gridItem}>
           <label className={styles.bLabel03}>끓임 온도 (°C)</label>
-          <input
-            className={styles.bItem03}
-            type="text"
-            name="temperature"
-            value={
-              temperature !== undefined && boilingData.temperature !== undefined
-                ? `${temperature}°C / ${boilingData.temperature}°C`
-                : "온도 설정 중..."
-            }
-            readOnly
-          />
+          <div 
+            className={`${styles.tempDisplay} ${getTemperatureClass()} ${tempAnimation ? styles.tempPulse : ''}`}
+          >
+            <span className={styles.currentTemp}>{temperature}</span>
+            <span className={styles.tempDivider}>/</span>
+            <span className={styles.targetTemp}>{boilingData.temperature}</span>
+            <span className={styles.tempUnit}>°C</span>
+          </div>
         </div>
 
         <div className={styles.gridItem}>
@@ -379,8 +387,7 @@ const BoilingProcessControls = ({ workOrder }) => {
                 className={styles.timerIcon}
               />
               <div className={styles.timerValue}>
-                {String(Math.floor(timer / 60)).padStart(2, "0")}:
-                {String(timer % 60).padStart(2, "0")}
+                {formatTime(timer)}
               </div>
             </div>
             <div className={styles.timerStatus}>
@@ -444,7 +451,6 @@ const BoilingProcessControls = ({ workOrder }) => {
         onClose={() => setShowErrorModal(false)}
       />
 
-      
       <CompleteModal
         isOpen={showCompleteModal}
         message={["끓임 공정이 완료되었습니다.", "다음 공정으로 이동하세요."]}
