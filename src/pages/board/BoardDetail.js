@@ -7,7 +7,7 @@ import "react-quill/dist/quill.snow.css";
 import SuccessAnimation from "../../lottie/SuccessNotification";
 import WarningAnimation from "../../lottie/WarningNotification";
 import Modal from 'react-modal';
-import { useAuth } from "../../contexts/AuthContext"; 
+import { useAuth } from "../../contexts/AuthContext";
 
 function BoardDetail() {
     const { boardId } = useParams();
@@ -181,10 +181,9 @@ function BoardDetail() {
                                     />
                                 ) : (
                                     <>{board.boardTitle}
-                                        <span className={`${BoardsDetail.categoryTag} ${
-                                            board.boardCategory === "중요" ? BoardsDetail.important : 
-                                            board.boardCategory === "공지" ? BoardsDetail.notice : 
-                                            BoardsDetail.normal}`}>
+                                        <span className={`${BoardsDetail.categoryTag} ${board.boardCategory === "중요" ? BoardsDetail.important :
+                                            board.boardCategory === "공지" ? BoardsDetail.notice :
+                                                BoardsDetail.normal}`}>
                                             {board.boardCategory}
                                         </span>
                                     </>
@@ -242,6 +241,7 @@ function BoardDetail() {
                         <ReactQuill
                             value={editedBoard.boardContents}
                             onChange={handleEditorChange}
+                            style={{ height: '399px' }}
                         />
                     ) : (
                         <div
