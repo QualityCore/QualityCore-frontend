@@ -79,7 +79,6 @@ const filtrationProcessApi = {
     }
 
     try {
-      console.log(`📌 API 요청: PUT /filtrationprocess/update/${filtrationId}`, updatePayload);
 
       const response = await axios.put(
         `${BASE_URL}/update/${filtrationId}`,
@@ -92,8 +91,7 @@ const filtrationProcessApi = {
           headers: { "Content-Type": "application/json" },
         }
       );
-
-      console.log("✅ 여과공정 업데이트 성공:", response.data);
+      
       return response.data;
     } catch (error) {
       console.error(`❌ 여과공정 업데이트 실패 (FiltrationID: ${filtrationId}):`, error);

@@ -46,20 +46,17 @@ const MashingProcessControls = ({ workOrder }) => {
 
     const fetchWaterInputVolume = async () => {
       try {
-        console.log(`📌 LOT_NO=${mashingData.lotNo}의 자재 목록 조회 요청`);
 
         const materialsList = await mashingProcessApi.getMaterialsByLotNo(
           mashingData.lotNo
         );
-
-        console.log("✅ 자재 목록:", materialsList);
 
         const waterMaterial = materialsList.find(
           (item) => item.materialName === "물"
         );
 
         if (waterMaterial) {
-          console.log(`🔍 물 데이터 찾음: ${waterMaterial.totalQty} L`);
+
           setMashingData((prev) => ({
             ...prev,
             waterInputVolume: waterMaterial.totalQty, // ✅ 물 투입량 설정
@@ -88,12 +85,10 @@ const MashingProcessControls = ({ workOrder }) => {
 
     const fetchMaterialData = async () => {
       try {
-        console.log(`📌 LOT_NO=${mashingData.lotNo}의 자재 목록 조회 요청`);
 
         const materialsList = await mashingProcessApi.getMaterialsByLotNo(
           mashingData.lotNo
         );
-        console.log("✅ 불러온 자재 목록:", materialsList);
 
         // ✅ "물" 데이터 찾기
         const waterMaterial = materialsList.find(
@@ -122,9 +117,6 @@ const MashingProcessControls = ({ workOrder }) => {
         // ✅ 비율 계산: 곡물비율을 1로 맞추고, 물 비율을 반올림
         const waterRatioAdjusted =
           grainRatio > 0 ? Math.round(waterRatio / grainRatio) : 0;
-        console.log(
-          `📌 자동 계산된 비율 -> 곡물: 1, 물: ${waterRatioAdjusted}`
-        );
 
         setMashingData((prev) => ({
           ...prev,
@@ -158,16 +150,14 @@ const MashingProcessControls = ({ workOrder }) => {
         ...mashingData,
         processStatus: "진행 중", // ✅ 상태 업데이트
       };
-      console.log("📌 저장할 데이터:", mashingRequestData);
 
       const response = await mashingProcessApi.saveMashingData(
         mashingRequestData
       );
-      console.log("📌 서버 응답:", response); // ✅ 응답 확인
 
       
     if (response?.result?.savedMashingProcess?.mashingId) {
-      console.log("📌 저장된 mashingId:", response.result.savedMashingProcess.mashingId);
+
       setMashingId(response.result.savedMashingProcess.mashingId);
     } else {
       console.warn("⚠️ 서버 응답에 mashingId가 없습니다.");
@@ -226,8 +216,6 @@ const MashingProcessControls = ({ workOrder }) => {
         actualEndTime: new Date().toISOString(),
       };
 
-      console.log("📌 업데이트할 데이터:", updatedMashingData);
-
       await mashingProcessApi.updateMashingProcess(mashingId,updatedMashingData);
       navigate("/filtration-process");
     } catch (error) {
@@ -236,7 +224,6 @@ const MashingProcessControls = ({ workOrder }) => {
   };
 
   useEffect(() => {
-    console.log("📌 현재 mashingId:", mashingId);
   }, [mashingId]);
 
   
@@ -251,7 +238,6 @@ const MashingProcessControls = ({ workOrder }) => {
         parsedData.grainRatio !== mashingData.grainRatio
       ) {
         sessionStorage.setItem("mashingData", JSON.stringify(mashingData));
-        console.log("✅ mashingData 저장 완료:", sessionStorage.getItem("mashingData"));
       }
     }
   }, [mashingData]);  // ✅ mashingData 변경될 때만 저장

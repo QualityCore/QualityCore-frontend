@@ -10,7 +10,6 @@ export const fetchAllEquipment = async (page = 0, size = 14, searchType = '', se
         }
 
         const url = `http://localhost:8080/api/v1/equipment?${params.toString()}`;
-        console.log("API 요청 URL:", url);
 
         const response = await fetch(url);
         if (!response.ok) {
@@ -18,7 +17,6 @@ export const fetchAllEquipment = async (page = 0, size = 14, searchType = '', se
         }
 
         const data = await response.json();
-        console.log('전체 설비 조회 data:', data);
 
         // API 응답에서 equipment.content 배열을 반환
         if (data && data.result && Array.isArray(data.result.equipment.content)) {
@@ -85,7 +83,6 @@ export const updateEquipment = async (equipmentData) => {
             body: JSON.stringify(equipmentData),  // 수정할 설비 데이터
         });
         const data = await response.json();
-        console.log('설비 수정 data', data);
 
         return data;  // 서버에서 반환된 데이터
     } catch (error) {
@@ -101,7 +98,6 @@ export const deleteEquipment = async (equipmentId) => {
             method: 'DELETE',
         });
         const data = await response.json();
-        console.log('설비 삭제 data', data);
 
         return data;  // 서버에서 반환된 데이터
     } catch (error) {

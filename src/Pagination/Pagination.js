@@ -3,10 +3,8 @@ import { FaFastBackward, FaAngleLeft, FaAngleRight, FaFastForward } from 'react-
 import pagination from "./Pagination.module.css";
 
 const Pagination = ({ page, totalPages, first, last, onPageChange, customStyle }) => {
-    console.log("Pagination 컴포넌트 렌더링, 현재 페이지:", page);
 
     const handlePageChange = (newPage) => {
-        console.log("페이지 변경: ", newPage);
         if (newPage >= 0 && newPage < totalPages) {
             onPageChange(newPage); // 페이지 변경 함수 호출
         }

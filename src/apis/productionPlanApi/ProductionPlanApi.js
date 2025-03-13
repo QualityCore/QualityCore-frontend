@@ -11,9 +11,6 @@ export const fetchProductionPlans = async (planYm, status) => {
       },
     });
 
-    console.log("요청 파라미터:", planYm, status);
-    console.log("응답 데이터:", response.data);
-
     return response.data;
   } catch (error) {
     if (error.response) {

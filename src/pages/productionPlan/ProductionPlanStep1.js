@@ -49,8 +49,6 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
                 return null; // 실패한 경우 명확하게 null 반환
             }
     
-            console.log('✅ Fetched BOM Data:', bomData);
-    
             setProductBOMList(prev => ({
                 ...prev,
                 [productId]: bomData
@@ -74,8 +72,6 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
         try {
             // BOM 정보 불러오기
             const bomData = await loadProductBOM(value);
-            
-            console.log('Fetched BOM Data:', bomData);
 
             updatedProducts[index] = {
                 ...updatedProducts[index],
@@ -123,7 +119,6 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
         const loadProducts = async () => {
             try {
                 const productList = await fetchProducts();
-                console.log("불러온 제품 목록:", productList);
                 setProducts(productList);
             } catch (error) {
                 console.error("제품 목록 로드 실패:", error);
@@ -160,8 +155,6 @@ const ProductionPlanStep1 = ({ formData, setFormData, goToStep, currentStep = 1 
             products: updatedProducts
         });
     };
-
-   
 
     // Step2로 이동 시 라인 배정 데이터 생성
     const handleNextStep = () => {

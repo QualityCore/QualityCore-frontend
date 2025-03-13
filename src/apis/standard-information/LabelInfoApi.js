@@ -9,7 +9,6 @@ export const fetchLabelInfo = async (page = 0, size = 8, search = '') => {
         }
 
         const url = `http://localhost:8080/api/v1/labelInfo?${params.toString()}`;
-        console.log("API 요청 URL:", url);
 
         const response = await fetch(url);
         if (!response.ok) {
@@ -17,7 +16,6 @@ export const fetchLabelInfo = async (page = 0, size = 8, search = '') => {
         }
 
         const data = await response.json();
-        console.log('라벨 정보 조회 data', data);
 
         // API 응답에서 라벨 정보와 페이징 정보를 반환
         if (data && data.result && data.result.labelInfo) {
@@ -53,7 +51,6 @@ export const fetchLabelInfoId = async (labelId) => {
         }
 
         const data = await response.json(); // 응답 JSON 데이터 받기
-        console.log('라벨 정보 조회 data', data); // 콘솔에 응답 데이터 출력
 
         return data.result.labelInfo; // 서버에서 반환된 라벨 정보 데이터 반환
     } catch (error) {
@@ -99,7 +96,6 @@ export const deleteLabelInfo = async (labelId) => {
         }
 
         const data = await response.json(); // 응답 JSON 데이터 받기
-        console.log('삭제 결과:', data); // 콘솔에 삭제 결과 출력
 
         return data; // 서버에서 반환된 결과 데이터 반환
     } catch (error) {

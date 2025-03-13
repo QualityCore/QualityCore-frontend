@@ -7,6 +7,8 @@ import SuccessAnimation from "../../lottie/SuccessNotification";
 import WarningAnimation from "../../lottie/WarningNotification";
 import Pagination from "../../Pagination/Pagination";
 
+Modal.setAppElement("#root");
+
 function EquipmentInfo() {
     const [equipmentList, setEquipmentList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,9 +59,7 @@ function EquipmentInfo() {
 
     const fetchWorkplaceData = async () => {
         try {
-            console.log('Fetching workplace data...');
             const workplaceData = await fetchWorkplaces(); // 작업장 데이터 가져오기
-            console.log('Fetched workplace data:', workplaceData);
             setWorkplaces(workplaceData); // 작업장 데이터 설정
         } catch (error) {
             console.error('Error loading workplace data:', error);
@@ -76,8 +76,6 @@ function EquipmentInfo() {
     const handlePageChange = async (newPage) => {
         // 페이지가 변경되었을 때만 데이터를 새로 로드하도록 함
         if (newPage === pageInfo.page) return; // 현재 페이지와 동일하면 리렌더링 방지
-
-        console.log(`Fetching data for page: ${newPage}`);
 
         // 페이지 정보 업데이트 (새로운 페이지를 설정)
         setPageInfo((prevPageInfo) => ({
@@ -367,7 +365,7 @@ function EquipmentInfo() {
                     />
                 </div>
             </div>
-    
+
             {/* 상세조회 모달 */}
             <Modal
                 isOpen={isModalOpen}
@@ -376,7 +374,7 @@ function EquipmentInfo() {
                 overlayClassName={Equipment.modalOverlay}
             >
                 <div className={Equipment.modalHeader}>
-                    <button onClick={closeModal} className={Equipment.closeButton}>X</button>
+                    <button onClick={closeModal} className={Equipment.closeButton}>x</button>
                 </div>
                 {selectedEquipment && (
                     <div className={Equipment.modalContent}>
@@ -475,16 +473,19 @@ function EquipmentInfo() {
                     </div>
                 )}
             </Modal>
-    
+
             <Modal
                 isOpen={isRegisterModalOpen}
                 onRequestClose={closeRegisterModal}
                 className={Equipment.createModal}
                 overlayClassName={Equipment.modalOverlay}
             >
+                <div className={Equipment.modalHeader1}>
+                    <button onClick={closeRegisterModal} className={Equipment.createCloseButton}>x</button>
+                </div>
                 <div className={Equipment.createModalContent}>
                     <h1>설비 등록</h1>
-                    <button onClick={closeRegisterModal} className={Equipment.createCloseButton}>X</button>
+
                     <form onSubmit={handleSubmit}>
                         <div className={Equipment.createInputContainer}>
                             <label className={Equipment.createInputLabel}>작업장</label>
@@ -509,7 +510,7 @@ function EquipmentInfo() {
                                 name="equipmentName"
                                 value={newEquipment.equipmentName}
                                 onChange={handleInputChange}
-                                className={Equipment.createInputField}
+                                className={Equipment.createInputField1}
                             />
                         </div>
                         <div className={Equipment.createInputContainer}>
@@ -519,7 +520,7 @@ function EquipmentInfo() {
                                 name="modelName"
                                 value={newEquipment.modelName}
                                 onChange={handleInputChange}
-                                className={Equipment.createInputField}
+                                className={Equipment.createInputField2}
                             />
                         </div>
                         <div className={Equipment.createInputContainer}>
@@ -529,7 +530,7 @@ function EquipmentInfo() {
                                 name="manufacturer"
                                 value={newEquipment.manufacturer}
                                 onChange={handleInputChange}
-                                className={Equipment.createInputField}
+                                className={Equipment.createInputField3}
                             />
                         </div>
                         <div className={Equipment.createInputContainer}>
@@ -539,7 +540,7 @@ function EquipmentInfo() {
                                 name="installDate"
                                 value={newEquipment.installDate}
                                 onChange={handleInputChange}
-                                className={Equipment.createInputField}
+                                className={Equipment.createInputField4}
                             />
                         </div>
                         <div className={Equipment.createInputContainer}>
@@ -548,7 +549,7 @@ function EquipmentInfo() {
                                 name="equipmentStatus"
                                 value={newEquipment.equipmentStatus}
                                 onChange={handleInputChange}
-                                className={Equipment.createInputField}
+                                className={Equipment.createInputField5}
                             >
                                 <option value="" disabled>상태를 선택하세요</option>
                                 <option value="정상">정상</option>
@@ -556,14 +557,14 @@ function EquipmentInfo() {
                                 <option value="고장">고장</option>
                             </select>
                         </div>
-    
+
                         <div className={Equipment.createInputContainer}>
                             <label className={Equipment.createInputLabel}>특이사항</label>
                             <textarea
                                 name="equipmentEtc"
                                 value={newEquipment.equipmentEtc}
                                 onChange={handleTextareaChange}
-                                className={Equipment.createInputField}
+                                className={Equipment.createInputField6}
                             />
                         </div>
                         <div className={Equipment.createInputContainer}>
@@ -572,18 +573,18 @@ function EquipmentInfo() {
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                                className={Equipment.createInputField}
+                                className={Equipment.createInputField7}
                             />
                         </div>
                         <button type="submit" className={Equipment.createButton1}>등록</button>
                     </form>
                 </div>
             </Modal>
-    
-            <Modal 
-                isOpen={isSuccessModal} 
-                onRequestClose={closeSuccessModal} 
-                className={Equipment.successModal} 
+
+            <Modal
+                isOpen={isSuccessModal}
+                onRequestClose={closeSuccessModal}
+                className={Equipment.successModal}
                 overlayClassName="modal-overlay"
             >
                 <div className={Equipment.successModalHeader}>
@@ -594,13 +595,13 @@ function EquipmentInfo() {
                     <p className={Equipment.successMessage}>{modalMessage}</p>
                 </div>
             </Modal>
-    
+
             {isWarningModal && (
                 <Modal
                     isOpen={isWarningModal}
                     onRequestClose={closeWarningModal}
                     className={Equipment.warningModal}
-                    overlayClassName={Equipment.warningModalOverlay}
+                    overlayClassName="modal-overlay"
                 >
                     <div className={Equipment.warningModalHeader}>
                         <button className={Equipment.warningCloseButton} onClick={closeWarningModal}>X</button>

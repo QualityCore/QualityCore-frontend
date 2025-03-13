@@ -41,6 +41,8 @@
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
+  border-right: 1px solid #eee;
 }
 
 .detailTable th {
@@ -114,6 +116,7 @@
   border-radius: 8px;
   padding: 1.5rem;
   line-height: 1.6;
+  height: 335px;
 }
 
 /* 첨부파일 관련 */
@@ -325,6 +328,25 @@ select[name="boardCategory"]:focus {
   font-weight: 600;
   margin-top: 10px;
   color: #333;
+}
+
+
+/* 성공 모달 특화 스타일 */
+.successModal {
+  border-top: 5px solid #48BB78;
+}
+
+/* 경고 모달 특화 스타일 */
+.warningModal {
+  border-top: 5px solid #F56565;
+}
+
+.successModalContent {
+  color: #2F855A;
+}
+
+.warningModalContent {
+  color: #C53030;
 }
 
 /* 오버레이 스타일 */

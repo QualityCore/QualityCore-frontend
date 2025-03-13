@@ -64,7 +64,6 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData, lineMaterial,
 
 
   const handleSave = async () => {
-    console.log("🔍 grindingData 전체 데이터:", grindingData);
   
     if (!grindingData || !grindingData.lotNo) {
       alert("⚠️ LOT_NO를 입력해야 합니다!");
@@ -74,7 +73,6 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData, lineMaterial,
     try {
       // ✅ 분쇄 공정 등록 여부 확인
       const checkLotResponse = await materialGrindingApi.getGrindingByLotNo(grindingData.lotNo);
-      console.log("🔍 LOT_NO 확인 API 응답:", checkLotResponse);
   
       if (checkLotResponse?.result?.data && Array.isArray(checkLotResponse.result.data) && checkLotResponse.result.data.length > 0) {     
         alert(`⚠️ 작업지시 ID (${grindingData.lotNo})는 이미 분쇄 공정에 등록되었습니다!`);
@@ -83,7 +81,7 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData, lineMaterial,
   
       // ✅ 데이터 저장
       const savedData = { ...grindingData };
-      console.log("✅ 저장할 데이터:", savedData);
+
       await materialGrindingApi.saveGrindingData(savedData);
   
       // ✅ 상태 업데이트 (진행 중으로 변경)
@@ -91,7 +89,7 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData, lineMaterial,
         lotNo: grindingData.lotNo,
         processTracking: { processStatus: "진행 중" },
       };
-      console.log("✅ 상태 업데이트 요청:", updatedData);
+
       const response = await materialGrindingApi.updateProcessStatus(updatedData);
   
       if (response.status === 200 || response.status === 201) {
@@ -113,7 +111,6 @@ const MaterialGrindingControls = ({ grindingData, setGrindingData, lineMaterial,
 
   const handleConfirmClick = () => {
     setShowConfirmModal(false);
-    console.log("✅ 확인 버튼 클릭! 성공 모달 열기");
     setShowSuccessModal(true);
   };
 
