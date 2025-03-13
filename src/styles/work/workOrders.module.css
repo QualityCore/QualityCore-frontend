@@ -139,6 +139,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
 .searchRefresh:hover {
   background: linear-gradient(to right, #38A169, #2F855A);
   transform: translateY(-2px);
+  transform: rotate(180deg);
   box-shadow: 0 6px 15px rgba(72, 187, 120, 0.4);
 }
 
@@ -295,6 +296,7 @@ input[type="date"].searchInput::-webkit-calendar-picker-indicator {
   width: 36px;
   height: 36px;
   display: flex;
+  font-weight: bold;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -552,24 +554,34 @@ h2 {
 
 .warningModalHeader,
 .successModalHeader {
-  text-align: right;
-  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 
 .warningCloseButton,
 .successCloseButton {
-  background: none;
-  border: none;
+  background: #F8FAFF;
+  border: 1px solid #E2E8F0;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #A0AEC0;
-  transition: color 0.3s ease;
-  padding: 0;
+  color: #718096;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
 }
 
 .warningCloseButton:hover,
 .successCloseButton:hover {
+  background-color: #EBF8FF;
   color: #2B6CB0;
+  transform: rotate(90deg);
 }
 
 .successMessage,

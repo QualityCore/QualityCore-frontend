@@ -233,7 +233,7 @@ const Sidebar = () => {
         <li>
           <Link
             to="/board"
-            onClick={resetNotifications} // 알림 초기화
+            onClick={resetNotifications}
             className="menu-item"
           >
             <div className="menu-item-content">
