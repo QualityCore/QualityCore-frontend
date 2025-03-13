@@ -10,11 +10,8 @@ import styles from "../../styles/production-process/PostMaturationFiltration.mod
 const PostMaturationFiltrationControls = () => {
     const [filtrationData, setFiltrationData] = useState({
         lotNo: "",
-        filtrationTime: "",
+        filtrationTime: "120",
         turbidity: "",
-        startTime: "",
-        expectedEndTime: "",
-        actualEndTime: "",
         notes: "",
     });
 

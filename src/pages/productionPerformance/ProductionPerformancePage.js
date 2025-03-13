@@ -70,29 +70,35 @@ const ProductionPerformancePage = () => {
           }
         }
         
-        // 효율성
-        if (activeTab === 'efficiency') {
-          try {
-            const efficiencyResult = await getProductEfficiency();
-            console.log("효율성 API 응답:", efficiencyResult);
-            
-            // 정확한 경로에서 데이터 추출
-            const effData = efficiencyResult.data?.efficiency || 
-                           efficiencyResult.data?.result?.efficiency || 
-                           efficiencyResult?.result?.efficiency; 
-            
-            console.log("효율성 추출된 데이터:", effData);
-            
-            if (effData && effData.length > 0) {
-              console.log("효율성 데이터 찾음, 크기:", effData.length);
-              setEfficiency(effData);
-            } else {
-              console.log("효율성 데이터를 찾을 수 없습니다");
-            }
-          } catch (error) {
-            console.error('효율성 데이터 로드 오류:', error);
-          }
-        }
+              // 효율성
+   
+              if (activeTab === 'efficiency') {
+                try {
+                  const efficiencyResult = await getProductEfficiency();
+                  console.log("효율성 API 응답:", efficiencyResult);
+                  
+                  // 명확한 데이터 경로 추출 (디버깅용 로그 추가)
+                  console.log("efficiencyResult 구조:", efficiencyResult);
+                  console.log("efficiencyResult.data:", efficiencyResult.data);
+                  console.log("efficiencyResult.data?.efficiency:", efficiencyResult.data?.efficiency);
+                  
+                  const effData = efficiencyResult.data?.efficiency || 
+                                efficiencyResult.data?.result?.efficiency || 
+                                efficiencyResult?.result?.efficiency; 
+                  
+                  console.log("효율성 추출된 데이터:", effData);
+                  
+                  if (effData && effData.length > 0) {
+                    console.log("효율성 데이터 찾음, 크기:", effData.length);
+                    setEfficiency(effData);
+                  } else {
+                    console.log("효율성 데이터를 찾을 수 없습니다");
+                    setEfficiency([]); // 빈 배열로 초기화
+                  }
+                } catch (error) {
+                  console.error('효율성 데이터 로드 오류:', error);
+                }
+              }
         
       } catch (error) {
         console.error('전체 데이터 로드 오류:', error);
@@ -307,40 +313,34 @@ const getQualityChartData = () => {
     <div className={styles.tabContent}>
       <div className={styles.tableContainer}>
         <h3>제품별 생산 효율성</h3>
-        <table className={styles.dataTable}>
-          <thead>
-            <tr>
-              <th>제품명</th>
-              <th>평균 생산시간(일)</th>
-              <th>평균 배치 크기</th>
-              <th>평균 품질률(%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {efficiency.map((item, index) => (
-              <tr key={index}>
-                <td>{item.PRODUCT_NAME}</td>
-                <td>
-                  {/* 배열 형식 확인하고 안전하게 처리 */}
-                  {Array.isArray(item.AVG_PRODUCTION_TIME_MINUTES) 
-                    ? (item.AVG_PRODUCTION_TIME_MINUTES[2] / 60 / 24).toFixed(1) 
-                    : (item.AVG_PRODUCTION_TIME_MINUTES / 60 / 24).toFixed(1)}
-                </td>
-                <td>
-                  {/* 배열 형식 확인하고 안전하게 처리 */}
-                  {Array.isArray(item.AVG_BATCH_SIZE) 
-                    ? parseInt(item.AVG_BATCH_SIZE[2]).toLocaleString() 
-                    : parseInt(item.AVG_BATCH_SIZE).toLocaleString()}
-                </td>
-                <td>{parseFloat(item.AVG_QUALITY_RATE).toFixed(2)}</td>
+        {efficiency.length > 0 ? (
+          <table className={styles.dataTable}>
+            <thead>
+              <tr>
+                <th>제품명</th>
+                <th>총 출하량</th>
+                <th>양품 수량</th>
+                <th>품질률(%)</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {efficiency.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.PRODUCT_NAME}</td>
+                  <td>{item.TOTAL_QUANTITY ? parseInt(item.TOTAL_QUANTITY).toLocaleString() : 0}</td>
+                  <td>{item.GOOD_QUANTITY ? parseInt(item.GOOD_QUANTITY).toLocaleString() : 0}</td>
+                  <td>{item.QUALITY_RATE ? parseFloat(item.QUALITY_RATE).toFixed(2) : '0.00'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className={styles.noData}>데이터가 없습니다.</div>
+        )}
       </div>
     </div>
   );
-
+  
   const renderActiveTab = () => {
     if (loading) {
       return <div className={styles.loading}>데이터 로딩 중...</div>;

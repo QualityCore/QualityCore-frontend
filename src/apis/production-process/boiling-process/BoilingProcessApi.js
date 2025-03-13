@@ -44,17 +44,17 @@ const boilingProcessApi = {
 
 
  // 📌 끓임 공정 업데이트 (끓임 후 워트량, 끓임 손실량 및 실제 종료시간 수정)
- updateBoilingProcess: async (boilingId, updatePayload) => {
-  if (!boilingId) {
-    console.error("❌ updateBoilingProcess 요청 실패: boilingId가 없습니다.");
-    throw new Error("Boiling ID is required");
+ updateBoilingProcessByLotNo: async (lotNo, updatePayload) => {
+  if (!lotNo) {
+    console.error("❌ updateBoilingProcess 요청 실패: lotNo가 없습니다.");
+    throw new Error("Lot No is required");
   }
 
   try {
-    console.log(`📌 API 요청: PUT ${BASE_URL}/update/${boilingId}`, updatePayload);
+    console.log(`📌 API 요청: PUT ${BASE_URL}/update/lot/${lotNo}`, updatePayload);
 
     const response = await axios.put(
-      `${BASE_URL}/update/${boilingId}`,
+      `${BASE_URL}/update/lot/${lotNo}`,
       updatePayload,
       { headers: { "Content-Type": "application/json" } }
     );
@@ -62,11 +62,10 @@ const boilingProcessApi = {
     console.log("✅ 끓임 공정 업데이트 성공:", response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ 끓임 공정 업데이트 실패 (BoilingID: ${boilingId}):`, error);
+    console.error(`❌ 끓임 공정 업데이트 실패 (Lot No: ${lotNo}):`, error);
     throw error;
   }
 },
-
 
 
 // 📌 특정 LOT_NO에 대한 끓임 공정 데이터 조회

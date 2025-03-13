@@ -145,7 +145,7 @@
     box-shadow: 0 4px 10px rgba(34, 211, 238, 0.3);
     font-size: 1rem;
     min-width: 180px;
-    width: 100%;
+    width: auto;
     margin-top: 1rem;
   }
   

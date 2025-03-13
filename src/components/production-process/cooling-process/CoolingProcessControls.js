@@ -18,10 +18,11 @@ const CoolingProcessControls = ({ workOrder }) => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isCooling, setIsCooling] = useState(false);
   const [temperature, setTemperature] = useState(100); // 🔥 초기 온도 100°C
-  const [timeLeft, setTimeLeft] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [tempAnimation, setTempAnimation] = useState(false); // 온도 변화 애니메이션 상태
   const navigate = useNavigate();
   const [coolingData, setCoolingData] = useState({
-    lotNo: "",
+    lotNo: workOrder?.lotNo || "",
     coolingTime: 120, // 냉각 시간
     targetTemperature: 5, //  목표 온도 (°C)
     coolantTemperature: 2, //  냉각수 온도 (°C)
@@ -29,8 +30,14 @@ const CoolingProcessControls = ({ workOrder }) => {
     processStatus: "진행 중",
   }); 
 
+  // workOrder가 변경될 때 lotNo 업데이트
+  useEffect(() => {
+    if (workOrder?.lotNo) {
+      setCoolingData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
+    }
+  }, [workOrder]);
 
-// LOT_NO가 변경되면 데이터 로드
+  // LOT_NO가 변경되면 데이터 로드
   useEffect(() => {
     const savedLotNo = localStorage.getItem("selectedLotNo");
     if (savedLotNo) {
@@ -38,17 +45,15 @@ const CoolingProcessControls = ({ workOrder }) => {
     }
   }, []);
 
-
-  // LOT_NO가 변경되면 자재 정보 및 여과 공정 데이터 조회 실행
-    useEffect(() => {
-      if (coolingData.lotNo) {
-       fetchCoolingData(coolingData.lotNo);
-      }
-    }, [coolingData.lotNo]);
-
+  // LOT_NO가 변경되면 자재 정보 및 냉각 공정 데이터 조회 실행
+  useEffect(() => {
+    if (coolingData.lotNo) {
+      fetchCoolingData(coolingData.lotNo);
+    }
+  }, [coolingData.lotNo]);
     
-   // 냉각 공정 데이터 가져오기
-   const fetchCoolingData = async (lotNo) => {
+  // 냉각 공정 데이터 가져오기
+  const fetchCoolingData = async (lotNo) => {
     try {
       console.log("✅ fetchCoolingData 실행 - LOT_NO:", lotNo);
       const response = await coolingProcessApi.getCoolingProcessByLotNo(lotNo);
@@ -71,31 +76,41 @@ const CoolingProcessControls = ({ workOrder }) => {
     }
   };
   
-
-   // ✅ 온도 감소 애니메이션 시작
-   const startCooling = () => {
+  // ✅ 온도 감소 애니메이션 시작 - 개선된 버전
+  const startCooling = () => {
     if (isCooling) return; // 이미 실행 중이면 중복 실행 방지
 
     setIsCooling(true);
+    
+    // 단계적으로 온도 감소
     const coolingInterval = setInterval(() => {
       setTemperature((prevTemp) => {
-        const newTemp = prevTemp - 5; // 5°C씩 감소
-        if (newTemp <= coolingData.targetTemperature) {
+        // 온도 변화 애니메이션 트리거
+        setTempAnimation(true);
+        setTimeout(() => setTempAnimation(false), 400);
+        
+        // 비선형적인 냉각 속도 (초반에 빠르게, 나중에 천천히)
+        const remainingTemp = prevTemp - coolingData.targetTemperature;
+        const decrementAmount = Math.max(0.5, (remainingTemp / 10));
+        
+        const newTemp = prevTemp - decrementAmount;
+        
+        // 목표 온도에 도달하거나 거의 도달했을 때
+        if (newTemp <= coolingData.targetTemperature + 0.5) {
           clearInterval(coolingInterval);
-          setShowCoolingCompleteModal(true); // ✅ 목표 온도 도달 시 모달 표시
+          setShowCoolingCompleteModal(true);
           setIsCooling(false);
           return coolingData.targetTemperature;
         }
-        return newTemp;
+        return Math.round(newTemp * 10) / 10; // 소수점 첫째 자리까지
       });
-    }, 1000); // ✅ 1초마다 5°C 감소
+    }, 500); // 0.5초마다 업데이트 (더 자연스러운 감소)
   };
 
-
-
-  // ✅ 타이머 실행 함수
+  // ✅ 타이머 실행 함수 - 당화 공정과 동일하게
   const startTimer = () => {
     setIsTimerRunning(true);
+    setIsProcessing(true);
     const totalTime =
       process.env.NODE_ENV === "development"
         ? 5
@@ -108,7 +123,8 @@ const CoolingProcessControls = ({ workOrder }) => {
         if (newTime <= 0) {
           clearInterval(countdown);
           setIsProcessing(false);
-          setShowCompleteModal(true); // ✅ 완료 모달 표시
+          setIsTimerRunning(false);
+          setShowCompleteModal(true);
           setButtonLabel("다음 공정 이동");
           return 0;
         }
@@ -116,8 +132,6 @@ const CoolingProcessControls = ({ workOrder }) => {
       });
     }, 1000);
   };
-
- 
 
   const handleSave = async () => {
     try {
@@ -127,14 +141,12 @@ const CoolingProcessControls = ({ workOrder }) => {
       setButtonLabel("다음 공정 이동");    
     } catch (error) {
       setShowErrorModal(true);
+      setIsProcessing(false);
     }
   };
 
-
-
   const handleNextProcess = async () => {
     try {
-     
       navigate("/fermentation-details");
     } catch (error) {
       setShowErrorModal(true);
@@ -152,10 +164,20 @@ const CoolingProcessControls = ({ workOrder }) => {
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
+  
+  // 온도에 따른 색상 클래스 계산
+  const getTemperatureClass = () => {
+    const percentage = (temperature - coolingData.targetTemperature) / (100 - coolingData.targetTemperature);
+    
+    if (percentage > 0.7) return styles.tempHot;
+    if (percentage > 0.4) return styles.tempWarm;
+    if (percentage > 0.1) return styles.tempCool;
+    return styles.tempCold;
+  };
 
   return (
     <form
-      className={`${styles.boilingProcessForm} ${isCooling ? styles.cooling : ''}`}
+      className={`${styles.coolingProcessForm} ${isCooling ? styles.cooling : ''}`}
       onSubmit={(e) => e.preventDefault()}
     >
       <h2 className={styles.title}>냉각 공정</h2>
@@ -185,13 +207,14 @@ const CoolingProcessControls = ({ workOrder }) => {
 
         <div className={styles.gridItem}>
           <label className={styles.cLabel03}>냉각 온도 (°C):</label>
-          <input
-            className={styles.cItem03}
-            type="text"
-            name="targetTemperature"
-            value={`${temperature}°C / ${coolingData.targetTemperature}°C`}
-            readOnly
-          />
+          <div 
+            className={`${styles.tempDisplay} ${getTemperatureClass()} ${tempAnimation ? styles.tempPulse : ''}`}
+          >
+            <span className={styles.currentTemp}>{temperature}</span>
+            <span className={styles.tempDivider}>/</span>
+            <span className={styles.targetTemp}>{coolingData.targetTemperature}</span>
+            <span className={styles.tempUnit}>°C</span>
+          </div>
         </div>
 
         <div className={styles.gridItem}>
@@ -228,25 +251,25 @@ const CoolingProcessControls = ({ workOrder }) => {
         </div>
       </div>
 
-      {/* 온도 정보 시각화 (추가) */}
-      {isCooling && (
-        <div className={styles.temperatureDisplay}>
-          <span className={styles.current}>{temperature}°C</span>
-          <span className={styles.target}>목표: {coolingData.targetTemperature}°C</span>
-        </div>
-      )}
-
-      {/* 타이머 표시 개선 */}
+      {/* 타이머 표시 - 당화 공정과 동일하게 */}
       {timeLeft > 0 && (
-        <div className={styles.timerDisplay}>
-          <div className={styles.timerContent}>
-            <span className={styles.timerLabel}>남은 시간</span>
-            <span className={styles.timerValue}>{formatTime(timeLeft)}</span>
+        <div className={styles.controlsContainer}>
+          <div className={styles.timerContainer}>
+            <div className={styles.timerLabel}>냉각 공정 진행 중</div>
+            <div className={styles.timerDisplay}>
+              <img src="/images/clock-un.gif" alt="타이머" className={styles.timerIcon} />
+              <div className={styles.timerValue}>
+                {formatTime(timeLeft)}
+              </div>
+            </div>
+            <div className={styles.timerStatus}>
+              {isTimerRunning ? "공정이 진행 중입니다" : ""}
+            </div>
           </div>
         </div>
       )}
 
-      <div className={styles.fGridItem}>
+      <div className={styles.buttonContainer}>
         <button
           className={styles.fSaveButton}
           onClick={() => {
@@ -292,8 +315,8 @@ const CoolingProcessControls = ({ workOrder }) => {
         isOpen={showCoolingCompleteModal} 
         message="설정한 온도에 도달하여 작업을 시작합니다." 
         onConfirm={() => { setShowCoolingCompleteModal(false); startTimer(); }} 
+        onClose={() => { setShowCoolingCompleteModal(false); startTimer(); }}
       />
-
     </form>
   );
 };

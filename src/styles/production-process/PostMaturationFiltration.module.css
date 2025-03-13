@@ -182,7 +182,7 @@
     box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
     font-size: 0.95rem;
     margin-top: 1rem;
-    width: 100%;
+    width: auto;
   }
   
   .submitButton:hover:not(:disabled) {

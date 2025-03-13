@@ -10,12 +10,12 @@ import styles from "../../styles/production-process/MaturationCss.module.css";
 const MaturationControls = () => {
     const [maturationData, setMaturationData] = useState({
         lotNo: "",
-        maturationTime: "",
-        startTemperature: "",
-        temperature: "",
-        pressure: "",
-        co2Percent: "",
-        dissolvedOxygen: "",
+        maturationTime: "720",
+        startTemperature: "1",
+        temperature: "0",
+        pressure: "1.4",
+        co2Percent: "12",
+        dissolvedOxygen: "7",
         notes: "",
     });
 
@@ -68,6 +68,13 @@ const MaturationControls = () => {
 
     const formatDateTime = (date) => {
         return date.toISOString().replace('T', ' ').substring(0, 19);
+    };
+
+    // 타이머 표시 형식 변환 함수
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
     const handleSave = async () => {
@@ -183,7 +190,7 @@ const MaturationControls = () => {
                 </div>
 
                 <div className={styles.gridItem}>
-                    <label>숙성 시간 (분)</label>
+                    <label>숙성 시간 (시간)</label>
                     <input
                         type="number"
                         name="maturationTime"
@@ -264,15 +271,25 @@ const MaturationControls = () => {
                     ></textarea>
                 </div>
 
+                {/* 타이머 표시 - 당화/냉각/발효 공정과 동일한 스타일 */}
                 {timeLeft > 0 && (
-                    <div className={styles.gridItem}>
-                        <p className={styles.timer}>
-                            남은 시간: {Math.floor(timeLeft / 60)}분 {timeLeft % 60}초
-                        </p>
+                    <div className={styles.controlsContainer}>
+                        <div className={styles.timerContainer}>
+                            <div className={styles.timerLabel}>숙성 공정 진행 중</div>
+                            <div className={styles.timerDisplay}>
+                                <img src="/images/clock-un.gif" alt="타이머" className={styles.timerIcon} />
+                                <div className={styles.timerValue}>
+                                    {formatTime(timeLeft)}
+                                </div>
+                            </div>
+                            <div className={styles.timerStatus}>
+                                {isTimerRunning ? "공정이 진행 중입니다" : ""}
+                            </div>
+                        </div>
                     </div>
                 )}
 
-                <div className={styles.gridItem}>
+                <div className={styles.buttonContainer}>
                     <button
                         className={styles.submitButton}
                         onClick={() => {
@@ -289,7 +306,7 @@ const MaturationControls = () => {
                         {buttonLabel === "등록하기"
                             ? "등록하기"
                             : buttonLabel === "공정 진행 중"
-                                ? `공정 진행 중 (${Math.floor(timeLeft / 60)}분 ${timeLeft % 60}초)`
+                                ? `공정 진행 중`
                                 : "다음 공정으로 이동"}
                     </button>
                 </div>
@@ -313,7 +330,7 @@ const MaturationControls = () => {
 
             <CompleteModal
                 isOpen={showCompleteModal}
-                message="공정이 완료되었습니다."
+                message={["숙성 공정이 완료되었습니다.", "다음 공정으로 이동하세요."]}
                 onClose={() => {
                     handleCloseCompleteModal()
                 }}
