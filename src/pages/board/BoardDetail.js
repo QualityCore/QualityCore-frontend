@@ -315,7 +315,7 @@ function BoardDetail() {
                     overlayClassName="modal-overlay"
                 >
                     <div className={BoardsDetail.successModalHeader}>
-                        <button className={BoardsDetail.successCloseButton} onClick={closeModal}>X</button>
+                        <button className={BoardsDetail.successCloseButton} onClick={closeModal}>x</button>
                     </div>
                     <div className={BoardsDetail.successModalContent}>
                         <SuccessAnimation />
@@ -333,7 +333,7 @@ function BoardDetail() {
                     overlayClassName="warningModalOverlay"
                 >
                     <div className={BoardsDetail.warningModalHeader}>
-                        <button className={BoardsDetail.warningCloseButton} onClick={closeWarningModal}>X</button>
+                        <button className={BoardsDetail.warningCloseButton} onClick={closeWarningModal}>x</button>
                     </div>
                     <div className={BoardsDetail.warningModalContent}>
                         <WarningAnimation />

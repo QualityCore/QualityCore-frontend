@@ -307,11 +307,27 @@ select[name="boardCategory"]:focus {
 /* 모달 닫기 버튼 - 공통 */
 .successCloseButton,
 .warningCloseButton {
-  background: none;
-  border: none;
-  font-size: 18px;
+  background: #F8FAFF;
+  border: 1px solid #E2E8F0;
+  font-size: 1.5rem;
   cursor: pointer;
-  color: #666;
+  color: #718096;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.successCloseButton:hover,
+.warningCloseButton:hover {
+  background-color: #EBF8FF;
+  color: #2B6CB0;
+  transform: rotate(90deg);
 }
 
 /* 모달 내용 - 공통 */

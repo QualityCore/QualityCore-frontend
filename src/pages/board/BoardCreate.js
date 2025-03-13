@@ -185,7 +185,7 @@ function BoardCreate() {
                     overlayClassName="successModalOverlay"
                 >
                     <div className={BoardsCreate.successModalHeader}>
-                        <button className={BoardsCreate.successCloseButton} onClick={closeModal}>X</button>
+                        <button className={BoardsCreate.successCloseButton} onClick={closeModal}>x</button>
                     </div>
                     <div className={BoardsCreate.successModalContent}>
                         <SuccessAnimation />
@@ -203,7 +203,7 @@ function BoardCreate() {
                     overlayClassName="warningModalOverlay"
                 >
                     <div className={BoardsCreate.warningModalHeader}>
-                        <button className={BoardsCreate.warningCloseButton} onClick={closeWarningModal}>X</button>
+                        <button className={BoardsCreate.warningCloseButton} onClick={closeWarningModal}>x</button>
                     </div>
                     <div className={BoardsCreate.warningModalContent}>
                         <WarningAnimation />
