@@ -9,9 +9,8 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
   const [uniqueLotNos, setUniqueLotNos] = useState([]);
 
   useEffect(() => {
-    setFormData(grindingData); // ✅ grindingData 변경 시 formData를 최신 상태로 업데이트
+    setFormData(grindingData); // grindingData 변경 시 formData를 최신 상태로 업데이트
   }, [grindingData]);
-
 
   useEffect(() => {
     if (lineMaterial) {
@@ -19,21 +18,14 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
       const uniqueLots = [...new Set(lineMaterial.map((item) => item.lotNo))];
       setUniqueLotNos(uniqueLots);
     }
-  }, [lineMaterial])
-
+  }, [lineMaterial]);
 
   // 작업지시 ID 목록 가져오기 (중복 제거 추가)
   useEffect(() => {
-    console.log("✅ useEffect 실행됨: fetchLineMaterial 호출"); // ✅ useEffect 실행 확인
-  
     const fetchLineMaterial = async () => {
       try {
-        const url = `http://localhost:8080/productionprocess/linematerial`;
-        console.log("📌 실제 요청 URL:", url); // ✅ 요청 URL 출력
-  
+        // 작업지시 목록 API 호출
         const response = await materialGrindingApi.getLineMaterial();
-
-        console.log("📌 작업지시 목록 API 응답:", response);
 
         const data = response.result?.lineMaterials || [];
 
@@ -41,57 +33,57 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           console.warn("⚠️ 작업지시 ID 데이터 없음!");
           return;
         }
-  
-        const grindingResponse =
-          await materialGrindingApi.getMaterialGrindingList();
+
+
+        // 분쇄 공정 등록된 LOT_NO 목록 조회
+        const grindingResponse = await materialGrindingApi.getMaterialGrindingList();
 
         const registeredLotNos = new Set(
           grindingResponse.result?.data?.map((item) => item.lotNo) || []
         );
 
 
+
         // ✅ 분쇄 공정에 등록되지 않은 작업지시 ID만 필터링
+
         const filteredData = data.filter(
           (item) => !registeredLotNos.has(item.lotNo)
         );
-
+        // 상태 업데이트: 분쇄 공정에 등록되지 않은 작업지시 목록 저장
         setLineMaterial(filteredData);
       } catch (error) {
         console.error("❌ 작업지시 ID 목록 불러오기 실패:", error);
       }
     };
-  
+
     fetchLineMaterial();
   }, []);
-  
 
   // 주원료 필터링: "보리", "밀", "쌀"만 허용
   const allowedMaterials = ["보리", "밀", "쌀"];
 
   const handleLotNoChange = async (e) => {
     const selectedLotNo = e.target.value;
-    if (!selectedLotNo) return; // ✅ 선택된 lotNo가 없으면 실행하지 않음
+    if (!selectedLotNo) return; // 선택된 lotNo가 없으면 실행하지 않음
 
     try {
       const response = await materialGrindingApi.getRawMaterialByLotNo(
         selectedLotNo
       );
-
-      // 📌 올바른 배열 데이터로 변환
+      // 올바른 배열 데이터로 변환
       const materialData = response.result?.materials || [];
 
       if (!Array.isArray(materialData) || materialData.length === 0) {
         console.warn("⚠️ 주원료 데이터가 없습니다.");
-        resetFormData(); // ✅ 값 초기화 함수 호출
+        resetFormData(); // 값 초기화 함수 호출
         return;
       }
 
-      // 🔹 `allowedMaterials`에 포함된 원료 찾기
+      // allowedMaterials에 포함된 원료 찾기
       const validMaterial = materialData.find((item) =>
         allowedMaterials.includes(item.materialName)
       );
-
-      // 🔹 `maltTypes`(맥아 종류) 중에서 존재하는 맥아 찾기
+      // maltTypes(맥아 종류) 중에서 존재하는 맥아 찾기
       const validMalt = materialData.find((item) =>
         maltTypes.includes(item.materialName)
       );
@@ -112,23 +104,23 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         };
 
         setSelectedMaterial(materialName);
-        setFormData((prev) => ({ ...prev, ...updatedData })); // ✅ 로컬 상태 업데이트
-        setGrindingData((prev) => ({ ...prev, ...updatedData })); // ✅ 부모 상태 업데이트
+        setFormData((prev) => ({ ...prev, ...updatedData })); // 로컬 상태 업데이트
+        setGrindingData((prev) => ({ ...prev, ...updatedData })); // 부모 상태 업데이트
       } else {
         console.warn(
           `⚠️ 허용되지 않은 원료만 포함됨: ${materialData
             .map((item) => item.materialName)
             .join(", ")}`
         );
-        resetFormData(); // ✅ 값 초기화 함수 호출
+        resetFormData(); // 값 초기화 함수 호출
       }
     } catch (error) {
       console.error("❌ 주원료 불러오기 실패:", error);
-      resetFormData(); // ✅ API 오류 시도 동일하게 초기화
+      resetFormData(); // API 오류 시 동일하게 초기화
     }
   };
 
-  // ✅ 중복 제거를 위해 초기화 함수 추가
+  // 중복 제거를 위해 초기화 함수 추가
   const resetFormData = () => {
     setSelectedMaterial("");
     const resetData = {
@@ -144,7 +136,7 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
     setGrindingData(resetData);
   };
 
-  // ✅ 허용된 맥아 종류 리스트
+  // 허용된 맥아 종류 리스트
   const maltTypes = ["페일 몰트", "필스너 몰트", "초콜릿 몰트"];
 
   const materialSettings = {
@@ -157,10 +149,10 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
     const { name, value } = e.target;
 
     setFormData((prev) => {
-      // 🔹 로컬 상태(formData) 업데이트
+      // 로컬 상태(formData) 업데이트
       let updatedData = { ...prev, [name]: value };
 
-      // ✅ 원료(mainMaterial) 변경 시, 분쇄 간격과 속도를 자동 설정
+      // 원료(mainMaterial) 변경 시, 분쇄 간격과 속도를 자동 설정
       if (name === "mainMaterial") {
         const settings = materialSettings[value] || {
           grindInterval: "",
@@ -174,10 +166,10 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
     });
 
     setGrindingData((prev) => {
-      // ✅ 부모 상태(grindingData)도 함께 업데이트 (중요!)
+      // 부모 상태(grindingData)도 함께 업데이트 (중요!)
       let updatedData = { ...prev, [name]: value };
 
-      // ✅ 원료(mainMaterial) 변경 시, 부모 상태도 함께 업데이트
+      // 원료(mainMaterial) 변경 시, 부모 상태도 함께 업데이트
       if (name === "mainMaterial") {
         const settings = materialSettings[value] || {
           grindInterval: "",
@@ -232,9 +224,11 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
             onChange={handleLotNoChange}
           >
             <option value="">ID 선택</option>
-             {uniqueLotNos.map((lotNo) => (
-            <option key={lotNo} value={lotNo}>{lotNo}</option>
-          ))}
+            {uniqueLotNos.map((lotNo) => (
+              <option key={lotNo} value={lotNo}>
+                {lotNo}
+              </option>
+            ))}
           </select>
         </div>
 
