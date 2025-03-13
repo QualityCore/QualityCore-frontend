@@ -16,8 +16,8 @@ const PackagingAndShipmentControls = () => {
         sealingStatus: "양호",
         packagingStatus: "양호",
         shipmentDate: new Date().toISOString().split("T")[0],
-        productName: "",
-        shipmentQuantity: 0, // Double 타입
+        productName: "아이유맥주",
+        shipmentQuantity: 5000, // Double 타입
         destination: "",
         notes: "", // 메모 필드 추가
     });
@@ -54,7 +54,7 @@ const PackagingAndShipmentControls = () => {
             packagingStatus: "양호",
             shipmentDate: new Date().toISOString().split("T")[0],
             productName: "아이유맥주",
-            shipmentQuantity: 0,
+            shipmentQuantity: 5000,
             destination: "",
             notes: "",
         });
@@ -129,8 +129,9 @@ const PackagingAndShipmentControls = () => {
 
 
     const handleNextProcess = async () => {
-        try {       
-          navigate("/work/orders");
+        try {  
+            console.log("✅ handleNextProcess 실행됨!"); // 디버깅 로그 추가     
+          navigate('/work/orders');
         } catch (error) {
           setShowErrorModal(true);
         }
@@ -294,7 +295,7 @@ const PackagingAndShipmentControls = () => {
                                 setShowConfirmModal(true);
                             } else if (buttonLabel === "공정 완료") {
                                 handleCompleteProcess();
-                            } else if (buttonLabel === "작업지시관리로 가기") {
+                            } else if (buttonLabel === "작업지시 관리 이동") {
                                 handleNextProcess();
                             }
                         }}
