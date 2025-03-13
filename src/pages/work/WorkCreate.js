@@ -6,6 +6,7 @@ import WarningAnimation from "../../lottie/WarningNotification";
 import Modal from "react-modal";
 import JSConfetti from "js-confetti";
 import { FaCheck, FaClipboardList } from "react-icons/fa";
+import { useAuth } from "../../contexts/AuthContext";
 
 const jsConfetti = new JSConfetti();
 
@@ -19,6 +20,8 @@ function WorkCreate() {
     const [warningMessage, setWarningMessage] = useState("");
     const [etcText, setEtcText] = useState("");
     const etcRef = useRef();
+    const { currentUser } = useAuth();
+    
 
     // 생산계획 가져오기
     const fetchWorkOrders = async () => {
@@ -62,7 +65,7 @@ function WorkCreate() {
         const workOrderData = {
             workProgress: "0%",
             workEtc: etcRef.current.value,
-            empId: "EMP001",
+            empId: currentUser ? currentUser.id : null,
             planId,
             planLineId,
             planProductId,
@@ -206,8 +209,8 @@ function WorkCreate() {
                     <tr>
                         <th>지시수량</th>
                         <td>{selectedWorkOrder ? selectedWorkOrder.planQty : "-"}</td>
-                        <th>작업조</th>
-                        <td>{selectedWorkOrder ? selectedWorkOrder.workTeam : "-"}</td>
+                        <th>작성자</th>
+                        <td>{selectedWorkOrder && currentUser ? currentUser.name : "-"}</td>
                     </tr>
                 </tbody>
             </table>

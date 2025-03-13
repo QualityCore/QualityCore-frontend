@@ -198,7 +198,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 500;
+    font-weight: bold;
     border-radius: 50%;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
@@ -371,7 +371,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 500;
+    font-weight: bold;
     border-radius: 50%;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
@@ -506,7 +506,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 500;
+    font-weight: bold;
     border-radius: 50%;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
@@ -566,6 +566,18 @@ body {
   
   .warningModalContent {
     color: #C53030;
+  }
+
+  .noText{
+    text-align: center;
+    padding: 3rem 0;
+    color: #718096;
+    font-size: 1.2rem;
+    font-weight: 500;
+    background-color: #F8FAFF;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin: 2rem 0;
   }
 
 /* 반응형 디자인 강화 */

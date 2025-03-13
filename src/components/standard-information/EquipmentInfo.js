@@ -36,7 +36,7 @@ function EquipmentInfo() {
     const [searchKeyword, setSearchKeyword] = useState('');
     const [isWarningModal, setIsWarningModal] = useState(false); // 경고 모달 상태
     const [warningMessage, setWarningMessage] = useState(''); // 경고 메시지 상태
-
+    const [error, setError] = useState("");
 
     // 설비 전체조회
     const fetchData = async (page = 0, searchType = '', searchKeyword = '') => {
@@ -53,7 +53,7 @@ function EquipmentInfo() {
                 ...fetchedPageInfo,
             }));
         } catch (error) {
-            console.error('Error loading equipment data:', error);
+            setError("설비 정보를 가져오는데 실패했습니다.");
         }
     };
 
@@ -318,42 +318,42 @@ function EquipmentInfo() {
                 <button className={Equipment.searchButton} onClick={handleSearch}>검색</button>
             </div>
             <div className={Equipment.mainBar}>
-                <table className={Equipment.equipmentTable}>
-                    <thead>
-                        <tr>
-                            <th>작업장</th>
-                            <th>공정</th>
-                            <th>설비</th>
-                            <th>모델명</th>
-                            <th>제조사</th>
-                            <th>상태</th>
-                            <th>설치일</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Array.isArray(equipmentList) && equipmentList.length === 0 ? (
-                            <tr>
-                                <td colSpan="7">설비정보가 없습니다.</td>
-                            </tr>
-                        ) : (
-                            Array.isArray(equipmentList) && equipmentList.map((equipment) => (
-                                <tr
-                                    key={equipment.equipmentId}
-                                    onClick={() => openModal(equipment.equipmentId)}
-                                    className={Equipment.equipmentRow}
-                                >
-                                    <td>{equipment.workplaceName}</td>
-                                    <td>{equipment.workplaceType}</td>
-                                    <td>{equipment.equipmentName}</td>
-                                    <td>{equipment.modelName}</td>
-                                    <td>{equipment.manufacturer}</td>
-                                    <td>{equipment.equipmentStatus}</td>
-                                    <td>{equipment.installDate}</td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+            {error ? (
+        <p>{error}</p>
+    ) : Array.isArray(equipmentList) && equipmentList.length === 0 ? (
+        <p className={Equipment.noText}>설비정보가 없습니다.</p>
+    ) : (
+        <table className={Equipment.equipmentTable}>
+            <thead>
+                <tr>
+                    <th>작업장</th>
+                    <th>공정</th>
+                    <th>설비</th>
+                    <th>모델명</th>
+                    <th>제조사</th>
+                    <th>상태</th>
+                    <th>설치일</th>
+                </tr>
+            </thead>
+            <tbody>
+                {Array.isArray(equipmentList) && equipmentList.map((equipment) => (
+                    <tr
+                        key={equipment.equipmentId}
+                        onClick={() => openModal(equipment.equipmentId)}
+                        className={Equipment.equipmentRow}
+                    >
+                        <td>{equipment.workplaceName}</td>
+                        <td>{equipment.workplaceType}</td>
+                        <td>{equipment.equipmentName}</td>
+                        <td>{equipment.modelName}</td>
+                        <td>{equipment.manufacturer}</td>
+                        <td>{equipment.equipmentStatus}</td>
+                        <td>{equipment.installDate}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    )}
                 {/* 페이지네이션 */}
                 <div style={{ position: "fixed", bottom: "80px", left: "58%", transform: "translateX(-50%)" }}>
                     <Pagination
@@ -588,7 +588,7 @@ function EquipmentInfo() {
                 overlayClassName="modal-overlay"
             >
                 <div className={Equipment.successModalHeader}>
-                    <button className={Equipment.successCloseButton} onClick={closeSuccessModal}>X</button>
+                    <button className={Equipment.successCloseButton} onClick={closeSuccessModal}>x</button>
                 </div>
                 <div className={Equipment.successModalContent}>
                     <SuccessAnimation />
@@ -604,7 +604,7 @@ function EquipmentInfo() {
                     overlayClassName="modal-overlay"
                 >
                     <div className={Equipment.warningModalHeader}>
-                        <button className={Equipment.warningCloseButton} onClick={closeWarningModal}>X</button>
+                        <button className={Equipment.warningCloseButton} onClick={closeWarningModal}>x</button>
                     </div>
                     <div className={Equipment.warningModalContent}>
                         <WarningAnimation />
