@@ -53,9 +53,9 @@ const Layout = ({ children }) => {
 };
 
 // 보호된 레이아웃 컴포넌트 - 인증 및 권한 확인 후 Layout 렌더링
-const ProtectedLayout = ({ children, requiredPermission = null }) => {
+const ProtectedLayout = ({ children, requiredPermission = null, excludedUsers = [], adminOnly = false }) => {
   return (
-    <ProtectedRoute requiredPermission={requiredPermission}>
+    <ProtectedRoute requiredPermission={requiredPermission} excludedUsers={excludedUsers} adminOnly={adminOnly}>
       <Layout>{children}</Layout>
     </ProtectedRoute>
   );
@@ -102,18 +102,47 @@ const App = () => {
             {/* 기타 보호된 경로 */}
             <Route path="/processTracking" element={<ProtectedLayout><ProcessTrackingPage /></ProtectedLayout>} />
             <Route path="/wort" element={<ProtectedLayout><WortVolumePage /></ProtectedLayout>} />
-            <Route path="/material" element={<ProtectedLayout><MaterialManagementPage /></ProtectedLayout>} />
+            
+            {/* EMP001 사용자 접근 제한 */}
+            <Route path="/material" element={
+              <ProtectedLayout excludedUsers={['EMP001']}>
+                <MaterialManagementPage />
+              </ProtectedLayout>
+            } />
+            
             <Route path="/attendance" element={<ProtectedLayout><Attendance /></ProtectedLayout>} />
             <Route path="/work/orders" element={<ProtectedLayout requiredPermission="work.read"><WorkOrder /></ProtectedLayout>} />
             <Route path="/work/create" element={<ProtectedLayout requiredPermission="work.write"><WorkCreate /></ProtectedLayout>} />
-            <Route path="/workplace" element={<ProtectedLayout><WorkplacePage /></ProtectedLayout>} />
+            
+            {/* admin 사용자만 접근 가능한 페이지들 */}
+            <Route path="/workplace" element={
+              <ProtectedLayout adminOnly={true}>
+                <WorkplacePage />
+              </ProtectedLayout>
+            } />
+            
+            <Route path="/process-stage" element={
+              <ProtectedLayout adminOnly={true}>
+                <ProcessStage />
+              </ProtectedLayout>
+            } />
+            
+            <Route path="/equipment-info" element={
+              <ProtectedLayout adminOnly={true}>
+                <EquipmentInfo />
+              </ProtectedLayout>
+            } />
+            
+            <Route path="/label-info" element={
+              <ProtectedLayout adminOnly={true}>
+                <LabelInfo />
+              </ProtectedLayout>
+            } />
+            
             <Route path="/material-grinding" element={<ProtectedLayout><MaterialGrindingPage /></ProtectedLayout>} />
             <Route path="/mashing-process" element={<ProtectedLayout><MashingProcessPage /></ProtectedLayout>} />
             <Route path="/filtration-process" element={<ProtectedLayout><FiltrationProcessPage /></ProtectedLayout>} />
-            <Route path="/process-stage" element={<ProtectedLayout><ProcessStage /></ProtectedLayout>} />
-            <Route path="/equipment-info" element={<ProtectedLayout><EquipmentInfo /></ProtectedLayout>} />
             <Route path="/productionPerformance" element={<ProtectedLayout><ProductionPerformancePage /></ProtectedLayout>} />
-            <Route path="/label-info" element={<ProtectedLayout><LabelInfo /></ProtectedLayout>} />
             <Route path="/board" element={<ProtectedLayout><Board /></ProtectedLayout>} />
             <Route path="/board-create" element={<ProtectedLayout><BoardCreate /></ProtectedLayout>} />
             <Route path="/board/:boardId" element={<ProtectedLayout><BoardDetail /></ProtectedLayout>} />
@@ -124,8 +153,6 @@ const App = () => {
             <Route path="/boiling-process" element={<ProtectedLayout><BoilingProcessPage /></ProtectedLayout>} />
             <Route path="/cooling-process" element={<ProtectedLayout><CoolingProcessPage /></ProtectedLayout>} />
             <Route path="/fermentation-details" element={<ProtectedLayout><FermentationDetailsPage /></ProtectedLayout>} />
-
-
 
             {/* 404 페이지 */}
             <Route path="*" element={<NotFound />} />
