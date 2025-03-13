@@ -31,11 +31,12 @@ const CoolingProcessControls = ({ workOrder }) => {
   }); 
 
   // workOrder가 변경될 때 lotNo 업데이트
-  useEffect(() => {
-    if (workOrder?.lotNo) {
-      setCoolingData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
+ useEffect(() => {
+    const savedLotNo = localStorage.getItem("selectedLotNo");
+    if (savedLotNo) {
+      setCoolingData((prev) => ({ ...prev, lotNo: savedLotNo }));
     }
-  }, [workOrder]);
+  }, []);
 
   // LOT_NO가 변경되면 데이터 로드
   useEffect(() => {
@@ -57,6 +58,7 @@ const CoolingProcessControls = ({ workOrder }) => {
     try {
       console.log("✅ fetchCoolingData 실행 - LOT_NO:", lotNo);
       const response = await coolingProcessApi.getCoolingProcessByLotNo(lotNo);
+      console.log("📌 냉각 공정 API 응답:", response);
   
       if (response && response.result) {
         console.log("✅ 서버에서 받은 냉각 공정 데이터:", response.result);

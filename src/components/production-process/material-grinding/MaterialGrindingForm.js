@@ -24,44 +24,48 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
 
   // 작업지시 ID 목록 가져오기 (중복 제거 추가)
   useEffect(() => {
+    console.log("✅ useEffect 실행됨: fetchLineMaterial 호출"); // ✅ useEffect 실행 확인
+  
     const fetchLineMaterial = async () => {
       try {
-        // ✅ 작업지시 목록 조회
+        const url = `http://localhost:8080/productionprocess/linematerial`;
+        console.log("📌 실제 요청 URL:", url); // ✅ 요청 URL 출력
+  
         const response = await materialGrindingApi.getLineMaterial();
         console.log("📌 작업지시 목록 API 응답:", response);
-
+  
         const data = response.result?.lineMaterials || [];
         console.log("📌 추출된 작업지시 목록:", data);
-
+  
         if (!Array.isArray(data) || data.length === 0) {
           console.warn("⚠️ 작업지시 ID 데이터 없음!");
           return;
         }
-
+  
         // ✅ 분쇄공정에 등록된 작업지시 ID 조회
-        const grindingResponse =
-          await materialGrindingApi.getMaterialGrindingList();
+        const grindingResponse = await materialGrindingApi.getMaterialGrindingList();
         console.log("📌 분쇄 공정 등록된 ID 목록 응답:", grindingResponse);
-
+  
         const registeredLotNos = new Set(
           grindingResponse.result?.data?.map((item) => item.lotNo) || []
         );
         console.log("📌 분쇄 공정에 등록된 LOT_NO 목록:", registeredLotNos);
-
+  
         // ✅ 분쇄 공정에 등록되지 않은 작업지시 ID만 필터링
         const filteredData = data.filter(
           (item) => !registeredLotNos.has(item.lotNo)
         );
-
+  
         console.log("📌 필터링된 작업지시 목록:", filteredData);
         setLineMaterial(filteredData);
       } catch (error) {
         console.error("❌ 작업지시 ID 목록 불러오기 실패:", error);
       }
     };
-
+  
     fetchLineMaterial();
   }, []);
+  
 
   // 주원료 필터링: "보리", "밀", "쌀"만 허용
   const allowedMaterials = ["보리", "밀", "쌀"];
