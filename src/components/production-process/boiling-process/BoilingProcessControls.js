@@ -197,19 +197,10 @@ const BoilingProcessControls = ({ workOrder }) => {
 
   const handleNextProcess = async () => {
     try {
-      console.log("🛠️ handleNextProcess 실행 - 기존 데이터:", boilingData);
   
       // ❌ null 방지: 데이터가 없으면 기본값 할당
       const postBoilWortVolume = boilingData.postBoilWortVolume ?? 0; // 기본값 0
       const boilLossVolume = boilingData.boilLossVolume ?? 0;
-  
-      // ✅ null이 아닌 값으로 API 요청
-      console.log("🛠️ API 요청 데이터:", {
-        lotNo: boilingData.lotNo, // ✅ boilingId 대신 lotNo 사용
-        postBoilWortVolume,
-        boilLossVolume,
-        actualEndTime: new Date().toISOString(),
-      });
   
       await boilingProcessApi.updateBoilingProcessByLotNo(boilingData.lotNo, {
         postBoilWortVolume,
@@ -217,7 +208,6 @@ const BoilingProcessControls = ({ workOrder }) => {
         actualEndTime: new Date().toISOString(),
       });
   
-      console.log("✅ 끓임 공정 업데이트 성공");
       navigate("/cooling-process");
     } catch (error) {
       console.error("❌ 다음 공정 이동 중 오류 발생:", error);

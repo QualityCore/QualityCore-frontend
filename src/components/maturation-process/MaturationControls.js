@@ -120,7 +120,6 @@ const MaturationControls = () => {
                 startTime: formatDateTime(new Date())
             };
 
-            console.log("📤 서버 전송 데이터:", payload);
             const response = await maturationDetailApi.createMaturationDetails(payload);
 
             setMaturationData(prev => ({
@@ -147,8 +146,6 @@ const MaturationControls = () => {
     const handleCompleteProcess = async () => {
         try {
             const actualEndTime = formatDateTime(new Date());
-            console.log("🚀 공정 완료 요청 시작 - maturationId:", maturationData.maturationId);
-            console.log("⏰ actualEndTime:", new Date());
 
             const response = await maturationDetailApi.completeEndTime(maturationData.maturationId, {
                 actualEndTime,

@@ -35,10 +35,11 @@ const FermentationDetailsControls = ({ workOrder }) => {
 
   // ✅ workOrder가 변경될 때 lotNo 업데이트
   useEffect(() => {
-    if (workOrder?.lotNo) {
-      setFermentationData((prev) => ({ ...prev, lotNo: workOrder.lotNo }));
-    }
-  }, [workOrder]);
+     const savedLotNo = localStorage.getItem("selectedLotNo");
+     if (savedLotNo) {
+       setFermentationData((prev) => ({ ...prev, lotNo: savedLotNo }));
+     }
+   }, []);
   
   // ✅ LOT_NO 가져오기 (이전 공정과 연동)
   useEffect(() => {
@@ -56,17 +57,11 @@ const FermentationDetailsControls = ({ workOrder }) => {
         );
         return;
       }
-      console.log(
-        "✅ 발효 공정 완료 API 호출:",
-        fermentationData.lotNo,
-        fermentationData.finalSugarContent
-      );
       const response = await fermentationDetailsApi.completeFermentationDetails(
         fermentationData.lotNo,
         fermentationData.finalSugarContent
       );
       if (response && response.success) {
-        console.log("✅ 발효 공정 완료 성공:", response);
       } else {
         console.warn("⚠️ 발효 공정 완료 실패:", response);
       }
@@ -78,20 +73,18 @@ const FermentationDetailsControls = ({ workOrder }) => {
   // 발효 공정 상세 정보 조회 (효모 데이터 포함)
   const fetchFermentationMaterials = async (lotNo) => {
     try {
-      console.log(`✅ 발효 공정 자재 조회 시작 (LOT_NO: ${lotNo})`);
       const materials = await fermentationDetailsApi.getMaterialsByLotNo(lotNo);
       const yeast = materials.find(
         (item) =>
           item.materialName === "에일 효모" || item.materialName === "라거 효모"
       );
+
       setFermentationData((prev) => ({
         ...prev,
         yeastType: yeast ? yeast.materialName : "", // 효모 종류
         yeastAmount: yeast ? yeast.totalQty : 0, // 효모 투입량
       }));
-      console.log(
-        `✅ 효모 정보 업데이트 완료: ${yeast ? yeast.materialName : "없음"}`
-      );
+    
     } catch (error) {
       console.error(`❌ 발효 공정 자재 조회 실패 (LOT_NO: ${lotNo}):`, error);
     }
@@ -196,13 +189,11 @@ const FermentationDetailsControls = ({ workOrder }) => {
 
   useEffect(() => {
     if (fermentationData.startTemperature === undefined) {
-      console.log(
-        "🚨 fermentationData.startTemperature 값이 없음! 기본값 설정"
-      );
+
       setFermentationData((prev) => ({ ...prev, startTemperature: 20 }));
     }
     if (startTemperature === undefined) {
-      console.log("🚨 temperature 값이 없음! 기본값 설정");
+      
       setStartTemperature(5); // 기본 5°C 설정
     }
   }, [fermentationData.startTemperature, startTemperature]);

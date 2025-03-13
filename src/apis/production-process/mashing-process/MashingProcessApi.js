@@ -50,7 +50,6 @@ updateMashingProcess: async (mashingId, mashingUpdatePayload) => {
   }
 
   try {
-    console.log(`📌 API 요청: PUT /mashingprocess/update/${mashingId}`, mashingUpdatePayload);
 
     const response = await axios.put(
       `${BASE_URL}/update/${mashingId}`,
@@ -63,7 +62,6 @@ updateMashingProcess: async (mashingId, mashingUpdatePayload) => {
       }
     );
 
-    console.log("✅ 당화공정 업데이트 성공:", response.data);
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -83,9 +81,7 @@ updateMashingProcess: async (mashingId, mashingUpdatePayload) => {
   getMaterialsByLotNo: async (lotNo) => {
     try {
       const response = await axios.get(`${BASE_URL}/${lotNo}`);
-      console.log("📌 자재 목록 응답:", response.data); // 디버깅
 
-      // ✅ `result.materials`만 반환하도록 수정
       return response.data.result?.materials || [];
     } catch (error) {
       console.error(`❌ 자재 정보 조회 실패 (LOT_NO: ${lotNo}):`, error);

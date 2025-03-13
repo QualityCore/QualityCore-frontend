@@ -158,7 +158,6 @@ import "../../styles/standard-information/workplace-table.css";
             const response = await axios.put(putUrl,updatedData);
 
           if(response.status === 200){
-            console.log("수정 성공! showSuccessModal 활성화");
             setShowSuccessModal(true);  // 성공 모달 표시
             setShowConfirmModal(false); // 확인 모달 닫기
             setShowEditForm(false); // 수정 폼 닫기
@@ -191,7 +190,7 @@ import "../../styles/standard-information/workplace-table.css";
     const deleteWorkplace = async(workplaceId) => {
       try{
         const response = await axios.delete(`http://localhost:8080/standardinformation/workplaces/${workplaceId}`);
-        console.log("!!!! 작업장 삭제 성공!!!!!!");
+
         return response.data;
       
       }catch(error){console.error("!!!작업장 삭제 실패!!!!" ,error);
@@ -230,7 +229,7 @@ import "../../styles/standard-information/workplace-table.css";
       }   
 
       try {
-        console.log("삭제요청! ID :" , deleteTargetId); // 로그 추가
+        
         await deleteWorkplace(deleteTargetId); // API 호출
         closeModal(); // 모달 닫기 및 상태 초기화
         setShowDeleteSuccessModal(true); // 삭제 성공시 모달표시시

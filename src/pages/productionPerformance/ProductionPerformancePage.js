@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import styles from '../../styles/productionPerformance/ProductionPerformance.module.css';
 
 // 더미 데이터 정의
@@ -43,7 +43,7 @@ const DUMMY_DATA = {
     { YEAR_MONTH: '2025-03', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 1700, ACTUAL_QUANTITY: 1650, ACHIEVEMENT_RATE: 97.1 }
   ],
   
-  // 불량률 데이터
+  // 품질률 데이터
   qualityData: [
     { productName: '아이유 맥주', qualityRate: 95.0, defectRate: 5.0 },
     { productName: '카리나 맥주', qualityRate: 96.0, defectRate: 4.0 },
@@ -168,19 +168,12 @@ const ProductionPerformancePage = () => {
           break;
           
         case 'quality':
-          fileName = `불량률분석_${yearMonth}.csv`;
-          dataToExport = qualityData.map(item => {
-            const efficiencyData = DUMMY_DATA.efficiency.find(e => e.PRODUCT_NAME === item.productName);
-            const totalQuantity = efficiencyData ? efficiencyData.TOTAL_QUANTITY : 0;
-            const defectQuantity = Math.round(totalQuantity * (item.defectRate / 100));
-            
-            return {
-              '제품명': item.productName,
-              '총출하량': totalQuantity,
-              '불량수량': defectQuantity,
-              '불량률(%)': item.defectRate
-            };
-          });
+          fileName = `품질분석_${yearMonth}.csv`;
+          dataToExport = qualityData.map(item => ({
+            '제품명': item.productName,
+            '품질률(%)': item.qualityRate,
+            '불량률(%)': item.defectRate
+          }));
           break;
           
         case 'efficiency':
@@ -245,6 +238,12 @@ const ProductionPerformancePage = () => {
       console.error('CSV 다운로드 오류:', error);
       alert('파일 생성 중 오류가 발생했습니다.');
     }
+  };
+
+  // 품질 파이 차트용 데이터 변환
+  const getQualityChartData = () => {
+    if (!qualityData || qualityData.length === 0) return [];
+    return qualityData;
   };
 
   const renderTabs = () => (
@@ -364,7 +363,32 @@ const ProductionPerformancePage = () => {
   const renderQualityTab = () => (
     <div className={styles.tabContent}>
       <div className={styles.chartContainer} style={{minHeight: '350px'}}>
-        <h3>제품별 불량률</h3>
+        <h3>제품별 품질률</h3>
+        <div style={{width: '100%', height: '280px', position: 'relative', display: 'flex', justifyContent: 'center'}}>
+          <PieChart width={500} height={300} margin={{ top: 20, right: 30, bottom: 0, left: 30 }}>
+            <Pie
+              data={getQualityChartData()}
+              cx={225}
+              cy={140}
+              labelLine={true}
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="qualityRate"
+              nameKey="productName"
+              label={({productName, qualityRate}) => `${productName}: ${qualityRate?.toFixed(1)}%`}
+            >
+              {qualityData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
+            <Legend />
+          </PieChart>
+        </div>
+      </div>
+      
+      <div className={styles.chartContainer} style={{minHeight: '350px'}}>
+        <h3>제품별 불량률 추이</h3>
         <div style={{width: '100%', height: '280px', position: 'relative'}}>
           <BarChart
             width={500}
@@ -377,56 +401,9 @@ const ProductionPerformancePage = () => {
             <YAxis domain={[0, 10]} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="defectRate" name="불량률(%)" fill="#FF8042" />
+            <Bar dataKey="defectRate" name="불량률" fill="#FF8042" />
           </BarChart>
         </div>
-      </div>
-      
-      <div className={styles.chartContainer} style={{minHeight: '350px'}}>
-        <h3>월별 불량률 추이</h3>
-        <div style={{width: '100%', height: '280px', position: 'relative'}}>
-          <LineChart
-            width={500}
-            height={250}
-            data={dailyData.map(item => ({
-              ...item,
-              productionDate: item.productionDate,
-              defectRate: 100 - item.qualityRate
-            }))}
-            margin={{top: 5, right: 30, left: 20, bottom: 5}}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="productionDate" />
-            <YAxis domain={[0, 10]} />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="defectRate" name="불량률(%)" stroke="#FF8042" strokeWidth={2} />
-          </LineChart>
-        </div>
-      </div>
-
-      <div className={styles.tableContainer}>
-        <h3>제품별 불량 현황</h3>
-        <table className={styles.dataTable}>
-          <thead>
-            <tr>
-              <th>제품명</th>
-              <th>총 출하량</th>
-              <th>불량 수량</th>
-              <th>불량률(%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {qualityData.map((item, index) => (
-              <tr key={index}>
-                <td>{item.productName}</td>
-                <td>{DUMMY_DATA.efficiency[index].TOTAL_QUANTITY.toLocaleString()}</td>
-                <td>{Math.round(DUMMY_DATA.efficiency[index].TOTAL_QUANTITY * (item.defectRate / 100)).toLocaleString()}</td>
-                <td>{item.defectRate.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </div>
   );

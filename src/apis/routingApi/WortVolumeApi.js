@@ -8,17 +8,10 @@ const API_BASE_URL = 'http://localhost:8080/api/v1';
 // 워트량 조회 API
 export const fetchWortVolumes = async (lotNo = '') => {
   try {
-    console.log('워트량 조회 API 요청:', `${API_BASE_URL}/wort`, { lotNo });
     
     const response = await axios.get(`${API_BASE_URL}/wort`, {
       params: { lotNo }
     });
-    
-    // 응답 전체 구조 로깅 (디버깅용)
-    console.log('API 응답 전체:', response);
-    
-    // 응답 데이터 구조 로깅 (디버깅용)
-    console.log('API 응답 데이터:', response.data);
     
     // 응답 구조 검증
     if (!response.data) {
@@ -30,9 +23,6 @@ export const fetchWortVolumes = async (lotNo = '') => {
                       response.data.data?.wortVolumes || 
                       response.data.result?.wortVolumes ||
                       response.data;
-    
-    // 결과 데이터 로깅 (디버깅용)
-    console.log('추출된 결과 데이터:', resultData);
     
     if (!resultData || !Array.isArray(resultData)) {
       throw new Error('유효한 워트량 데이터를 찾을 수 없습니다');

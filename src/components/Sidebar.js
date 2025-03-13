@@ -13,16 +13,16 @@ import "../styles/Sidebar.css";
 const Sidebar = () => {
   const navigate = useNavigate(); // 라우팅 네비게이션 추가
   const { currentUser, logout } = useAuth(); // 현재 사용자 정보와 로그아웃 함수 가져오기
-  
-  const { 
-    messages, 
-    workOrderMessages, 
-    resetNotifications, 
-    resetWorkOrderNotifications 
+
+  const {
+    messages,
+    workOrderMessages,
+    resetNotifications,
+    resetWorkOrderNotifications
   } = useContext(WebsocketContext);
-  
+
   const [openCategory, setOpenCategory] = useState(null);
-  
+
   // 사용자별 프로필 이미지 매핑
   const userImages = {
     'admin': '/images/admin.jpg', // 관리자 이미지
@@ -31,7 +31,7 @@ const Sidebar = () => {
     'EMP001': '/images/emp001.jpg',     // 일반사원 이미지
     'iu': '/images/iublack.jpg'        // 아이유 이미지
   };
-  
+
   // 사용자 역할 한글 변환
   const roleTranslation = {
     'ADMIN': '관리자',
@@ -53,13 +53,13 @@ const Sidebar = () => {
   const toggleCategory = (category) => {
     setOpenCategory(openCategory === category ? null : category);
   };
-  
+
   // 로그아웃 처리 함수
   const handleLogout = () => {
     logout(); // AuthContext의 logout 함수 호출
     navigate('/login'); // 로그인 페이지로 이동
   };
-  
+
   // 근태관리 페이지로 이동
   const handleAttendance = () => {
     navigate('/attendance'); // 스케줄 관리 페이지로 이동
@@ -67,7 +67,7 @@ const Sidebar = () => {
 
   // 로고 클릭시 홈화면으로 이동
   const handleHome = () => {
-    navigate('/home'); 
+    navigate('/home');
   }
 
   // 사용자 프로필 이미지 가져오기
@@ -75,7 +75,7 @@ const Sidebar = () => {
     if (!currentUser) return '/images/default_profile.png';
     return userImages[currentUser.id] || '/images/default_profile.png';
   };
-  
+
   // 사용자 역할 한글로 변환
   const getUserRole = () => {
     if (!currentUser) return '';
@@ -140,10 +140,10 @@ const Sidebar = () => {
           )}
         </li>
 
-         {/* 작업지시 */}
-         <li>
-          <button 
-            onClick={() => toggleCategory("작업지시")} 
+        {/* 작업지시 */}
+        <li>
+          <button
+            onClick={() => toggleCategory("작업지시")}
             className="menu-item"
           >
             <div className="menu-item-content">
@@ -159,16 +159,16 @@ const Sidebar = () => {
           {openCategory === "작업지시" && (
             <ul className="submenu">
               <li>
-                <Link 
-                  to="/work/orders" 
+                <Link
+                  to="/work/orders"
                   onClick={resetWorkOrderNotifications}
                 >
                   작업지시서 관리
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/work/create" 
+                <Link
+                  to="/work/create"
                   onClick={resetWorkOrderNotifications}
                 >
                   작업지시서 등록
@@ -224,25 +224,25 @@ const Sidebar = () => {
           {openCategory === "생산실적" && (
             <ul className="submenu">
               <li><Link to="/productionPerformance">생산실적 관리</Link></li>
-             
+
             </ul>
           )}
         </li>
 
         {/* 게시판 */}
         <li>
-          <Link 
-              to="/board" 
-              onClick={resetNotifications} // 알림 초기화
-              className="menu-item"
+          <Link
+            to="/board"
+            onClick={resetNotifications} // 알림 초기화
+            className="menu-item"
           >
-              <div className="menu-item-content">
-                  <HiOutlineUserGroup className="mr-4" />
-                  <span>전사게시판</span>
-                  {messages.length > 0 && (
-                      <span className="notification-badge">{messages.length}</span>
-                  )}
-              </div>
+            <div className="menu-item-content">
+              <HiOutlineUserGroup className="mr-4" />
+              <span>전사게시판</span>
+              {messages.length > 0 && (
+                <span className="notification-badge">{messages.length}</span>
+              )}
+            </div>
           </Link>
         </li>
       </ul>

@@ -17,7 +17,7 @@ const boilingProcessApi = {
   // 📌 특정 LOT_NO에 대한 자재 정보 조회
   getMaterialsByLotNo: async (lotNo) => {
     try {
-      const response = await axios.get(`${BASE_URL}/${lotNo}`);
+      const response = await axios.get(`${BASE_URL}/boiling/${lotNo}`);
       return response.data.result?.materials || [];
     } catch (error) {
       console.error(`❌ 자재 정보 조회 실패 (LOT_NO: ${lotNo}):`, error);
@@ -32,7 +32,6 @@ const boilingProcessApi = {
       const response = await axios.post(`${BASE_URL}/register`, boilingRequestData, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("✅ 끓임 공정 저장 응답 데이터:", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ 끓임 공정 데이터 저장 실패:", error);
@@ -51,15 +50,12 @@ const boilingProcessApi = {
   }
 
   try {
-    console.log(`📌 API 요청: PUT ${BASE_URL}/update/lot/${lotNo}`, updatePayload);
 
     const response = await axios.put(
       `${BASE_URL}/update/lot/${lotNo}`,
       updatePayload,
       { headers: { "Content-Type": "application/json" } }
     );
-
-    console.log("✅ 끓임 공정 업데이트 성공:", response.data);
     return response.data;
   } catch (error) {
     console.error(`❌ 끓임 공정 업데이트 실패 (Lot No: ${lotNo}):`, error);
@@ -85,10 +81,6 @@ getBoilingProcessByLotNo: async (lotNo) => {
   // 📌 홉 투입 정보 업데이트
   updateHopInfo: async (boilingId, hopPayload) => {
     try {
-      console.log(
-        `📌 API 요청: PUT /boilingprocess/hop/${boilingId}`,
-        hopPayload
-      );
       const response = await axios.put(
         `${BASE_URL}/hop/${boilingId}`,
         hopPayload,
