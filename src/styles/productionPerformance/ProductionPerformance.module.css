@@ -204,6 +204,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  animation: fadeIn 0.5s ease-out, slideUp 0.5s ease-out;
 }
 
 .chartContainer:hover {
@@ -472,5 +473,50 @@
   .dataTable td {
     padding: 0.8rem 0.5rem;
     font-size: 0.85rem;
+  }
+}
+
+
+
+/* 바 차트 애니메이션 */
+@keyframes growUp {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
+/* recharts 바 애니메이션 적용 */
+.recharts-bar-rectangle {
+  animation: growUp 1s ease-out forwards;
+}
+
+/* 라인 차트 애니메이션 */
+@keyframes drawLine {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.recharts-line-curve {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 2s ease-out forwards;
+}
+
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+  }
+  to {
+    transform: translateY(0);
   }
 }

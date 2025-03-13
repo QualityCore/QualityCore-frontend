@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer, ReferenceLine } from 'recharts';
 import styles from '../../styles/productionPerformance/ProductionPerformance.module.css';
 
 // 더미 데이터 정의
@@ -21,13 +21,11 @@ const DUMMY_DATA = {
   dailyData: [
     { productionDate: '2025-01-05', productName: '아이유 맥주', totalQuantity: 400, goodQuantity: 380, qualityRate: 95.0 },
     { productionDate: '2025-01-15', productName: '아이유 맥주', totalQuantity: 450, goodQuantity: 430, qualityRate: 95.6 },
-    { productionDate: '2025-01-25', productName: '아이유 맥주', totalQuantity: 350, goodQuantity: 330, qualityRate: 94.3 },
-    { productionDate: '2025-02-05', productName: '아이유 맥주', totalQuantity: 500, goodQuantity: 470, qualityRate: 94.0 },
-    { productionDate: '2025-02-15', productName: '아이유 맥주', totalQuantity: 520, goodQuantity: 490, qualityRate: 94.2 },
-    { productionDate: '2025-02-25', productName: '아이유 맥주', totalQuantity: 480, goodQuantity: 450, qualityRate: 93.8 },
-    { productionDate: '2025-03-05', productName: '아이유 맥주', totalQuantity: 580, goodQuantity: 560, qualityRate: 96.6 },
-    { productionDate: '2025-03-15', productName: '아이유 맥주', totalQuantity: 620, goodQuantity: 595, qualityRate: 96.0 },
-    { productionDate: '2025-03-25', productName: '아이유 맥주', totalQuantity: 600, goodQuantity: 575, qualityRate: 95.8 }
+    { productionDate: '2025-01-25', productName: '카리나 맥주', totalQuantity: 350, goodQuantity: 322, qualityRate: 92.0 },
+    { productionDate: '2025-02-05', productName: '카리나 맥주', totalQuantity: 500, goodQuantity: 460, qualityRate: 92.0 },
+    { productionDate: '2025-03-05', productName: '장원영 맥주', totalQuantity: 580, goodQuantity: 564, qualityRate: 97.3 },
+    { productionDate: '2025-03-15', productName: '카리나 맥주', totalQuantity: 620, goodQuantity: 570, qualityRate: 92.0 }
+
   ],
   
   // 계획 대비 실적 데이터
@@ -43,18 +41,20 @@ const DUMMY_DATA = {
     { YEAR_MONTH: '2025-03', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 1700, ACTUAL_QUANTITY: 1650, ACHIEVEMENT_RATE: 97.1 }
   ],
   
-  // 품질률 데이터
+  // 불량률 데이터
   qualityData: [
     { productName: '아이유 맥주', qualityRate: 95.0, defectRate: 5.0 },
-    { productName: '카리나 맥주', qualityRate: 96.0, defectRate: 4.0 },
+    { productName: '카리나 맥주', qualityRate: 92.0, defectRate: 8.0 },
     { productName: '장원영 맥주', qualityRate: 97.3, defectRate: 2.7 }
+
   ],
   
   // 생산 효율성 데이터
   efficiency: [
     { PRODUCT_NAME: '아이유 맥주', TOTAL_QUANTITY: 4500, GOOD_QUANTITY: 4280, QUALITY_RATE: 95.1, AVG_PRODUCTION_TIME_MINUTES: 120, AVG_BATCH_SIZE: 500 },
-    { PRODUCT_NAME: '카리나 맥주', TOTAL_QUANTITY: 4000, GOOD_QUANTITY: 3850, QUALITY_RATE: 96.3, AVG_PRODUCTION_TIME_MINUTES: 105, AVG_BATCH_SIZE: 450 },
+    { PRODUCT_NAME: '카리나 맥주', TOTAL_QUANTITY: 4000, GOOD_QUANTITY: 3680, QUALITY_RATE: 92.0, AVG_PRODUCTION_TIME_MINUTES: 105, AVG_BATCH_SIZE: 450 },
     { PRODUCT_NAME: '장원영 맥주', TOTAL_QUANTITY: 4500, GOOD_QUANTITY: 4380, QUALITY_RATE: 97.3, AVG_PRODUCTION_TIME_MINUTES: 110, AVG_BATCH_SIZE: 480 }
+
   ]
 };
 
@@ -67,7 +67,7 @@ const ProductionPerformancePage = () => {
   const [planVsActual, setPlanVsActual] = useState([]);
   const [qualityData, setQualityData] = useState([]);
   const [efficiency, setEfficiency] = useState([]);
-  const [products, setProducts] = useState(['전체', '아이유 맥주', '카리나 맥주', '장원영 맥주']);
+  const [products, setProducts] = useState(['전체', '아이유 맥주', '카리나 맥주', '장원영 맥주', '정연 맥주', '윈터 맥주']);
   const [loading, setLoading] = useState(true);
   
   const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -168,12 +168,19 @@ const ProductionPerformancePage = () => {
           break;
           
         case 'quality':
-          fileName = `품질분석_${yearMonth}.csv`;
-          dataToExport = qualityData.map(item => ({
-            '제품명': item.productName,
-            '품질률(%)': item.qualityRate,
-            '불량률(%)': item.defectRate
-          }));
+          fileName = `불량률분석_${yearMonth}.csv`;
+          dataToExport = qualityData.map(item => {
+            const efficiencyData = DUMMY_DATA.efficiency.find(e => e.PRODUCT_NAME === item.productName);
+            const totalQuantity = efficiencyData ? efficiencyData.TOTAL_QUANTITY : 0;
+            const defectQuantity = Math.round(totalQuantity * (item.defectRate / 100));
+            
+            return {
+              '제품명': item.productName,
+              '총출하량': totalQuantity,
+              '불량수량': defectQuantity,
+              '불량률(%)': item.defectRate
+            };
+          });
           break;
           
         case 'efficiency':
@@ -238,12 +245,6 @@ const ProductionPerformancePage = () => {
       console.error('CSV 다운로드 오류:', error);
       alert('파일 생성 중 오류가 발생했습니다.');
     }
-  };
-
-  // 품질 파이 차트용 데이터 변환
-  const getQualityChartData = () => {
-    if (!qualityData || qualityData.length === 0) return [];
-    return qualityData;
   };
 
   const renderTabs = () => (
@@ -363,32 +364,7 @@ const ProductionPerformancePage = () => {
   const renderQualityTab = () => (
     <div className={styles.tabContent}>
       <div className={styles.chartContainer} style={{minHeight: '350px'}}>
-        <h3>제품별 품질률</h3>
-        <div style={{width: '100%', height: '280px', position: 'relative', display: 'flex', justifyContent: 'center'}}>
-          <PieChart width={500} height={300} margin={{ top: 20, right: 30, bottom: 0, left: 30 }}>
-            <Pie
-              data={getQualityChartData()}
-              cx={225}
-              cy={140}
-              labelLine={true}
-              outerRadius={100}
-              fill="#8884d8"
-              dataKey="qualityRate"
-              nameKey="productName"
-              label={({productName, qualityRate}) => `${productName}: ${qualityRate?.toFixed(1)}%`}
-            >
-              {qualityData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-              ))}
-            </Pie>
-            <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
-            <Legend />
-          </PieChart>
-        </div>
-      </div>
-      
-      <div className={styles.chartContainer} style={{minHeight: '350px'}}>
-        <h3>제품별 불량률 추이</h3>
+        <h3>제품별 불량률</h3>
         <div style={{width: '100%', height: '280px', position: 'relative'}}>
           <BarChart
             width={500}
@@ -401,9 +377,99 @@ const ProductionPerformancePage = () => {
             <YAxis domain={[0, 10]} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="defectRate" name="불량률" fill="#FF8042" />
+            <Bar dataKey="defectRate" name="불량률(%)" fill={(data) => data.defectRate >= 6 ? '#FF0000' : '#FF8042'} />
+            {/* 위험 기준선 추가 */}
+            <ReferenceLine y={6} stroke="red" strokeWidth={2} strokeDasharray="3 3" label={{ value: '위험 수준 (6%)', position: 'right', fill: 'red', fontSize: 12 }} />
           </BarChart>
         </div>
+      </div>
+      
+      <div className={styles.chartContainer} style={{minHeight: '350px'}}>
+        <h3>월별 불량률 추이</h3>
+        <div style={{width: '100%', height: '280px', position: 'relative'}}>
+          <LineChart
+            width={500}
+            height={250}
+            data={dailyData.map(item => ({
+              ...item,
+              productionDate: item.productionDate,
+              defectRate: 100 - item.qualityRate
+            }))}
+            margin={{top: 5, right: 30, left: 20, bottom: 5}}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="productionDate" />
+            <YAxis domain={[0, 10]} />
+            <Tooltip content={({active, payload, label}) => {
+              if (active && payload && payload.length) {
+                return (
+                  <div className={styles.customTooltip}>
+                    <p className={styles.label}>{`일자: ${label}`}</p>
+                    <p className={styles.label}>{`제품: ${payload[0].payload.productName}`}</p>
+                    <p className={styles.data} style={{color: payload[0].value >= 6 ? 'red' : 'black'}}>
+                      {`불량률: ${payload[0].value.toFixed(2)}%`}
+                      {payload[0].value >= 6 ? ' (위험)' : ''}
+                    </p>
+                  </div>
+                );
+              }
+              return null;
+            }} />
+            <Legend />
+            <ReferenceLine y={6} stroke="red" strokeWidth={2} strokeDasharray="3 3" label={{ value: '위험 수준 (6%)', position: 'right', fill: 'red', fontSize: 12 }} />
+            <Line type="monotone" dataKey="defectRate" name="불량률(%)" stroke="#FF8042" strokeWidth={2} dot={(props) => {
+              const { cx, cy, payload } = props;
+              const defectRate = payload.defectRate;
+              return (
+                <circle 
+                  cx={cx} 
+                  cy={cy} 
+                  r={5} 
+                  fill={defectRate >= 6 ? '#FF0000' : '#FF8042'} 
+                  stroke="none" 
+                />
+              );
+            }} />
+          </LineChart>
+        </div>
+      </div>
+
+      <div className={styles.tableContainer}>
+        <h3>제품별 불량 현황</h3>
+        <table className={styles.dataTable}>
+          <thead>
+            <tr>
+              <th>제품명</th>
+              <th>총 출하량</th>
+              <th>불량 수량</th>
+              <th>불량률(%)</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {qualityData.map((item, index) => {
+              const efficiencyData = DUMMY_DATA.efficiency.find(e => e.PRODUCT_NAME === item.productName) || 
+                                    { TOTAL_QUANTITY: 0 };
+              const totalQuantity = efficiencyData.TOTAL_QUANTITY;
+              const defectQuantity = Math.round(totalQuantity * (item.defectRate / 100));
+              const isWarning = item.defectRate >= 6;
+              
+              return (
+                <tr key={index} className={isWarning ? styles.warningRow : ''}>
+                  <td>{item.productName}</td>
+                  <td>{totalQuantity.toLocaleString()}</td>
+                  <td>{defectQuantity.toLocaleString()}</td>
+                  <td style={{color: isWarning ? 'red' : 'inherit', fontWeight: isWarning ? 'bold' : 'normal'}}>
+                    {item.defectRate.toFixed(2)}
+                  </td>
+                  <td style={{color: isWarning ? 'red' : 'green', fontWeight: 'bold'}}>
+                    {isWarning ? '위험' : '정상'}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
