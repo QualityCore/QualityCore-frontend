@@ -88,7 +88,7 @@ function WorkCreate() {
                     emojiSize: 100,
                     confettiNumber: 70,
                 });
-                
+
                 setWorkOrders((prevOrders) => prevOrders.filter(order =>
                     !(order.planId === planId &&
                         order.planLineId === planLineId &&
@@ -164,9 +164,9 @@ function WorkCreate() {
         <div className={workCreate.mainBar}>
             <div className={workCreate.planInfoName}>
                 <h3 className={workCreate.planH3}>생산계획</h3>
-                <select 
-                    onChange={handleWorkOrderSelect} 
-                    className={workCreate.planSelect} 
+                <select
+                    onChange={handleWorkOrderSelect}
+                    className={workCreate.planSelect}
                     value={selectedWorkOrder ? `${selectedWorkOrder.planId}|${selectedWorkOrder.planLineId}|${selectedWorkOrder.planProductId}` : ""}
                 >
                     <option value="">생산 계획 선택</option>
@@ -180,7 +180,7 @@ function WorkCreate() {
                     ))}
                 </select>
             </div>
-            
+
             <table className={workCreate.workTable}>
                 <tbody>
                     <tr>
@@ -211,7 +211,7 @@ function WorkCreate() {
                     </tr>
                 </tbody>
             </table>
-            
+
             {mergedRecipe.length > 0 && (
                 <table className={workCreate.bomTable}>
                     <thead>
@@ -236,7 +236,7 @@ function WorkCreate() {
                     </tbody>
                 </table>
             )}
-            
+
             <h3 className={workCreate.footName}>특이사항</h3>
             <textarea
                 ref={etcRef}
@@ -249,13 +249,13 @@ function WorkCreate() {
             <button className={workCreate.createButton} onClick={handleCreateWorkOrder}>
                 <FaClipboardList /> 작업지시서 등록
             </button>
-            
+
             {/* 성공모달 */}
-            <Modal 
-                isOpen={isSuccessModal} 
-                onRequestClose={closeSuccessModal} 
-                className={workCreate.successModal} 
-                overlayClassName="modal-overlay"
+            <Modal
+                isOpen={isSuccessModal}
+                onRequestClose={closeSuccessModal}
+                className={workCreate.successModal}
+                overlayClassName="modal-overlay1"
             >
                 <div className={workCreate.successModalHeader}>
                     <button className={workCreate.successCloseButton} onClick={closeSuccessModal}>×</button>
@@ -265,12 +265,12 @@ function WorkCreate() {
                     <p className={workCreate.successMessage}>{modalMessage}</p>
                 </div>
             </Modal>
-            
+
             {/* 경고모달 */}
-            <Modal 
-                isOpen={isWarningModal} 
-                onRequestClose={closeWarningModal} 
-                className={workCreate.warningModal} 
+            <Modal
+                isOpen={isWarningModal}
+                onRequestClose={closeWarningModal}
+                className={workCreate.warningModal}
                 overlayClassName={workCreate.warningModalOverlay}
             >
                 <div className={workCreate.warningModalHeader}>

@@ -7,7 +7,8 @@ import { useAuth } from "../../contexts/AuthContext";
 
 function Board() {
     const { currentUser } = useAuth();
-    const [boards, setBoards] = useState([]);
+    const [fixedBoards, setFixedBoards] = useState([]); // 공지 및 중요 게시글
+    const [regularBoards, setRegularBoards] = useState([]); // 일반 게시글 (페이지네이션 적용)
     const [paginationInfo, setPaginationInfo] = useState({ page: 0, totalPages: 0, first: true, last: true });
     const [searchKeyword, setSearchKeyword] = useState("");
     const [searchType, setSearchType] = useState("title");
@@ -18,32 +19,38 @@ function Board() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // 게시판 데이터 불러오기 함수
+    // 게시글 로드 함수
     const loadBoards = async (page = 0) => {
         try {
             setLoading(true);
-            const { content, pageInfo } = await fetchBoards(page, 12, searchType, searchKeyword);
-            
-            // 정렬 순서: 공지 > 중요 > 일반 순으로 정렬
-            const sortedContent = [...content].sort((a, b) => {
-                const categoryOrder = {
-                    "공지": 3,
-                    "중요": 2,
-                    "일반": 1
-                };
-                
-                // 카테고리 기준 내림차순 정렬 (높은 숫자가 먼저)
+            const { content } = await fetchBoards(0, 1000, searchType, searchKeyword); // 모든 게시글을 가져옵니다
+
+            // 공지 및 중요 게시글 분리
+            const fixedContent = content.filter(
+                (board) => board.boardCategory === "공지" || board.boardCategory === "중요"
+            ).sort((a, b) => {
+                const categoryOrder = { "공지": 2, "중요": 1 };
                 return categoryOrder[b.boardCategory] - categoryOrder[a.boardCategory] ||
-                       // 같은 카테고리 내에서는 최신순(boardId가 큰 순)으로 정렬
-                       b.boardId.localeCompare(a.boardId);
+                    new Date(b.boardDate) - new Date(a.boardDate); // 최신순 정렬
             });
-            
-            setBoards(sortedContent);
+
+            // 일반 게시글 분리 및 정렬
+            const regularContent = content.filter(
+                (board) => board.boardCategory === "일반"
+            ).sort((a, b) => new Date(b.boardDate) - new Date(a.boardDate)); // 최신순 정렬
+
+            // 페이지네이션 적용
+            const startIndex = page * 12;
+            const endIndex = startIndex + 12;
+            const paginatedRegularContent = regularContent.slice(startIndex, endIndex);
+
+            setFixedBoards(fixedContent); // 공지 및 중요 게시글 저장
+            setRegularBoards(paginatedRegularContent); // 일반 게시글 저장
             setPaginationInfo({
-                page: pageInfo.currentPage,
-                totalPages: pageInfo.totalPages,
-                first: pageInfo.first,
-                last: pageInfo.last,
+                page: page,
+                totalPages: Math.ceil(regularContent.length / 12),
+                first: page === 0,
+                last: page === Math.ceil(regularContent.length / 12) - 1,
             });
         } catch (err) {
             setError("게시판 데이터를 불러오는 중 오류가 발생했습니다.");
@@ -52,14 +59,13 @@ function Board() {
         }
     };
 
-    // 컴포넌트가 마운트될 때 데이터 로드
+    // 컴포넌트 로드 시 데이터 가져오기
     useEffect(() => {
         loadBoards();
     }, [location.pathname, refreshData]);
 
-    // 글쓰기 버튼 클릭 시 처리
+    // 글쓰기 버튼 클릭 핸들러
     const handleWriteClick = () => {
-        // 로그인하지 않은 경우 경고
         if (!currentUser) {
             alert("게시글을 작성하려면 로그인이 필요합니다.");
             return;
@@ -67,31 +73,29 @@ function Board() {
         navigate("/board-create");
     };
 
-    // 게시글 클릭 시 상세 페이지로 이동
+    // 행 클릭 핸들러
     const handleRowClick = (boardId) => {
         navigate(`/board/${boardId}`);
     };
 
-    // 검색 버튼 클릭 시 호출
+    // 검색 핸들러
     const handleSearch = () => {
         loadBoards(0);
     };
 
-    // 상세 페이지에서 수정 후 돌아올 때 데이터 갱신
+    // 새로고침 데이터 처리
     useEffect(() => {
         if (location.state && location.state.isUpdated) {
             setRefreshData(!refreshData);
         }
     }, [location]);
 
-
-    
     return (
         <div className={Boards.boardContainer}>
             <div className={Boards.mainBar}>
                 <h1 className={Boards.pageTitle}>게시판</h1>
-                
-                {/* 검색 영역 */}
+
+                {/* 검색 및 글쓰기 버튼 */}
                 <div className={Boards.headerBar}>
                     <div className={Boards.searchGroup}>
                         <select
@@ -121,11 +125,11 @@ function Board() {
                     </div>
                 </div>
 
-                {/* 게시판 목록 테이블 */}
+                {/* 게시글 목록 */}
                 <div className={Boards.tableContainer}>
                     {error ? (
                         <p>{error}</p>
-                    ) : boards.length === 0 ? (
+                    ) : fixedBoards.length === 0 && regularBoards.length === 0 ? (
                         <p className={Boards.noText}>게시글이 없습니다.</p>
                     ) : (
                         <>
@@ -139,41 +143,51 @@ function Board() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {boards.map((board) => (
+                                    {/* 공지 및 중요 게시글 */}
+                                    {fixedBoards.map((board) => (
                                         <tr
                                             key={board.boardId}
                                             className={`${Boards.tableRow} 
-                                                ${board.boardCategory === "중요" ? Boards.importantRow : ""}
-                                                ${board.boardCategory === "공지" ? Boards.noticeRow : ""}`}
+                                                ${board.boardCategory === "중요" ? Boards.importantRow : Boards.noticeRow}`}
                                             onClick={() => handleRowClick(board.boardId)}
                                             style={{ cursor: "pointer" }}
                                         >
-                                            {/* 카테고리 태그 */}
                                             <td>
                                                 <span
                                                     className={`${Boards.categoryTag} 
-                                                        ${board.boardCategory === "중요" ? Boards.importantTag :
-                                                            board.boardCategory === "공지" ? Boards.noticeTag :
-                                                                Boards.normalTag}`}
+                                                        ${board.boardCategory === "중요" ? Boards.importantTag : Boards.noticeTag}`}
                                                 >
                                                     {board.boardCategory}
                                                 </span>
                                             </td>
-
-                                            {/* 제목 */}
                                             <td>{board.boardTitle}</td>
-
-                                            {/* 글쓴이 */}
                                             <td>{board.empName}</td>
+                                            <td>{new Date(board.boardDate).toLocaleDateString()}</td>
+                                        </tr>
+                                    ))}
 
-                                            {/* 작성시간 */}
+                                    {/* 일반 게시글 */}
+                                    {regularBoards.map((board) => (
+                                        <tr
+                                            key={board.boardId}
+                                            className={Boards.tableRow}
+                                            onClick={() => handleRowClick(board.boardId)}
+                                            style={{ cursor: "pointer" }}
+                                        >
+                                            <td>
+                                                <span className={`${Boards.categoryTag} ${Boards.normalTag}`}>
+                                                    {board.boardCategory}
+                                                </span>
+                                            </td>
+                                            <td>{board.boardTitle}</td>
+                                            <td>{board.empName}</td>
                                             <td>{new Date(board.boardDate).toLocaleDateString()}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
 
-                            {/* 페이지네이션 컴포넌트 */}
+                            {/* 페이지네이션 */}
                             <div className={Boards.paginationContainer}>
                                 <Pagination
                                     page={paginationInfo.page}
