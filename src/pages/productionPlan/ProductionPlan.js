@@ -22,13 +22,11 @@ const ProductionPlan = () => {
 
   // ⭐검색 실행 시 API 호출!⭐
   const handleSearch = async () => {
-    console.log("검색 파라미터:", searchParams);
     const data = await fetchProductionPlans(
       searchParams.planYm,
       searchParams.status
     );
     setPlans(data);
-    console.log(searchParams.planYm);
   };
 
   // ⭐ Enter 키를 누르면 검색 실행! ⭐
@@ -40,7 +38,6 @@ const ProductionPlan = () => {
 
   // ⭐ 상세 페이지로 이동하는 함수 ⭐
   const handleRowClick = (planId) => {
-    console.log('행 클릭됨, planId:', planId);
     navigate(`/detail/${planId}`); 
   };
 

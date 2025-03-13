@@ -25,9 +25,6 @@ const BeerPodiumDoughnut = () => {
                     "장원영 맥주": "#F58B78"
                 };
 
-                // 맥주 이름 확인용 로그
-                console.log("맥주 데이터:", sortedData.map(beer => beer.productName));
-
                 setChartData({
                     labels: sortedData.map(beer => beer.productName),
                     datasets: [

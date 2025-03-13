@@ -14,7 +14,6 @@ export const calculateMaterialRequirements = async (planData) => {
 };
 
 export const saveMaterialPlan = async (completeData) => {
-    console.log("🚀 Step3 API 요청 데이터:", JSON.stringify(completeData, null, 2)); // JSON 포맷 정리
 
     try {
         const response = await axios.post(

@@ -17,9 +17,7 @@ const ProductionPlanDetailPage = () => {
         setIsLoading(true);
         setError(null);
         
-        console.log("Loading details for planId:", planId);
         const data = await fetchProductionPlanDetail(planId);
-        console.log("Received data:", data);
         setPlanDetail(data);
       } catch (error) {
         console.error('생산 계획 상세 정보 로드 실패:', error);

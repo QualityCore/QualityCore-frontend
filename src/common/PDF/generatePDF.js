@@ -78,8 +78,6 @@ const styles = StyleSheet.create({
 
 // PDF 생성 함수
 const generatePDF = (selectedWorkOrder, materials) => {
-    // materials 배열 출력 (디버깅용)
-    console.log("Materials:", materials);
 
     // materials가 undefined일 경우 빈 배열로 처리
     materials = materials || []; // 자재 정보가 없을 때 빈 배열 처리

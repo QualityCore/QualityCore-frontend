@@ -207,7 +207,6 @@ function LabelInfo() {
     const bottleBlob = await fetch(beerBottleImages[beerType])
       .then((res) => res.blob())
       .catch((err) => {
-        console.error("병 이미지 로드 실패:", err);
         alert("병 이미지를 등록할 수 없습니다.");
         return null;
       });

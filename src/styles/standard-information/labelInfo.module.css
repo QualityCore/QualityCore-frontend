@@ -498,6 +498,25 @@
   animation: slideUp 0.4s ease;
 }
 
+
+/* 성공 모달 특화 스타일 */
+.successModal {
+  border-top: 5px solid #48BB78;
+}
+
+/* 경고 모달 특화 스타일 */
+.warningModal {
+  border-top: 5px solid #F56565;
+}
+
+.successModalContent {
+  color: #2F855A;
+}
+
+.warningModalContent {
+  color: #C53030;
+}
+
 .detailModalContent h2 {
   text-align: center;
   color: #2B3674;
@@ -587,6 +606,8 @@
   position: relative;
   animation: zoomIn 0.4s ease;
   z-index: 1001;
+  max-width: 400px;
+  width: 90%;
 }
 
 @keyframes zoomIn {
@@ -641,20 +662,6 @@
   font-size: 1.3rem;
   font-weight: 600;
   margin-top: 1.5rem;
-}
-
-/* 데이터 없을 때 메시지 */
-.noLabelMessage {
-  text-align: center;
-  padding: 3rem;
-  background-color: #F8FAFF;
-  border-radius: 12px;
-  color: #2B3674;
-  font-size: 1.2rem;
-  font-weight: 600;
-  grid-column: 1 / -1;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  margin: 2rem 0;
 }
 
 /* 페이지네이션 컨테이너 */

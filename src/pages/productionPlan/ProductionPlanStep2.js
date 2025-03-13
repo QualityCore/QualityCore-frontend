@@ -44,10 +44,6 @@ const ProductionPlanStep2 = ({ formData, setFormData, goToStep, currentStep = 2 
         const endDate = new Date(start);
         endDate.setDate(start.getDate() + daysToAdd);
 
-        console.log('Start Date:', start);
-        console.log('Beer Type:', beerType);
-        console.log('Calculated End Date:', endDate.toISOString().split('T')[0]);
-
         return endDate.toISOString().split('T')[0];
     };
 

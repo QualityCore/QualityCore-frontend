@@ -59,9 +59,7 @@ function EquipmentInfo() {
 
     const fetchWorkplaceData = async () => {
         try {
-            console.log('Fetching workplace data...');
             const workplaceData = await fetchWorkplaces(); // 작업장 데이터 가져오기
-            console.log('Fetched workplace data:', workplaceData);
             setWorkplaces(workplaceData); // 작업장 데이터 설정
         } catch (error) {
             console.error('Error loading workplace data:', error);
@@ -78,8 +76,6 @@ function EquipmentInfo() {
     const handlePageChange = async (newPage) => {
         // 페이지가 변경되었을 때만 데이터를 새로 로드하도록 함
         if (newPage === pageInfo.page) return; // 현재 페이지와 동일하면 리렌더링 방지
-
-        console.log(`Fetching data for page: ${newPage}`);
 
         // 페이지 정보 업데이트 (새로운 페이지를 설정)
         setPageInfo((prevPageInfo) => ({

@@ -63,7 +63,6 @@ const CarbonationProcessControls = () => {
     const handleSave = async () => {
         try {
             setIsProcessing(true);
-            console.log("📤 등록 요청 데이터:", carbonationData);
 
             if (!carbonationData.carbonationTime) {
                 alert("탄산화 시간을 입력해주세요.");
@@ -107,8 +106,6 @@ const CarbonationProcessControls = () => {
     const handleCompleteProcess = async () => {
         try {
             const actualEndTime = formatDateToISOStringWithoutMs(new Date());
-            console.log("🚀 공정 완료 요청 시작 - carbonationId:", carbonationData.carbonationId);
-            console.log("⏰ actualEndTime:", new Date());
 
             const response = await carbonationProcessApi.completeEndTime(carbonationData.carbonationId, {
                 actualEndTime,

@@ -24,22 +24,17 @@ const ProductionPerformancePage = () => {
         if (activeTab === 'monthly' || activeTab === 'quality') {
           try {
             const monthlyResult = await getMonthlyPerformance(yearMonth, productName);
-            console.log("월별 데이터 API 응답:", monthlyResult);
-            
             const dataFromDirectPath = monthlyResult.data?.monthlyData;
             const dataFromResultPath = monthlyResult.data?.result?.monthlyData;
             
-            console.log("직접 경로 데이터:", dataFromDirectPath);
-            console.log("result 하위 데이터:", dataFromResultPath);
-            
             if (dataFromDirectPath && dataFromDirectPath.length > 0) {
-              console.log("직접 경로에서 데이터 찾음");
+
               setMonthlyData(dataFromDirectPath);
             } else if (dataFromResultPath && dataFromResultPath.length > 0) {
-              console.log("result 하위에서 데이터 찾음");
+
               setMonthlyData(dataFromResultPath);
             } else {
-              console.log("데이터를 찾을 수 없습니다");
+
             }
           } catch (error) {
             console.error('월별 데이터 로드 오류:', error);
@@ -50,20 +45,16 @@ const ProductionPerformancePage = () => {
         if (activeTab === 'plan-vs-actual') {
           try {
             const planResult = await getPlanVsActual(yearMonth, productName);
-            console.log("계획 대비 실적 API 응답:", planResult);
             
             // 정확한 경로에서 데이터 추출
             const planData = planResult.data?.planVsActual || 
                             planResult.data?.result?.planVsActual || 
                             planResult?.result?.planVsActual; 
             
-            console.log("계획 대비 실적 추출된 데이터:", planData);
-            
             if (planData && planData.length > 0) {
-              console.log("계획 대비 실적 데이터 찾음, 크기:", planData.length);
+
               setPlanVsActual(planData);
             } else {
-              console.log("계획 대비 실적 데이터를 찾을 수 없습니다");
             }
           } catch (error) {
             console.error('계획 대비 실적 로드 오류:', error);
@@ -75,24 +66,14 @@ const ProductionPerformancePage = () => {
               if (activeTab === 'efficiency') {
                 try {
                   const efficiencyResult = await getProductEfficiency();
-                  console.log("효율성 API 응답:", efficiencyResult);
-                  
-                  // 명확한 데이터 경로 추출 (디버깅용 로그 추가)
-                  console.log("efficiencyResult 구조:", efficiencyResult);
-                  console.log("efficiencyResult.data:", efficiencyResult.data);
-                  console.log("efficiencyResult.data?.efficiency:", efficiencyResult.data?.efficiency);
                   
                   const effData = efficiencyResult.data?.efficiency || 
                                 efficiencyResult.data?.result?.efficiency || 
                                 efficiencyResult?.result?.efficiency; 
                   
-                  console.log("효율성 추출된 데이터:", effData);
-                  
                   if (effData && effData.length > 0) {
-                    console.log("효율성 데이터 찾음, 크기:", effData.length);
                     setEfficiency(effData);
                   } else {
-                    console.log("효율성 데이터를 찾을 수 없습니다");
                     setEfficiency([]); // 빈 배열로 초기화
                   }
                 } catch (error) {
@@ -112,7 +93,6 @@ const ProductionPerformancePage = () => {
   
   // 상태 변경 확인용 
   useEffect(() => {
-    console.log("monthlyData 상태 업데이트됨:", monthlyData);
   }, [monthlyData]);
 
   const handleTabChange = (tab) => {
