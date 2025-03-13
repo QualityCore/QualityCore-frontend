@@ -62,7 +62,6 @@ const PackagingAndShipmentControls = () => {
 
     const handleSave = async () => {
         try {
-            console.group('🚀 handleSave 함수 실행');
             setIsProcessing(true);
 
             // 1. 데이터 변환 및 유효성 검증
@@ -89,18 +88,8 @@ const PackagingAndShipmentControls = () => {
                 shipmentQuantity: parsedQuantity, // shipmentQuantity를 숫자로 변환
             };
 
-            console.log('🔄 변환된 데이터:', transformedData);
-
-            // 3. API 호출
-            console.log('📡 API 요청 시작:', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: transformedData
-            });
-
             const response = await packagingAndShipmentApi.createPackagingAndShipment(transformedData);
 
-            console.log('🎉 저장 성공 응답:', response);
             setShowSuccessModal(true);
             setButtonLabel("공정 완료");
            
@@ -129,8 +118,7 @@ const PackagingAndShipmentControls = () => {
 
 
     const handleNextProcess = async () => {
-        try {  
-            console.log("✅ handleNextProcess 실행됨!"); // 디버깅 로그 추가     
+        try {      
           navigate('/work/orders');
         } catch (error) {
           setShowErrorModal(true);

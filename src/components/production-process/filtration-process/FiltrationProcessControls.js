@@ -48,7 +48,6 @@ const FiltrationProcessControls = ({ workOrder }) => {
       };
 
       const response = await filtrationProcessApi.saveFiltrationProcess(saveData);
-      console.log("✅ 여과 공정 저장 성공:", response);
       
       // ✅ 서버 응답에서 filtrationId를 받아서 저장해야 함
       if (response?.result?.saveFiltrationProcess?.filtrationId) {
@@ -107,16 +106,9 @@ const FiltrationProcessControls = ({ workOrder }) => {
     }
 
     if(!filtrationId){
-      console.log("❌ filtrationId가 없습니다. API 요청을 중단합니다.")
       setShowErrorModal(true);
       return;
     }
-
-    console.log("📌 API 요청 데이터:", {
-      recoveredWortVolume: filtrationData.recoveredWortVolume,
-      lossVolume: filtrationData.lossVolume,
-      actualEndTime: new Date().toISOString(),
-    });
 
     try {
       await filtrationProcessApi.updateFiltrationProcess(filtrationId, {
@@ -133,12 +125,10 @@ const FiltrationProcessControls = ({ workOrder }) => {
   };
 
   useEffect(() => {
-    console.log("🟢 현재 filtrationId:", filtrationId);
   }, [filtrationId]);
 
   useEffect(() => {
     const savedMashingData = sessionStorage.getItem("mashingData");
-    console.log("📌 필터 공정에서 저장된 데이터 확인:", savedMashingData); // 🔍 확인용 로그
 
     if (savedMashingData) {
       const parsedData = JSON.parse(savedMashingData);
@@ -173,9 +163,6 @@ const FiltrationProcessControls = ({ workOrder }) => {
       const updatedWortVolume = prev.recoveredWortVolume
         ? (Number(prev.recoveredWortVolume) - Number(lossVolume)).toFixed(1) // ✅ 손실량 반영한 회수된 워트량
         : 0;
-  
-      console.log(`✅ 손실량 계산 완료: ${lossVolume} L`); // 🔍 로그 확인
-      console.log(`✅ 업데이트된 회수된 워트량: ${updatedWortVolume} L`); // 🔍 로그 확인
   
       return { ...prev, lossVolume, recoveredWortVolume: updatedWortVolume };
     });

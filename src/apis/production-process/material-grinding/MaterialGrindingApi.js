@@ -18,11 +18,9 @@ const materialGrindingApi = {
     getGrindingByLotNo: async (lotNo) => {
         try {
             const apiUrl = `${BASE_URL}/materialgrinding/${lotNo}`;
-            console.log("📌 요청하는 lotNo:", lotNo);
-            console.log("📌 최종 API 요청 URL:", apiUrl);
 
             const response = await axios.get(apiUrl);
-            console.log("📌 주원료 API 응답 데이터:", response.data);
+
             return response.data || [];  
         } catch (error) {
             console.error("❌ 주원료 불러오기 실패:", error);
@@ -75,11 +73,9 @@ const materialGrindingApi = {
      getRawMaterialByLotNo: async (lotNo) => {
         try {
             const apiUrl = `${BASE_URL}/${lotNo}`;
-            console.log("📌 요청하는 lotNo:", lotNo);
-            console.log("📌 최종 API 요청 URL:", apiUrl);
 
             const response = await axios.get(apiUrl);
-            console.log("📌 주원료 API 응답 데이터:", response.data);
+
             return response.data || [];  // ✅ null 대신 빈 배열 반환
         } catch (error) {
             console.error("❌ 주원료 불러오기 실패:", error);

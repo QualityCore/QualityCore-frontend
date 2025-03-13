@@ -32,7 +32,6 @@ const boilingProcessApi = {
       const response = await axios.post(`${BASE_URL}/register`, boilingRequestData, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("✅ 끓임 공정 저장 응답 데이터:", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ 끓임 공정 데이터 저장 실패:", error);
@@ -51,15 +50,12 @@ const boilingProcessApi = {
   }
 
   try {
-    console.log(`📌 API 요청: PUT ${BASE_URL}/update/lot/${lotNo}`, updatePayload);
 
     const response = await axios.put(
       `${BASE_URL}/update/lot/${lotNo}`,
       updatePayload,
       { headers: { "Content-Type": "application/json" } }
     );
-
-    console.log("✅ 끓임 공정 업데이트 성공:", response.data);
     return response.data;
   } catch (error) {
     console.error(`❌ 끓임 공정 업데이트 실패 (Lot No: ${lotNo}):`, error);
@@ -85,10 +81,6 @@ getBoilingProcessByLotNo: async (lotNo) => {
   // 📌 홉 투입 정보 업데이트
   updateHopInfo: async (boilingId, hopPayload) => {
     try {
-      console.log(
-        `📌 API 요청: PUT /boilingprocess/hop/${boilingId}`,
-        hopPayload
-      );
       const response = await axios.put(
         `${BASE_URL}/hop/${boilingId}`,
         hopPayload,

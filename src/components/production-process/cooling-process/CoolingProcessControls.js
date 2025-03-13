@@ -56,12 +56,10 @@ const CoolingProcessControls = ({ workOrder }) => {
   // 냉각 공정 데이터 가져오기
   const fetchCoolingData = async (lotNo) => {
     try {
-      console.log("✅ fetchCoolingData 실행 - LOT_NO:", lotNo);
       const response = await coolingProcessApi.getCoolingProcessByLotNo(lotNo);
       console.log("📌 냉각 공정 API 응답:", response);
   
       if (response && response.result) {
-        console.log("✅ 서버에서 받은 냉각 공정 데이터:", response.result);
         setCoolingData((prev) => ({
           ...prev,
           coolingTime: response.result.coolingTime || prev.coolingTime,

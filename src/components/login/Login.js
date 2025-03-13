@@ -95,7 +95,6 @@ const Login = () => {
   // 비밀번호 업데이트 함수
 
   const updateUserPassword = (userId, newPassword) => {
-    console.log(`비밀번호 변경 요청: ID=${userId}, 새 비밀번호=${newPassword}`);
   
     setMockUsers(prevUsers => {
       const updatedUsers = prevUsers.map(user => 
@@ -104,8 +103,7 @@ const Login = () => {
   
       // 변경된 사용자 정보를 localStorage에 저장
       localStorage.setItem('mockUsers', JSON.stringify(updatedUsers));
-  
-      console.log('업데이트된 사용자 목록:', updatedUsers);
+
       return updatedUsers;
     });
   };

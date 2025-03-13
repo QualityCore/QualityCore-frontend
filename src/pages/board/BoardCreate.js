@@ -67,7 +67,7 @@ function BoardCreate() {
             else if (currentUser.id === 'plan') empId = 'plan';
             else if (currentUser.id === 'work') empId = 'work';
             else if (currentUser.id === 'EMP001') empId = 'EMP001';
-            else if (currentUser.id === 'iu') empId = 'iu'; 
+            else if (currentUser.id === 'iu') empId = 'iu';
 
             const apiFormData = new FormData();
             apiFormData.append("boardData", JSON.stringify({

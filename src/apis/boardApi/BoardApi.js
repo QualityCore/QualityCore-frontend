@@ -48,7 +48,6 @@ export const fetchBoards = async (
     }
 
     const url = `http://localhost:8080/api/v1/board?${params.toString()}`;
-    console.log("게시판 API 요청 URL:", url);
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -56,7 +55,6 @@ export const fetchBoards = async (
     }
 
     const data = await response.json();
-    console.log('게시판 조회 data:', data);
 
     if (data?.result?.board?.content && Array.isArray(data.result.board.content)) {
       // 백엔드에서 반환된 데이터에서 사용자 정보 매핑
@@ -100,7 +98,6 @@ export const fetchBoardsMain = async (page = 0, size = 5) => {
     params.append('size', size);
 
     const url = `http://localhost:8080/api/v1/boardMain?${params.toString()}`;
-    console.log("메인 화면 게시판 API 요청 URL:", url);
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -108,7 +105,6 @@ export const fetchBoardsMain = async (page = 0, size = 5) => {
     }
 
     const data = await response.json();
-    console.log('메인 화면 게시판 조회 data:', data);
 
     if (data?.result?.board?.content && Array.isArray(data.result.board.content)) {
       // 백엔드에서 반환된 데이터에서 사용자 정보 매핑
@@ -151,8 +147,6 @@ export const fetchBoardByCode = async (boardId) => {
 
     // 응답 데이터를 JSON으로 변환
     const data = await response.json();
-
-    console.log('게시판 상세 조회 data', data);
 
     // 서버에서 반환된 board 데이터 가공
     if (data.result && data.result.board) {

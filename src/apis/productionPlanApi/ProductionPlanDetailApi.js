@@ -7,22 +7,13 @@ export const fetchProductionPlanDetail = async (planId) => {
 
     const response = await axios.get(`http://localhost:8080/api/v1/detail/${planId}`);
     
-    console.log("API 전체 응답:", response);
-    
     if (response.status === 200) {
-      // 응답 구조 로깅
-      console.log("응답 데이터 구조:");
-      console.log("- response.data:", response.data);
-      
+   
       if (response.data.code === 200) {
         console.log("- response.data.result:", response.data.result);
         
         if (response.data.result && response.data.result.planDetail) {
           const planDetail = response.data.result.planDetail;
-          
-          // 로깅 추가
-          console.log("- 추출된 planDetail:", planDetail);
-          console.log("- planDetail keys:", Object.keys(planDetail));
 
           // 데이터 구조 확인 및 가공
           if (planDetail.planMst) {

@@ -11,7 +11,6 @@ const useWebSocket = (url, topic) => {
         const client = Stomp.over(socket);
 
         client.connect({}, () => {
-            console.log("WebSocket 연결 성공");
 
             // 구독 설정
             client.subscribe(topic, (message) => {
@@ -25,7 +24,6 @@ const useWebSocket = (url, topic) => {
         return () => {
             // 컴포넌트 언마운트 시 WebSocket 연결 해제
             if (client) client.disconnect();
-            console.log("WebSocket 연결 해제");
         };
     }, [url, topic]);
 

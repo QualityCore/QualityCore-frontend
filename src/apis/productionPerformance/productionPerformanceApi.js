@@ -12,7 +12,7 @@ export const getMonthlyPerformance = async (yearMonth, productName = '') => {
     }
          
     const response = await axios.get(`${BASE_URL}/performance/monthly`, { params });
-    console.log("API 원본 응답:", response);
+
     return response;
   } catch (error) {
     console.error('월별 생산실적 조회 오류:', error);
@@ -38,7 +38,7 @@ export const getPlanVsActual = async (yearMonth, productName = '') => {
 export const getProductEfficiency = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/performance/efficiency`);
-    console.log("효율성 API 원본 응답:", response);
+
     return response;  // data 속성을 추출하지 않고 전체 응답 반환
   } catch (error) {
     console.error('제품별 효율성 조회 오류:', error);

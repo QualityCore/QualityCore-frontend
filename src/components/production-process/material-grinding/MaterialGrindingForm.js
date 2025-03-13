@@ -32,17 +32,24 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         console.log("📌 실제 요청 URL:", url); // ✅ 요청 URL 출력
   
         const response = await materialGrindingApi.getLineMaterial();
+
         console.log("📌 작업지시 목록 API 응답:", response);
   
         const data = response.result?.lineMaterials || [];
         console.log("📌 추출된 작업지시 목록:", data);
   
+
+
+        const data = response.result?.lineMaterials || [];
+
+
         if (!Array.isArray(data) || data.length === 0) {
           console.warn("⚠️ 작업지시 ID 데이터 없음!");
           return;
         }
   
         // ✅ 분쇄공정에 등록된 작업지시 ID 조회
+
         const grindingResponse = await materialGrindingApi.getMaterialGrindingList();
         console.log("📌 분쇄 공정 등록된 ID 목록 응답:", grindingResponse);
   
@@ -51,12 +58,20 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         );
         console.log("📌 분쇄 공정에 등록된 LOT_NO 목록:", registeredLotNos);
   
+
+        const grindingResponse =
+          await materialGrindingApi.getMaterialGrindingList();
+
+        const registeredLotNos = new Set(
+          grindingResponse.result?.data?.map((item) => item.lotNo) || []
+        );
+
+
         // ✅ 분쇄 공정에 등록되지 않은 작업지시 ID만 필터링
         const filteredData = data.filter(
           (item) => !registeredLotNos.has(item.lotNo)
         );
-  
-        console.log("📌 필터링된 작업지시 목록:", filteredData);
+
         setLineMaterial(filteredData);
       } catch (error) {
         console.error("❌ 작업지시 ID 목록 불러오기 실패:", error);
@@ -78,11 +93,9 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
       const response = await materialGrindingApi.getRawMaterialByLotNo(
         selectedLotNo
       );
-      console.log("📌 API 응답 데이터:", response);
 
       // 📌 올바른 배열 데이터로 변환
       const materialData = response.result?.materials || [];
-      console.log("📌 변환된 원료 데이터:", materialData);
 
       if (!Array.isArray(materialData) || materialData.length === 0) {
         console.warn("⚠️ 주원료 데이터가 없습니다.");
@@ -114,7 +127,6 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           maltType: validMalt ? validMalt.materialName : "",
           maltInputVolume: validMalt ? validMalt.totalQty || "" : "",
         };
-        console.log("✅ 업데이트할 데이터:", updatedData);
 
         setSelectedMaterial(materialName);
         setFormData((prev) => ({ ...prev, ...updatedData })); // ✅ 로컬 상태 업데이트
@@ -191,7 +203,6 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         updatedData.grindIntervalSetting = settings.grindInterval;
         updatedData.grindSpeedSetting = settings.grindSpeed;
       }
-      console.log("🔄 grindingData 업데이트됨:", updatedData);
       return updatedData;
     });
   };
@@ -216,7 +227,6 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
           waterInputVolume: grindingData.waterInputVolume || 0,
         };
         sessionStorage.setItem("mashingData", JSON.stringify(newData));
-        console.log("✅ mashingData 저장 완료:", newData);
       }
     } else {
       console.warn(

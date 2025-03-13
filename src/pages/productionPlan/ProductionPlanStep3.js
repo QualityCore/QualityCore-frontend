@@ -19,8 +19,6 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
     const [selectedBeer, setSelectedBeer] = useState(null);
     const [showSuccess, setShowSuccess] = useState(false); // ✅ 성공 애니메이션 상태 추가
     const navigate = useNavigate(); 
-
-    console.log("formData : ",formData);
     
     const uniqueBeers = useMemo(() => [...new Set(formData.products.map(p => p.productName))], [formData]);
 
@@ -75,15 +73,6 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
                 const rawMaterialsData = response.result?.rawMaterials || [];
                 const packagingMaterialsData = response.result?.packagingMaterials || [];
         
-                // 🔍 로그 추가
-                console.log('원자재 데이터:', rawMaterialsData.map(m => ({
-                    beerName: m.beerName,
-                    materialName: m.materialName,
-                    planQty: m.planQty,
-                    currentStock: m.currentStock,
-                    status: m.status
-                })));
-        
                 // 맥주별 자재 분류
                 const rawMaterialsByBeerMap = rawMaterialsData.reduce((acc, material) => {
                     const beerName = material.beerName;
@@ -131,13 +120,12 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
                 planQty: Number(product.planQty)
             }))
         };
-        console.log("Prepared data for save:", preparedData);
         return preparedData;
     };
 
     const handleSave = async () => {
         const preparedData = prepareDataForSave(formData);
-        console.log("Prepared data for save:", preparedData);
+
         try {
             await saveMaterialPlan(preparedData);
             setShowSuccess(true);  // ✅ 성공 애니메이션 표시
@@ -153,7 +141,6 @@ const ProductionPlanStep3 = ({ formData, setFormData, goToStep, currentStep = 3 
     if (isLoading) {
         return <div>자재 정보를 불러오는 중...</div>;
     }
- 
       
     return (
         <div className={styles.container}>

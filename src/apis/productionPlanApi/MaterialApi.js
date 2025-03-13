@@ -52,7 +52,7 @@ export const requestMaterial = async (requestData) => {
 export const updateMaterialRequestStatus = async (requestId, status) => {
   try {
     const response = await axios.put(`${BASE_URL}/request/${requestId}/status?status=${status}`);
-    console.log("✅ 발주 상태 변경 응답:", response); // 🛠 디버깅용 로그 추가
+
     return response.data;
   } catch (error) {
     console.error('자재 구매 신청 상태 변경 실패:', error);
