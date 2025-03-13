@@ -10,12 +10,12 @@ import styles from "../../styles/production-process/MaturationCss.module.css";
 const MaturationControls = () => {
     const [maturationData, setMaturationData] = useState({
         lotNo: "",
-        maturationTime: "",
-        startTemperature: "",
-        temperature: "",
-        pressure: "",
-        co2Percent: "",
-        dissolvedOxygen: "",
+        maturationTime: "720",
+        startTemperature: "1",
+        temperature: "0",
+        pressure: "1.4",
+        co2Percent: "12",
+        dissolvedOxygen: "7",
         notes: "",
     });
 
@@ -183,7 +183,7 @@ const MaturationControls = () => {
                 </div>
 
                 <div className={styles.gridItem}>
-                    <label>숙성 시간 (분)</label>
+                    <label>숙성 시간 (시간간)</label>
                     <input
                         type="number"
                         name="maturationTime"

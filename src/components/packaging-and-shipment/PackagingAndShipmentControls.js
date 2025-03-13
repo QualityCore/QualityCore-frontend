@@ -53,7 +53,7 @@ const PackagingAndShipmentControls = () => {
             sealingStatus: "양호",
             packagingStatus: "양호",
             shipmentDate: new Date().toISOString().split("T")[0],
-            productName: "",
+            productName: "아이유맥주",
             shipmentQuantity: 0,
             destination: "",
             notes: "",
@@ -103,7 +103,7 @@ const PackagingAndShipmentControls = () => {
             console.log('🎉 저장 성공 응답:', response);
             setShowSuccessModal(true);
             setButtonLabel("공정 완료");
-            resetForm(); // 폼 초기화
+           
 
         } catch (error) {
             console.error('💥 저장 실패 상세:', {
@@ -120,12 +120,27 @@ const PackagingAndShipmentControls = () => {
 
     const handleCompleteProcess = async () => {
         setShowCompleteModal(true);
+        setButtonLabel("작업지시 관리 이동");
     };
 
     const handleCloseCompleteModal = () => {
         setShowCompleteModal(false);
     };
 
+
+    const handleNextProcess = async () => {
+        try {       
+          navigate("/work/orders");
+        } catch (error) {
+          setShowErrorModal(true);
+        }
+      };
+
+
+
+
+
+      
     return (
         <form className={styles.packagingForm} onSubmit={(e) => e.preventDefault()}>
             <h2 className={styles.packagingTitle}>포장 및 출하 공정</h2>
@@ -219,18 +234,24 @@ const PackagingAndShipmentControls = () => {
                         onChange={handleChange}
                     />
                 </div>
+           
+           
 
                 {/* 제품명 */}
                 <div className={styles.gridItem}>
                     <label>제품명</label>
-                    <input
-                        type="text"
+                    <select
                         name="productName"
                         value={shipmentData.productName}
                         onChange={handleChange}
-                        placeholder="제품명"
-                    />
+                    >
+                    <option value="">제품명 선택</option>
+                    <option value="아이유맥주">아이유맥주</option>
+                    <option value="카리나맥주">카리나맥주</option>
+                    <option value="장원영맥주">장원영맥주</option>
+                    </select>
                 </div>
+
 
                 {/* 목적지 */}
                 <div className={styles.gridItem}>
@@ -273,6 +294,8 @@ const PackagingAndShipmentControls = () => {
                                 setShowConfirmModal(true);
                             } else if (buttonLabel === "공정 완료") {
                                 handleCompleteProcess();
+                            } else if (buttonLabel === "작업지시관리로 가기") {
+                                handleNextProcess();
                             }
                         }}
                         disabled={isProcessing}
@@ -305,7 +328,7 @@ const PackagingAndShipmentControls = () => {
 
             <CompleteModal
                 isOpen={showCompleteModal}
-                message="출하가 완료되었습니다."
+                message="출하 준비가 완료되었습니다."
                 onClose={() => handleCloseCompleteModal()}
             />
         </form>
