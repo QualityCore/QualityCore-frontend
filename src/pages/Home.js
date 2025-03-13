@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../styles/Home.module.css";
 import BoardMain from "./board/BoardMain";
 import ProductionPlanCard from "../components/home/ProductionPlanCard";
+import BeerPodium from "../pages/work/BeerPodium";
 
 
 const Home = () => {
@@ -21,7 +22,7 @@ const Home = () => {
         </div>
 
         <div className={`${styles.gridItem} ${styles.performanceCard}`}>
-
+          <BeerPodium />
         </div>
       </div>
     </div>
