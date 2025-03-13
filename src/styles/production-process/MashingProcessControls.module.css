@@ -10,6 +10,19 @@
   height: calc(100vh - 170px);
   overflow-x: hidden;
   box-sizing: border-box;
+  position: relative;
+}
+
+/* 상단 그라데이션 라인 추가 */
+.mashingProcessForm::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, #047857, #10B981, #34D399);
+  border-radius: 20px 20px 0 0;
 }
 
 @media (max-width: 1500px) {
@@ -139,13 +152,13 @@ input:disabled {
   grid-column: 1 / -1;
 }
 
-/* 타이머 컨테이너 - 왼쪽에 배치, 넓어진 버전 */
+/* 개선된 타이머 컨테이너 */
 .timerContainer {
-  flex: 2;  /* 더 많은 공간 차지 */
+  flex: 2;
   background: linear-gradient(135deg, #047857 0%, #10B981 100%);
   border-radius: 16px;
-  padding: 0.9rem;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.12);
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(4, 120, 87, 0.25);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -154,62 +167,147 @@ input:disabled {
   position: relative;
   border: none;
   overflow: hidden;
-  min-width: 450px;  /* 최소 너비 설정 */
-  height: 80px;
+  min-width: 450px;
+  height: 120px; /* 높이 증가 */
+  transition: all 0.5s ease;
 }
 
-.timerContainer::before {
+/* 물결 효과 애니메이션 */
+.timerContainer::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(to right, #10B981, #34D399);
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 1;
+  animation: wave 3s infinite;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
 }
 
 .timerLabel {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: white;
   font-weight: 600;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.5rem;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .timerDisplay {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 1.2rem;
   font-size: 1.5rem;
   font-weight: 600;
   color: white;
-  margin: 0.2rem 0;
+  margin: 0.5rem 0;
 }
 
 .timerIcon {
-  height: 57px;
-  width: 57px;
+  height: 64px;
+  width: 64px;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.3));
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .timerValue {
   font-family: 'Consolas', monospace;
   background: rgba(255, 255, 255, 0.15);
-  padding: 0.2rem 0.8rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  min-width: 100px;
-  backdrop-filter: blur(3px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  min-width: 120px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 2rem;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .timerStatus {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   color: #6EE7B7;
-  margin-top: 0.2rem;
-  animation: pulse 2s infinite;
+  margin-top: 0.5rem;
   font-weight: 500;
-  display: none;
+  animation: blink 1.5s infinite;
+  display: block;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* 온도 시각화 요소 (당화 온도 표시용) */
+.temperatureDisplay {
+  position: relative;
+  background: linear-gradient(to right, #047857, #10B981);
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  margin: 2rem 0;
+  box-shadow: 0 8px 20px rgba(4, 120, 87, 0.3);
+  overflow: hidden;
+  grid-column: 1 / -1;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.temperatureDisplay::before {
+  content: '🌡️';
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.temperatureDisplay .current {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.temperatureDisplay .target {
+  font-size: 1.5rem;
+  opacity: 0.8;
 }
 
 /* 버튼 컨테이너 - 항상 오른쪽에 배치 */
@@ -220,31 +318,55 @@ input:disabled {
   flex: 1;  /* 타이머보다 적은 공간 차지 */
 }
 
-/* 폼 내부 버튼은 더 이상 100% 너비가 아니라 고정 크기 */
+/* 개선된 버튼 스타일 */
 .mSaveButton {
   background: linear-gradient(to right, #047857, #10B981);
   color: white;
   font-weight: 600;
-  padding: 0.9rem 1.8rem;
+  padding: 1.2rem 2.2rem;
   border: none;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-  font-size: 1rem;
-  min-width: 180px;
-  width: auto;  /* 너비는 내용에 맞게 자동 조정 */
-  margin-left: auto;  /* 오른쪽 정렬을 위해 */
+  box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3);
+  font-size: 1.1rem;
+  min-width: 200px;
+  width: auto;
+  margin-left: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.mSaveButton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 1;
+  transition: all 0.4s ease;
+  transform: translateX(-100%);
+}
+
+.mSaveButton:hover::after {
+  transform: translateX(100%);
 }
 
 .mSaveButton:hover:not(:disabled) {
   background: linear-gradient(to right, #065F46, #059669);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 20px rgba(16, 185, 129, 0.4);
 }
 
 .mSaveButton:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(-1px);
 }
 
 .mSaveButton:disabled {
@@ -252,18 +374,6 @@ input:disabled {
   color: #718096;
   cursor: not-allowed;
   box-shadow: none;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.6;
-  }
 }
 
 /* 진행 막대 스타일 */
@@ -336,9 +446,18 @@ input:disabled {
   flex-direction: column;
 }
 
+/* 반응형 조정 */
 @media (max-width: 1100px) {
   .timerContainer {
     min-width: 350px;
+  }
+  
+  .temperatureDisplay {
+    height: 130px;
+  }
+  
+  .temperatureDisplay .current {
+    font-size: 3rem;
   }
 }
 
@@ -357,6 +476,16 @@ input:disabled {
     min-width: unset;
     max-width: 100%;
     margin-bottom: 1rem;
+    height: 100px;
+  }
+  
+  .timerValue {
+    font-size: 1.6rem;
+  }
+  
+  .timerIcon {
+    height: 50px;
+    width: 50px;
   }
   
   .buttonContainer {
@@ -365,6 +494,20 @@ input:disabled {
   
   .mSaveButton {
     margin-left: 0;  /* 중앙 정렬을 위해 마진 제거 */
+  }
+  
+  .temperatureDisplay {
+    height: 120px;
+    padding: 1.5rem;
+  }
+  
+  .temperatureDisplay .current {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .temperatureDisplay .target {
+    font-size: 1.2rem;
   }
 }
 
@@ -384,11 +527,19 @@ input:disabled {
   }
   
   .timerContainer {
-    height: 70px;
+    height: 90px;
   }
   
   .timerIcon {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .temperatureDisplay {
+    height: 100px;
+  }
+  
+  .temperatureDisplay .current {
+    font-size: 2.2rem;
   }
 }
