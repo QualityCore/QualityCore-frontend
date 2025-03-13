@@ -27,7 +27,9 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         // 작업지시 목록 API 호출
         const response = await materialGrindingApi.getLineMaterial();
 
+
         const data = response.result?.lineMaterials || [];
+
 
         if (!Array.isArray(data) || data.length === 0) {
           console.warn("⚠️ 작업지시 ID 데이터 없음!");
@@ -35,8 +37,10 @@ const MaterialGrindingForm = ({ grindingData, setGrindingData }) => {
         }
 
 
+
         // 분쇄 공정 등록된 LOT_NO 목록 조회
         const grindingResponse = await materialGrindingApi.getMaterialGrindingList();
+
 
         const registeredLotNos = new Set(
           grindingResponse.result?.data?.map((item) => item.lotNo) || []
