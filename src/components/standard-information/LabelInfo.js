@@ -50,6 +50,7 @@ function LabelInfo() {
   const [isSuccessModal, setIsSuccessModal] = useState(false); // 성공 모달 상태
   const [modalMessage, setModalMessage] = useState(''); // 성공 메시지 상태
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [error, setError] = useState("");
 
   const closeSuccessModal = () => {
     setIsSuccessModal(false);
@@ -98,7 +99,7 @@ function LabelInfo() {
         setLabelInfo([]);
       }
     } catch (error) {
-      console.error("Error fetching label info:", error);
+      setError("설비 정보를 불러오는데 실패했습니다.")
       setLabelInfo([]);
     }
   };
@@ -267,16 +268,21 @@ function LabelInfo() {
 
         {/* 카드 컨테이너 */}
         <div className={labelInfos.cardContainer}>
-          {Array.isArray(labelInfo) && labelInfo.length > 0 ? (
-            labelInfo.map((item) => (
-              <LabelInfoCard key={item.labelId} item={item} handleDetailModalOpen={handleDetailModalOpen} />
-            ))
-          ) : (
-            <div className={labelInfos.noLabelMessage}>
-              라벨 정보가 없습니다.
-            </div>
-          )}
-        </div>
+  {error ? (
+      <p className={labelInfos.errorMessage}>{error}</p>
+  ) : Array.isArray(labelInfo) && labelInfo.length === 0 ? (
+      <p className={labelInfos.noText}>라벨정보가 없습니다.</p>
+  ) : (
+    Array.isArray(labelInfo) && labelInfo.map((item) => (
+      <LabelInfoCard 
+        key={item.labelId} 
+        item={item} 
+        handleDetailModalOpen={handleDetailModalOpen} 
+      />
+    ))
+  )}
+</div>
+
       </div>
 
       {/* 상세조회 모달 */}
@@ -291,7 +297,7 @@ function LabelInfo() {
           onClick={handleDetailModalClose}
           className={labelInfos.closeButton}
         >
-          X
+          x
         </button>
         <h2>라벨 상세 정보</h2>
         <div>
@@ -333,7 +339,7 @@ function LabelInfo() {
           onClick={handleModalClose}
           className={labelInfos.closeButton}
         >
-          X
+          x
         </button>
         <h2 className={labelInfos.modalTitle}>라벨 등록</h2>
 
@@ -416,7 +422,7 @@ function LabelInfo() {
         <div className={labelInfos.successModalContent}>
           <SuccessAnimation />
           <p className={labelInfos.successMessage}>{modalMessage}</p>
-          <button className={labelInfos.successCloseButton} onClick={closeSuccessModal}>X</button>
+          <button className={labelInfos.successCloseButton} onClick={closeSuccessModal}>x</button>
         </div>
       </Modal>
     </div>

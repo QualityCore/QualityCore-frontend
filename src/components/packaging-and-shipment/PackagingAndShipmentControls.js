@@ -144,7 +144,8 @@ const PackagingAndShipmentControls = () => {
                         value={shipmentData.lotNo}
                         readOnly
                     />
-                </div>... {/* 세척 및 살균 */}
+                </div>
+                {/* 세척 및 살균 */}
                 <div className={styles.gridItem}>
                     <label>세척 및 살균</label>
                     <select
@@ -264,7 +265,8 @@ const PackagingAndShipmentControls = () => {
                         onChange={handleChange}
                         placeholder="수량"
                     />
-                </div>... {/* 메모 */}
+                </div> 
+                {/* 메모 */}
                 <div className={styles.gridItem}>
                     <label>메모</label>
                     <textarea
@@ -292,7 +294,8 @@ const PackagingAndShipmentControls = () => {
                         {buttonLabel}
                     </button>
                 </div>
-            </div>... {/* 모달 처리 */}
+            </div>
+            {/* 모달 처리 */}
             <ConfirmModal
                 isOpen={showConfirmModal && !confirmModalShown}
                 message="등록하시겠습니까?"
