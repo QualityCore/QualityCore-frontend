@@ -241,7 +241,7 @@ function BoardDetail() {
                         <ReactQuill
                             value={editedBoard.boardContents}
                             onChange={handleEditorChange}
-                            style={{ height: '399px' }}
+                            style={{ height: '280px' }}
                         />
                     ) : (
                         <div

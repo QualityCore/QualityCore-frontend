@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // useNavigate 추가
 import styles from '../../styles/WorkMain.module.css';
 import { findAllWorkOrders } from "../../apis/workOrderApi/workOrdersApi";
 import { CircularProgress } from '@mui/material';
@@ -7,6 +8,7 @@ function WorkMain() {
     const [workOrders, setWorkOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // useNavigate 훅 사용
 
     useEffect(() => {
         fetchWorkOrders();
@@ -30,8 +32,9 @@ function WorkMain() {
     // 진행률
     const getWorkProgress = (statusCode) => {
         const statusProgressMap = {
-            SC001: 0, SC002: 25, SC003: 50, 
-            SC004: 75, SC005: 100
+            SC001: 10, SC002: 20, SC003: 30,
+            SC004: 40, SC005: 50, SC006: 60,
+            SC007: 70, SC008: 80, SC009: 90, SC010: 100
         };
         return statusProgressMap[statusCode] || 0;
     };
@@ -39,16 +42,17 @@ function WorkMain() {
     return (
         <div className={styles.container}>
             <div className={styles.headerContainer}>
-                <h1 className={styles.title}>
+                {/* 작업현황 클릭 시 navigate('/work/orders') 실행 */}
+                <h1 className={styles.title} onClick={() => navigate('/work/orders')} style={{ cursor: 'pointer' }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 7H20" stroke="#3182CE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M4 12H20" stroke="#3182CE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M4 17H20" stroke="#3182CE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M4 7H20" stroke="#3182CE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M4 12H20" stroke="#3182CE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M4 17H20" stroke="#3182CE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     작업현황
                 </h1>
             </div>
-            
+
             {loading ? (
                 <div className={styles.loadingContainer}>
                     <CircularProgress />
@@ -81,16 +85,16 @@ function WorkMain() {
                                             <td>{order.processStatus}</td>
                                             <td>
                                                 <div className={styles.progressBar}>
-                                                    <div 
-                                                        className={styles.progressBarFill} 
+                                                    <div
+                                                        className={styles.progressBarFill}
                                                         style={{ width: `${progress}%` }}
-                                                    >
-                                                        <span className={styles.progressBarLabel}>
-                                                            {progress}%
-                                                        </span>
-                                                    </div>
+                                                    />
+                                                    <span className={styles.progressBarLabel}>
+                                                        {progress}%
+                                                    </span>
                                                 </div>
                                             </td>
+
                                         </tr>
                                     );
                                 })
@@ -105,7 +109,7 @@ function WorkMain() {
                             )}
                         </tbody>
                     </table>
-                    
+
                     {/* 데이터 기준 날짜 정보 제거 */}
                 </div>
             )}
