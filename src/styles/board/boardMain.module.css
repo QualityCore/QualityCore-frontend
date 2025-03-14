@@ -1,39 +1,79 @@
-/* 중요와 공지 행 스타일 */
-.boardTable tbody tr.importantRow {
-  background-color: rgba(245, 101, 101, 0.08);
-}
-
-.boardTable tbody tr.noticeRow {
-  background-color: rgba(94, 75, 255, 0.08);
-}
-
-/* 호버 시에도 색상 유지하면서 강조 */
-.boardTable tbody tr.importantRow:hover {
-  background-color: rgba(245, 101, 101, 0.15);
-}
-
-.boardTable tbody tr.noticeRow:hover {
-  background-color: rgba(94, 75, 255, 0.15);
-}
-
 /* Main Container */
 .boardMainContainer {
-  background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
   height: 100%;
-  max-height: 100%;
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.boardMainContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #5E4BFF 0%, #8BB3FF 100%);
+}
+
+/* 헤더 컨테이너 */
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4rem 1.5rem 0rem 1.5rem; 
+  border-bottom: 1px solid #eee;
+  margin-bottom: -0.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2D3748;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.title:hover {
+  color: #5E4BFF;
+}
+
+/* 컨텐츠 컨테이너 */
+.contentContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  overflow: hidden;
+}
+
+/* 로딩 및 에러 컨테이너 */
+.loadingContainer, .errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-grow: 1;
+  padding: 2rem;
+}
+
+.errorContainer p {
+  color: #E53E3E;
+  font-size: 1rem;
 }
 
 /* Table Container */
 .boardTableContainer {
-  height: calc(90% - 40px);
+  flex-grow: 1;
   overflow: auto;
-  margin-top: 0px;
+  margin-top: 1rem;
 }
 
 /* Table Style */
@@ -41,7 +81,6 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  margin-bottom: 1.5rem;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -91,6 +130,24 @@
   box-shadow: 0 4px 12px rgba(43, 108, 176, 0.15);
   position: relative;
   z-index: 5;
+}
+
+/* 중요와 공지 행 스타일 */
+.boardTable tbody tr.importantRow {
+  background-color: rgba(245, 101, 101, 0.08);
+}
+
+.boardTable tbody tr.noticeRow {
+  background-color: rgba(94, 75, 255, 0.08);
+}
+
+/* 호버 시에도 색상 유지하면서 강조 */
+.boardTable tbody tr.importantRow:hover {
+  background-color: rgba(245, 101, 101, 0.15);
+}
+
+.boardTable tbody tr.noticeRow:hover {
+  background-color: rgba(94, 75, 255, 0.15);
 }
 
 /* 테이블 열 너비 설정 */
@@ -148,51 +205,6 @@
   box-shadow: 0 2px 5px rgba(94, 75, 255, 0.3);
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 1.5rem;
-}
-
-.button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  background-color: white;
-  color: #4A5568;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.button:hover:not(:disabled) {
-  background-color: #F0F5FF;
-  color: #5E4BFF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(94, 75, 255, 0.1);
-}
-
-.button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.button.active {
-  background: linear-gradient(to right, #5E4BFF, #8BB3FF);
-  color: white;
-  border-color: transparent;
-  font-weight: 600;
-  box-shadow: 0 3px 8px rgba(94, 75, 255, 0.2);
-}
-
 /* 로딩 및 에러 메시지 */
 .boardTable tbody tr td[colspan="4"] {
   padding: 3rem 1rem;
@@ -221,7 +233,7 @@
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .boardMainContainer {
+  .headerContainer, .contentContainer {
     padding: 1rem;
   }
 
@@ -241,7 +253,7 @@
 }
 
 @media (max-width: 480px) {
-  .boardMainContainer {
+  .headerContainer, .contentContainer {
     padding: 0.8rem;
   }
 

@@ -94,9 +94,9 @@ const Header = () => {
           <FaBell className="icon" />
           <FaMoon className="icon" />
           <FaQuestionCircle className="icon" />
-          <div className="profile-icon">
+          {/* <div className="profile-icon">
             <img src="/images/iuimage.jpg" alt="profile" className="profile" />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
