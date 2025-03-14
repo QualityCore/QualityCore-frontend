@@ -94,7 +94,7 @@ const Sidebar = () => {
       </div>
       <ul>
         {/* 시스템 관리 */}
-        <li>
+        {/* <li>
           <button onClick={() => toggleCategory("시스템관리")}>
             <RiSettings4Line className="mr-2" />
             시스템 관리
@@ -107,7 +107,7 @@ const Sidebar = () => {
               <li><Link to="/menu">메뉴 관리</Link></li>
             </ul>
           )}
-        </li>
+        </li> */}
 
         {/* 기준정보 관리 */}
         <li>

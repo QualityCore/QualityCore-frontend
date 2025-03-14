@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from "../../styles/PasswordReset.module.css";
 
@@ -17,6 +17,53 @@ const PasswordReset = ({ onClose, onPasswordChange }) => {
   const [maskedEmail, setMaskedEmail] = useState('');
   const [timeLeft, setTimeLeft] = useState(600); // 10분(600초)
   
+  // 비밀번호 일치 여부 및 강도 상태 추가
+  const [passwordsMatch, setPasswordsMatch] = useState(null);
+  const [passwordStrength, setPasswordStrength] = useState(null);
+  
+  // 비밀번호 확인 실시간 체크
+  useEffect(() => {
+    if (confirmPassword) {
+      if (newPassword === confirmPassword) {
+        setPasswordsMatch(true);
+      } else {
+        setPasswordsMatch(false);
+      }
+    } else {
+      setPasswordsMatch(null);
+    }
+  }, [newPassword, confirmPassword]);
+  
+  // 비밀번호 강도 체크 - 완화된 기준으로 수정
+  useEffect(() => {
+    if (newPassword) {
+      // 완화된 비밀번호 강도 체크
+      if (newPassword.length < 4) {
+        setPasswordStrength('weak');
+      } else if (newPassword.length < 4) {
+        setPasswordStrength('medium');
+      } else {
+        // 1234 정도는 보통 강도로 설정
+        const hasLetter = /[a-zA-Z]/.test(newPassword);
+        const hasNumber = /[0-9]/.test(newPassword);
+        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+        
+        if (hasLetter && hasNumber && hasSpecial) {
+          setPasswordStrength('strong');
+        } else if ((hasLetter && hasNumber) || 
+                  (hasLetter && hasSpecial) || 
+                  (hasNumber && hasSpecial) ||
+                  newPassword.length >= 4) { // 4자 이상이면 보통 강도로
+          setPasswordStrength('medium');
+        } else {
+          setPasswordStrength('weak');
+        }
+      }
+    } else {
+      setPasswordStrength(null);
+    }
+  }, [newPassword]);
+  
   // 사번 확인 및 이메일 발송 처리
   const handleSendVerification = async () => {
     if (!employeeId) {
@@ -28,54 +75,54 @@ const PasswordReset = ({ onClose, onPasswordChange }) => {
     setError('');
     
     try {
-        const response = await axios.post(`${API_BASE_URL}/send-verification`, {
-          employeeId: employeeId
-        });
+      const response = await axios.post(`${API_BASE_URL}/send-verification`, {
+        employeeId: employeeId
+      });
+      
+      if (response.data.success) {
+        setMaskedEmail(response.data.email);
+        setSuccessMessage(response.data.message);
+        setStep(2);
+        // 타이머 시작
+        startTimer();
+      } else {
+        setError(response.data.message || '오류가 발생했습니다.');
+      }
+    } 
+    catch (error) {
+      console.error('Error details:', error);
+      
+      if (error.response) {
+        // 서버가 응답을 반환했지만 에러 상태 코드인 경우 (400, 500 등)
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
         
-        if (response.data.success) {
-          setMaskedEmail(response.data.email);
-          setSuccessMessage(response.data.message);
-          setStep(2);
-          // 타이머 시작
-          startTimer();
+        if (error.response.status === 404) {
+          setError('API 엔드포인트를 찾을 수 없습니다.');
+        } else if (error.response.status === 400) {
+          setError(error.response.data.message || '잘못된 요청입니다.');
+        } else if (error.response.status === 500) {
+          setError('서버 내부 오류가 발생했습니다.');
         } else {
-          setError(response.data.message || '오류가 발생했습니다.');
+          setError(error.response.data.message || `서버 오류: ${error.response.status}`);
         }
       } 
-      catch (error) {
-        console.error('Error details:', error);
-        
-        if (error.response) {
-          // 서버가 응답을 반환했지만 에러 상태 코드인 경우 (400, 500 등)
-          console.error('Response data:', error.response.data);
-          console.error('Response status:', error.response.status);
-          
-          if (error.response.status === 404) {
-            setError('API 엔드포인트를 찾을 수 없습니다.');
-          } else if (error.response.status === 400) {
-            setError(error.response.data.message || '잘못된 요청입니다.');
-          } else if (error.response.status === 500) {
-            setError('서버 내부 오류가 발생했습니다.');
-          } else {
-            setError(error.response.data.message || `서버 오류: ${error.response.status}`);
-          }
-        } 
-        else if (error.request) {
-          // 요청이 전송되었지만 응답이 없는 경우 (서버가 꺼져있거나 CORS 문제)
-          console.error('No response received');
-          setError('서버로부터 응답이 없습니다. 서버가 실행 중인지 확인해주세요.');
-        } 
-        else {
-          // 요청 설정 중 오류 발생
-          console.error('Error setting up request:', error.message);
-          setError(`요청 준비 중 오류: ${error.message}`);
-        }
-        
-        // 브라우저 콘솔에 네트워크 요청 정보 표시
-        console.error('Error config:', error.config);
-      } finally {
-        setLoading(false);
+      else if (error.request) {
+        // 요청이 전송되었지만 응답이 없는 경우 (서버가 꺼져있거나 CORS 문제)
+        console.error('No response received');
+        setError('서버로부터 응답이 없습니다. 서버가 실행 중인지 확인해주세요.');
+      } 
+      else {
+        // 요청 설정 중 오류 발생
+        console.error('Error setting up request:', error.message);
+        setError(`요청 준비 중 오류: ${error.message}`);
       }
+      
+      // 브라우저 콘솔에 네트워크 요청 정보 표시
+      console.error('Error config:', error.config);
+    } finally {
+      setLoading(false);
+    }
   };
   
   // 타이머 시작
@@ -165,6 +212,16 @@ const PasswordReset = ({ onClose, onPasswordChange }) => {
       setError('비밀번호 재설정 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
+    }
+  };
+  
+  // 비밀번호 강도에 따른 텍스트 반환
+  const getPasswordStrengthText = () => {
+    switch (passwordStrength) {
+      case 'weak': return '약함';
+      case 'medium': return '보통';
+      case 'strong': return '강함';
+      default: return '';
     }
   };
   
@@ -264,28 +321,79 @@ const PasswordReset = ({ onClose, onPasswordChange }) => {
               </p>
               <div className={styles.formGroup}>
                 <label className={styles.inputLabel}>새 비밀번호</label>
-                <input 
-                  type="password" 
-                  className={styles.inputField} 
-                  placeholder="새 비밀번호"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
+                <div className={styles.inputWrapper}>
+                  <input 
+                    type="password" 
+                    className={`${styles.inputField} ${passwordStrength ? styles[passwordStrength] : ''}`}
+                    placeholder="새 비밀번호"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  {passwordStrength && (
+                    <span className={`${styles.inputIcon} ${styles[passwordStrength]}`}>
+                      {passwordStrength === 'strong' ? '✓' : ''}
+                    </span>
+                  )}
+                </div>
+                
+                {/* 비밀번호 강도 표시 */}
+                {newPassword && (
+                  <>
+                    <div className={styles.passwordStrength}>
+                      <div className={`${styles.passwordStrengthBar} ${styles[passwordStrength]}`}></div>
+                    </div>
+                    <div className={`${styles.passwordStrengthText} ${styles[passwordStrength]}`}>
+                      {getPasswordStrengthText()}
+                    </div>
+                  </>
+                )}
               </div>
+              
               <div className={styles.formGroup}>
                 <label className={styles.inputLabel}>비밀번호 확인</label>
-                <input 
-                  type="password" 
-                  className={styles.inputField} 
-                  placeholder="비밀번호 확인"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                <div className={styles.inputWrapper}>
+                  <input 
+                    type="password" 
+                    className={`${styles.inputField} ${
+                      passwordsMatch === null ? '' : (passwordsMatch ? styles.success : styles.error)
+                    }`}
+                    placeholder="비밀번호 확인"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  {passwordsMatch !== null && (
+                    <span className={`${styles.inputIcon} ${passwordsMatch ? styles.success : styles.error}`}>
+                      {passwordsMatch ? '✓' : '✗'}
+                    </span>
+                  )}
+                </div>
+                
+                {/* 비밀번호 일치 메시지 */}
+                {passwordsMatch !== null && (
+                  <div className={`${styles.passwordMatch} ${passwordsMatch ? styles.success : styles.error}`}>
+                    {passwordsMatch ? (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                        </svg>
+                        비밀번호가 일치합니다.
+                      </>
+                    ) : (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                        </svg>
+                        비밀번호가 일치하지 않습니다.
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
+              
               <button 
                 className={styles.actionButton}
                 onClick={handleResetPassword}
-                disabled={loading}
+                disabled={loading || !passwordsMatch}
               >
                 {loading ? '처리 중...' : '비밀번호 변경'}
               </button>
