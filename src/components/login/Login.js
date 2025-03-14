@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../login/apiInterceptor';
 import styles from "../../styles/Login.module.css";
 import PasswordReset from './PasswordReset'; 
 
@@ -93,9 +94,7 @@ const Login = () => {
   
 
   // 비밀번호 업데이트 함수
-
   const updateUserPassword = (userId, newPassword) => {
-  
     setMockUsers(prevUsers => {
       const updatedUsers = prevUsers.map(user => 
         user.id === userId ? { ...user, password: newPassword } : user
@@ -107,10 +106,6 @@ const Login = () => {
       return updatedUsers;
     });
   };
-  
-
-
-
   
   // 로그인 처리 함수
   const handleLogin = () => {
@@ -140,7 +135,9 @@ const Login = () => {
       role: user.role,
       department: user.department,
       permissions: user.permissions,
-      isLoggedIn: true
+      isLoggedIn: true,
+      // 보안 강화: 로그인 시간 기록 (세션 관리용)
+      loginTime: new Date().toISOString()
     };
   
     login(userData);
@@ -153,8 +150,6 @@ const Login = () => {
   
     navigate('/home');
   };
-  
-  
   
   // 비밀번호 찾기 기능 - 모달 표시로 변경
   const handlePasswordReset = () => {
@@ -268,11 +263,11 @@ const Login = () => {
       
       {/* 비밀번호 찾기 모달 */}
       {showPasswordReset && (
-  <PasswordReset 
-    onClose={handleClosePasswordReset} 
-    onPasswordChange={updateUserPassword}
-  />
-)}
+        <PasswordReset 
+          onClose={handleClosePasswordReset} 
+          onPasswordChange={updateUserPassword}
+        />
+      )}
     </div>
   );
 };

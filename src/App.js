@@ -29,13 +29,14 @@ import BoardDetail from "./pages/board/BoardDetail";
 import { WebsocketProvider } from './common/WebSocket/WebsocketContext';
 import ProductionPerformancePage from "./pages/productionPerformance/ProductionPerformancePage"
 import NotFound from "./pages/NotFound";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext"; // 강화된 AuthProvider로 변경됨
 import ProtectedRoute from "./components/login/ProtectedRoute";
 import AccessDenied from "./pages/AccessDenied";
 import MaturationPage from "./pages/production-process/maturation-detail/MaturationPage";
 import PostMaturationFiltrationPage from "./pages/postMaturation-filtration/PostMaturationFiltrationPage";
 import CarbonationProcessPage from "./pages/production-process/carbonation-process/CarbonationProcessPage";
 import PackagingAndShipmentPage from "./pages/production-process/packaging-and-shipment/PackagingAndShipmentPage";
+import SessionManager from "./components/login/SessionManager"; 
 
 // 레이아웃 컴포넌트 - 사이드바와 헤더를 포함합니다
 const Layout = ({ children }) => {
@@ -65,8 +66,10 @@ const App = () => {
   return (
     <WebsocketProvider>
       <Router>
-
         <AuthProvider>
+          {/* 세션 관리자 컴포넌트 - 모든 페이지에 적용됩니다 */}
+          <SessionManager />
+          
           <Routes>
             {/* 공개 경로 */}
             <Route path="/login" element={<Login />} />
