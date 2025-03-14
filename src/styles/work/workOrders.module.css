@@ -680,6 +680,27 @@ h2 {
   overflow: hidden;
 }
 
+/* 진행도별 색상 */
+.progressBarFill[style*="width: 0%"] {
+  background: #e74a3b;
+}
+
+.progressBarFill[style*="width: 25%"] {
+  background: linear-gradient(to right, #e74a3b, #f6c23e);
+}
+
+.progressBarFill[style*="width: 50%"] {
+  background: linear-gradient(to right, #f6c23e, #4e73df);
+}
+
+.progressBarFill[style*="width: 75%"] {
+  background: linear-gradient(to right, #4e73df, #36b9cc);
+}
+
+.progressBarFill[style*="width: 100%"] {
+  background: linear-gradient(to right, #36b9cc, #1cc88a);
+}
+
 .progressBarFill::after {
   content: "";
   position: absolute;
