@@ -238,7 +238,7 @@ const Sidebar = () => {
           >
             <div className="menu-item-content">
               <HiOutlineUserGroup className="mr-4" />
-              <span>전사게시판</span>
+              <span>게시판</span>
               {messages.length > 0 && (
                 <span className="notification-badge">{messages.length}</span>
               )}

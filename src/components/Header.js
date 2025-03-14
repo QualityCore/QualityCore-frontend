@@ -59,7 +59,7 @@ const Header = () => {
 
       // 게시판
       
-      '/board': { main: '게시판', sub: '전사게시판' },
+      '/board': { main: '게시판', sub: '게시판' },
       '/board-create': { main: '게시판', sub: '게시글작성' },
 
 

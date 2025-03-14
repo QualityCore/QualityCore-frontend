@@ -6,52 +6,85 @@ import styles from '../../styles/productionPerformance/ProductionPerformance.mod
 const DUMMY_DATA = {
   // 월별 생산실적 데이터
   monthlyData: [
-    { yearMonth: '2025-01', productName: '아이유 맥주', totalQuantity: 1200, goodQuantity: 1140, qualityRate: 95.0 },
-    { yearMonth: '2025-02', productName: '아이유 맥주', totalQuantity: 1500, goodQuantity: 1410, qualityRate: 94.0 },
-    { yearMonth: '2025-03', productName: '아이유 맥주', totalQuantity: 1800, goodQuantity: 1730, qualityRate: 96.1 },
-    { yearMonth: '2025-01', productName: '카리나 맥주', totalQuantity: 1000, goodQuantity: 950, qualityRate: 95.0 },
-    { yearMonth: '2025-02', productName: '카리나 맥주', totalQuantity: 1400, goodQuantity: 1330, qualityRate: 95.0 },
-    { yearMonth: '2025-03', productName: '카리나 맥주', totalQuantity: 1600, goodQuantity: 1550, qualityRate: 96.9 },
-    { yearMonth: '2025-01', productName: '장원영 맥주', totalQuantity: 1300, goodQuantity: 1260, qualityRate: 96.9 },
-    { yearMonth: '2025-02', productName: '장원영 맥주', totalQuantity: 1500, goodQuantity: 1470, qualityRate: 98.0 },
-    { yearMonth: '2025-03', productName: '장원영 맥주', totalQuantity: 1700, goodQuantity: 1650, qualityRate: 97.1 }
+    { yearMonth: '2025-01', productName: '아이유 맥주', totalQuantity: 58750, goodQuantity: 55813, qualityRate: 95.0 },
+    { yearMonth: '2025-02', productName: '아이유 맥주', totalQuantity: 62500, goodQuantity: 58750, qualityRate: 94.0 },
+    { yearMonth: '2025-03', productName: '아이유 맥주', totalQuantity: 67800, goodQuantity: 65146, qualityRate: 96.1 },
+    
+    { yearMonth: '2025-01', productName: '카리나 맥주', totalQuantity: 51200, goodQuantity: 48128, qualityRate: 94.0 },
+    { yearMonth: '2025-02', productName: '카리나 맥주', totalQuantity: 59400, goodQuantity: 55838, qualityRate: 94.0 },
+    { yearMonth: '2025-03', productName: '카리나 맥주', totalQuantity: 64800, goodQuantity: 60264, qualityRate: 93.0 },
+    
+    { yearMonth: '2025-01', productName: '장원영 맥주', totalQuantity: 54600, goodQuantity: 52907, qualityRate: 96.9 },
+    { yearMonth: '2025-02', productName: '장원영 맥주', totalQuantity: 61200, goodQuantity: 59976, qualityRate: 98.0 },
+    { yearMonth: '2025-03', productName: '장원영 맥주', totalQuantity: 69500, goodQuantity: 67484, qualityRate: 97.1 }
   ],
   
   // 일별 세부 생산실적 데이터 (월별 차트에 사용)
   dailyData: [
-    { productionDate: '2025-01-05', productName: '아이유 맥주', totalQuantity: 400, goodQuantity: 380, qualityRate: 95.0 },
-    { productionDate: '2025-01-15', productName: '아이유 맥주', totalQuantity: 450, goodQuantity: 430, qualityRate: 95.6 },
-    { productionDate: '2025-01-25', productName: '카리나 맥주', totalQuantity: 350, goodQuantity: 322, qualityRate: 92.0 },
-    { productionDate: '2025-02-05', productName: '카리나 맥주', totalQuantity: 500, goodQuantity: 460, qualityRate: 92.0 },
-    { productionDate: '2025-03-05', productName: '장원영 맥주', totalQuantity: 580, goodQuantity: 564, qualityRate: 97.3 },
-    { productionDate: '2025-03-15', productName: '카리나 맥주', totalQuantity: 620, goodQuantity: 570, qualityRate: 92.0 }
+    { productionDate: '2025-01-05', productName: '아이유 맥주', totalQuantity: 19200, goodQuantity: 18240, qualityRate: 95.0 },
+    { productionDate: '2025-01-15', productName: '아이유 맥주', totalQuantity: 21400, goodQuantity: 20437, qualityRate: 95.5 },
+    { productionDate: '2025-01-25', productName: '아이유 맥주', totalQuantity: 18150, goodQuantity: 17136, qualityRate: 94.4 },
+    
+    { productionDate: '2025-02-05', productName: '아이유 맥주', totalQuantity: 20800, goodQuantity: 19760, qualityRate: 95.0 },
+    { productionDate: '2025-02-15', productName: '아이유 맥주', totalQuantity: 22300, goodQuantity: 20847, qualityRate: 93.5 },
+    { productionDate: '2025-02-25', productName: '아이유 맥주', totalQuantity: 19400, goodQuantity: 18143, qualityRate: 93.5 },
+    
+    { productionDate: '2025-03-05', productName: '아이유 맥주', totalQuantity: 23500, goodQuantity: 22560, qualityRate: 96.0 },
+    { productionDate: '2025-03-15', productName: '아이유 맥주', totalQuantity: 24100, goodQuantity: 23226, qualityRate: 96.4 },
+    { productionDate: '2025-03-25', productName: '아이유 맥주', totalQuantity: 20200, goodQuantity: 19360, qualityRate: 95.8 },
+    
+    { productionDate: '2025-01-05', productName: '카리나 맥주', totalQuantity: 16800, goodQuantity: 15456, qualityRate: 92.0 },
+    { productionDate: '2025-01-15', productName: '카리나 맥주', totalQuantity: 18200, goodQuantity: 15834, qualityRate: 87.0 },
+    { productionDate: '2025-01-25', productName: '카리나 맥주', totalQuantity: 16200, goodQuantity: 14838, qualityRate: 91.6 },
+    
+    { productionDate: '2025-02-05', productName: '카리나 맥주', totalQuantity: 19600, goodQuantity: 18032, qualityRate: 92.0 },
+    { productionDate: '2025-02-15', productName: '카리나 맥주', totalQuantity: 20500, goodQuantity: 17425, qualityRate: 85.0 },
+    { productionDate: '2025-02-25', productName: '카리나 맥주', totalQuantity: 19300, goodQuantity: 17951, qualityRate: 93.0 },
+    
+    { productionDate: '2025-03-05', productName: '카리나 맥주', totalQuantity: 21800, goodQuantity: 19184, qualityRate: 88.0 },
+    { productionDate: '2025-03-15', productName: '카리나 맥주', totalQuantity: 22400, goodQuantity: 20608, qualityRate: 92.0 },
+    { productionDate: '2025-03-25', productName: '카리나 맥주', totalQuantity: 20600, goodQuantity: 19364, qualityRate: 94.0 },
+    
+    { productionDate: '2025-01-05', productName: '장원영 맥주', totalQuantity: 18500, goodQuantity: 17945, qualityRate: 97.0 },
+    { productionDate: '2025-01-15', productName: '장원영 맥주', totalQuantity: 19200, goodQuantity: 18624, qualityRate: 97.0 },
+    { productionDate: '2025-01-25', productName: '장원영 맥주', totalQuantity: 16900, goodQuantity: 16338, qualityRate: 96.7 },
+    
+    { productionDate: '2025-02-05', productName: '장원영 맥주', totalQuantity: 20400, goodQuantity: 19992, qualityRate: 98.0 },
+    { productionDate: '2025-02-15', productName: '장원영 맥주', totalQuantity: 21600, goodQuantity: 21168, qualityRate: 98.0 },
+    { productionDate: '2025-02-25', productName: '장원영 맥주', totalQuantity: 19200, goodQuantity: 18816, qualityRate: 98.0 },
+    
+    { productionDate: '2025-03-05', productName: '장원영 맥주', totalQuantity: 23800, goodQuantity: 23086, qualityRate: 97.0 },
+    { productionDate: '2025-03-15', productName: '장원영 맥주', totalQuantity: 24500, goodQuantity: 23765, qualityRate: 97.0 },
+    { productionDate: '2025-03-25', productName: '장원영 맥주', totalQuantity: 21200, goodQuantity: 20633, qualityRate: 97.3 }
   ],
   
   // 계획 대비 실적 데이터
   planVsActual: [
-    { YEAR_MONTH: '2025-01', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 1200, ACTUAL_QUANTITY: 1140, ACHIEVEMENT_RATE: 95.0 },
-    { YEAR_MONTH: '2025-02', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 1500, ACTUAL_QUANTITY: 1410, ACHIEVEMENT_RATE: 94.0 },
-    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 1800, ACTUAL_QUANTITY: 1730, ACHIEVEMENT_RATE: 96.1 },
-    { YEAR_MONTH: '2025-01', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 1000, ACTUAL_QUANTITY: 970, ACHIEVEMENT_RATE: 97.0 },
-    { YEAR_MONTH: '2025-02', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 1400, ACTUAL_QUANTITY: 1330, ACHIEVEMENT_RATE: 95.0 },
-    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 1600, ACTUAL_QUANTITY: 1550, ACHIEVEMENT_RATE: 96.9 },
-    { YEAR_MONTH: '2025-01', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 1300, ACTUAL_QUANTITY: 1260, ACHIEVEMENT_RATE: 96.9 },
-    { YEAR_MONTH: '2025-02', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 1500, ACTUAL_QUANTITY: 1455, ACHIEVEMENT_RATE: 97.0 },
-    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 1700, ACTUAL_QUANTITY: 1650, ACHIEVEMENT_RATE: 97.1 }
+    { YEAR_MONTH: '2025-01', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 60000, ACTUAL_QUANTITY: 58750, ACHIEVEMENT_RATE: 97.9 },
+    { YEAR_MONTH: '2025-02', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 65000, ACTUAL_QUANTITY: 62500, ACHIEVEMENT_RATE: 96.2 },
+    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 70000, ACTUAL_QUANTITY: 67800, ACHIEVEMENT_RATE: 96.9 },
+    
+    { YEAR_MONTH: '2025-01', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 55000, ACTUAL_QUANTITY: 51200, ACHIEVEMENT_RATE: 93.1 },
+    { YEAR_MONTH: '2025-02', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 60000, ACTUAL_QUANTITY: 59400, ACHIEVEMENT_RATE: 99.0 },
+    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 65000, ACTUAL_QUANTITY: 64800, ACHIEVEMENT_RATE: 99.7 },
+    
+    { YEAR_MONTH: '2025-01', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 56000, ACTUAL_QUANTITY: 54600, ACHIEVEMENT_RATE: 97.5 },
+    { YEAR_MONTH: '2025-02', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 63000, ACTUAL_QUANTITY: 61200, ACHIEVEMENT_RATE: 97.1 },
+    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 72000, ACTUAL_QUANTITY: 69500, ACHIEVEMENT_RATE: 96.5 }
   ],
   
   // 불량률 데이터
   qualityData: [
     { productName: '아이유 맥주', qualityRate: 95.0, defectRate: 5.0 },
-    { productName: '카리나 맥주', qualityRate: 92.0, defectRate: 8.0 },
+    { productName: '카리나 맥주', qualityRate: 91.0, defectRate: 9.0 },
     { productName: '장원영 맥주', qualityRate: 97.3, defectRate: 2.7 }
   ],
   
   // 생산 효율성 데이터
   efficiency: [
-    { PRODUCT_NAME: '아이유 맥주', TOTAL_QUANTITY: 4500, GOOD_QUANTITY: 4280, QUALITY_RATE: 95.1, AVG_PRODUCTION_TIME_MINUTES: 120, AVG_BATCH_SIZE: 500 },
-    { PRODUCT_NAME: '카리나 맥주', TOTAL_QUANTITY: 4000, GOOD_QUANTITY: 3680, QUALITY_RATE: 92.0, AVG_PRODUCTION_TIME_MINUTES: 105, AVG_BATCH_SIZE: 450 },
-    { PRODUCT_NAME: '장원영 맥주', TOTAL_QUANTITY: 4500, GOOD_QUANTITY: 4380, QUALITY_RATE: 97.3, AVG_PRODUCTION_TIME_MINUTES: 110, AVG_BATCH_SIZE: 480 }
+    { PRODUCT_NAME: '아이유 맥주', TOTAL_QUANTITY: 189050, GOOD_QUANTITY: 179709, QUALITY_RATE: 95.1, AVG_PRODUCTION_TIME_MINUTES: 120, AVG_BATCH_SIZE: 5200 },
+    { PRODUCT_NAME: '카리나 맥주', TOTAL_QUANTITY: 175400, GOOD_QUANTITY: 159614, QUALITY_RATE: 91.0, AVG_PRODUCTION_TIME_MINUTES: 105, AVG_BATCH_SIZE: 4900 },
+    { PRODUCT_NAME: '장원영 맥주', TOTAL_QUANTITY: 185300, GOOD_QUANTITY: 180367, QUALITY_RATE: 97.3, AVG_PRODUCTION_TIME_MINUTES: 110, AVG_BATCH_SIZE: 5100 }
   ]
 };
 
@@ -64,7 +97,8 @@ const ProductionPerformancePage = () => {
   const [planVsActual, setPlanVsActual] = useState([]);
   const [qualityData, setQualityData] = useState([]);
   const [efficiency, setEfficiency] = useState([]);
-  const [products] = useState(['전체', '아이유 맥주', '카리나 맥주', '장원영 맥주', '정연 맥주', '윈터 맥주']);
+ // 이 부분을 수정
+const [products] = useState(['전체', '아이유 맥주', '카리나 맥주', '장원영 맥주']);
   const [loading, setLoading] = useState(true);
   const [animationTrigger, setAnimationTrigger] = useState(0);
 
@@ -105,6 +139,17 @@ const ProductionPerformancePage = () => {
     
     const selectedYearMonth = yearMonth;
     const selectedProduct = productName === '전체' ? null : productName;
+
+    if (selectedProduct && !DUMMY_DATA.monthlyData.some(item => item.productName === selectedProduct)) {
+      // 제품이 데이터에 없으면 빈 배열 설정
+      setMonthlyData([]);
+      setDailyData([]);
+      setPlanVsActual([]);
+      setQualityData([]);
+      setEfficiency([]);
+      setLoading(false);
+      return;
+    }
     
     // 월별 생산실적 데이터 필터링
     let filteredMonthlyData = [...DUMMY_DATA.monthlyData];
@@ -212,30 +257,117 @@ const ProductionPerformancePage = () => {
       </div>
     );
   });
-
-  const renderMonthlyTab = () => (
-    <div className={styles.tabContent}>
-      <ChartWrapper 
-        type="bar"
-        data={dailyData} 
-        xKey="productionDate" 
-        yKey="totalQuantity" 
-        title="월별 생산량 추이"
-        animationKey={`monthly-bar-${animationTrigger}`}
-      />
+// 월별 탭 차트 함수를 완전히 교체하세요
+const renderMonthlyTab = () => {
+  // 1. 같은 날짜의 모든 제품 데이터를 합산
+  const aggregatedData = dailyData.reduce((result, current) => {
+    // 날짜가 이미 존재하는지 확인
+    const existingDateIndex = result.findIndex(item => 
+      item.productionDate === current.productionDate
+    );
+    
+    if (existingDateIndex >= 0) {
+      // 같은 날짜가 있으면 수량 합산
+      result[existingDateIndex].totalQuantity += current.totalQuantity;
+      result[existingDateIndex].goodQuantity += current.goodQuantity;
       
-      <ChartWrapper 
-        type="line"
-        data={dailyData} 
-        xKey="productionDate" 
-        yKey="qualityRate" 
-        title="월별 품질률 추이"
-        fill="#00C49F"
-        domain={[90, 100]}
-        animationKey={`monthly-line-${animationTrigger}`}
-      />
+      // 품질률은 가중 평균으로 계산 (각 제품의 중요도에 따라 품질률 계산)
+      const totalQuantityNow = result[existingDateIndex].totalQuantity;
+      const prevWeightedQuality = result[existingDateIndex]._weightedQualitySum || 
+                                 (result[existingDateIndex].qualityRate * (totalQuantityNow - current.totalQuantity));
+      
+      const newWeightedQuality = prevWeightedQuality + (current.qualityRate * current.totalQuantity);
+      result[existingDateIndex].qualityRate = newWeightedQuality / totalQuantityNow;
+      result[existingDateIndex]._weightedQualitySum = newWeightedQuality;
+    } else {
+      // 새로운 날짜면 객체 복사해서 추가
+      result.push({
+        ...current,
+        _weightedQualitySum: current.qualityRate * current.totalQuantity // 가중 품질률 계산용 임시 필드
+      });
+    }
+    
+    return result;
+  }, []);
+  
+  // 임시 필드 제거
+  aggregatedData.forEach(item => {
+    delete item._weightedQualitySum;
+  });
+  
+  // 2. 날짜순으로 정렬
+  const sortedData = aggregatedData.sort((a, b) => 
+    new Date(a.productionDate) - new Date(b.productionDate)
+  );
+  
+  return (
+    <div className={styles.tabContent}>
+      <div 
+        className={styles.chartContainer} 
+        style={{
+          ...chartAnimationStyle,
+          minHeight: '350px'
+        }}
+      >
+        <h3>월별 생산량 추이 (전체)</h3>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={sortedData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="productionDate" 
+              tickFormatter={(value) => value.slice(5)} // YYYY-MM-DD → MM-DD
+            />
+            <YAxis />
+            <Tooltip 
+              formatter={(value) => [value.toLocaleString(), '총 생산량']}
+              labelFormatter={(label) => `생산일: ${label.slice(5)}`}
+            />
+            <Legend />
+            <Bar 
+              dataKey="totalQuantity" 
+              name="생산량" 
+              fill="#0088FE"
+              animationDuration={1500}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      
+      <div 
+        className={styles.chartContainer} 
+        style={{
+          ...chartAnimationStyle,
+          minHeight: '350px'
+        }}
+      >
+        <h3>월별 품질률 추이 (전체 평균)</h3>
+        <ResponsiveContainer width="100%" height={280}>
+          <LineChart data={sortedData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="productionDate" 
+              tickFormatter={(value) => value.slice(5)} // YYYY-MM-DD → MM-DD
+            />
+            <YAxis domain={[90, 100]} />
+            <Tooltip 
+              formatter={(value) => [`${value.toFixed(2)}%`, '평균 품질률']}
+              labelFormatter={(label) => `생산일: ${label.slice(5)}`}
+            />
+            <Legend />
+            <Line 
+              type="monotone" 
+              dataKey="qualityRate" 
+              name="품질률" 
+              stroke="#00C49F"
+              strokeWidth={2}
+              animationDuration={1500}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
+};
 
   const renderPlanVsActualTab = () => (
     <div className={styles.tabContent}>
@@ -354,11 +486,14 @@ const ProductionPerformancePage = () => {
         <h3>월별 불량률 추이</h3>
         <ResponsiveContainer width="100%" height={280}>
           <LineChart 
-            data={dailyData.map(item => ({
-              ...item,
-              productionDate: item.productionDate,
-              defectRate: 100 - item.qualityRate
-            }))}
+            data={dailyData
+              .map(item => ({
+                ...item,
+                productionDate: item.productionDate,
+                defectRate: 100 - item.qualityRate
+              }))
+              .sort((a, b) => new Date(a.productionDate) - new Date(b.productionDate))
+            }
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="productionDate" />
@@ -433,13 +568,13 @@ const ProductionPerformancePage = () => {
         </ResponsiveContainer>
       </div>
 
-      <div 
-        className={styles.tableContainer} 
-        style={{
-          ...chartAnimationStyle,
-          animationDelay: '0.5s'
-        }}
-      >
+       <div 
+      className={styles.tableContainer} 
+      style={{
+        ...chartAnimationStyle,
+        animationDelay: '0.5s'
+      }}
+    >
         <h3>제품별 불량 현황</h3>
         <table className={styles.dataTable}>
           <thead>
