@@ -8,15 +8,15 @@ const DUMMY_DATA = {
   monthlyData: [
     { yearMonth: '2025-01', productName: '아이유 맥주', totalQuantity: 58750, goodQuantity: 55813, qualityRate: 95.0 },
     { yearMonth: '2025-02', productName: '아이유 맥주', totalQuantity: 62500, goodQuantity: 58750, qualityRate: 94.0 },
-    { yearMonth: '2025-03', productName: '아이유 맥주', totalQuantity: 67800, goodQuantity: 65146, qualityRate: 96.1 },
+    { yearMonth: '2025-03', productName: '아이유 맥주', totalQuantity: 53700, goodQuantity: 51552, qualityRate: 96.0 },
     
     { yearMonth: '2025-01', productName: '카리나 맥주', totalQuantity: 51200, goodQuantity: 48128, qualityRate: 94.0 },
     { yearMonth: '2025-02', productName: '카리나 맥주', totalQuantity: 59400, goodQuantity: 55838, qualityRate: 94.0 },
-    { yearMonth: '2025-03', productName: '카리나 맥주', totalQuantity: 64800, goodQuantity: 60264, qualityRate: 93.0 },
+    { yearMonth: '2025-03', productName: '카리나 맥주', totalQuantity: 53400, goodQuantity: 49662, qualityRate: 93.0 },
     
     { yearMonth: '2025-01', productName: '장원영 맥주', totalQuantity: 54600, goodQuantity: 52907, qualityRate: 96.9 },
     { yearMonth: '2025-02', productName: '장원영 맥주', totalQuantity: 61200, goodQuantity: 59976, qualityRate: 98.0 },
-    { yearMonth: '2025-03', productName: '장원영 맥주', totalQuantity: 69500, goodQuantity: 67484, qualityRate: 97.1 }
+    { yearMonth: '2025-03', productName: '장원영 맥주', totalQuantity: 57000, goodQuantity: 55290, qualityRate: 97.0 }
   ],
   
   // 일별 세부 생산실적 데이터 (월별 차트에 사용)
@@ -30,8 +30,8 @@ const DUMMY_DATA = {
     { productionDate: '2025-02-25', productName: '아이유 맥주', totalQuantity: 19400, goodQuantity: 18143, qualityRate: 93.5 },
     
     { productionDate: '2025-03-05', productName: '아이유 맥주', totalQuantity: 23500, goodQuantity: 22560, qualityRate: 96.0 },
-    { productionDate: '2025-03-15', productName: '아이유 맥주', totalQuantity: 24100, goodQuantity: 23226, qualityRate: 96.4 },
-    { productionDate: '2025-03-25', productName: '아이유 맥주', totalQuantity: 20200, goodQuantity: 19360, qualityRate: 95.8 },
+    { productionDate: '2025-03-17', productName: '아이유 맥주', totalQuantity: 10000, goodQuantity: 9600, qualityRate: 96.0 },
+    { productionDate: '2025-03-25', productName: '아이유 맥주', totalQuantity: 20200, goodQuantity: 19392, qualityRate: 96.0 },
     
     { productionDate: '2025-01-05', productName: '카리나 맥주', totalQuantity: 16800, goodQuantity: 15456, qualityRate: 92.0 },
     { productionDate: '2025-01-15', productName: '카리나 맥주', totalQuantity: 18200, goodQuantity: 15834, qualityRate: 87.0 },
@@ -42,7 +42,7 @@ const DUMMY_DATA = {
     { productionDate: '2025-02-25', productName: '카리나 맥주', totalQuantity: 19300, goodQuantity: 17951, qualityRate: 93.0 },
     
     { productionDate: '2025-03-05', productName: '카리나 맥주', totalQuantity: 21800, goodQuantity: 19184, qualityRate: 88.0 },
-    { productionDate: '2025-03-15', productName: '카리나 맥주', totalQuantity: 22400, goodQuantity: 20608, qualityRate: 92.0 },
+    { productionDate: '2025-03-17', productName: '카리나 맥주', totalQuantity: 11000, goodQuantity: 10120, qualityRate: 92.0 },
     { productionDate: '2025-03-25', productName: '카리나 맥주', totalQuantity: 20600, goodQuantity: 19364, qualityRate: 94.0 },
     
     { productionDate: '2025-01-05', productName: '장원영 맥주', totalQuantity: 18500, goodQuantity: 17945, qualityRate: 97.0 },
@@ -54,23 +54,23 @@ const DUMMY_DATA = {
     { productionDate: '2025-02-25', productName: '장원영 맥주', totalQuantity: 19200, goodQuantity: 18816, qualityRate: 98.0 },
     
     { productionDate: '2025-03-05', productName: '장원영 맥주', totalQuantity: 23800, goodQuantity: 23086, qualityRate: 97.0 },
-    { productionDate: '2025-03-15', productName: '장원영 맥주', totalQuantity: 24500, goodQuantity: 23765, qualityRate: 97.0 },
-    { productionDate: '2025-03-25', productName: '장원영 맥주', totalQuantity: 21200, goodQuantity: 20633, qualityRate: 97.3 }
+    { productionDate: '2025-03-17', productName: '장원영 맥주', totalQuantity: 12000, goodQuantity: 11640, qualityRate: 97.0 },
+    { productionDate: '2025-03-25', productName: '장원영 맥주', totalQuantity: 21200, goodQuantity: 20564, qualityRate: 97.0 }
   ],
   
   // 계획 대비 실적 데이터
   planVsActual: [
     { YEAR_MONTH: '2025-01', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 60000, ACTUAL_QUANTITY: 58750, ACHIEVEMENT_RATE: 97.9 },
     { YEAR_MONTH: '2025-02', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 65000, ACTUAL_QUANTITY: 62500, ACHIEVEMENT_RATE: 96.2 },
-    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 70000, ACTUAL_QUANTITY: 67800, ACHIEVEMENT_RATE: 96.9 },
+    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '아이유 맥주', PLANNED_QUANTITY: 60000, ACTUAL_QUANTITY: 53700, ACHIEVEMENT_RATE: 89.5 },
     
     { YEAR_MONTH: '2025-01', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 55000, ACTUAL_QUANTITY: 51200, ACHIEVEMENT_RATE: 93.1 },
     { YEAR_MONTH: '2025-02', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 60000, ACTUAL_QUANTITY: 59400, ACHIEVEMENT_RATE: 99.0 },
-    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 65000, ACTUAL_QUANTITY: 64800, ACHIEVEMENT_RATE: 99.7 },
+    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '카리나 맥주', PLANNED_QUANTITY: 57000, ACTUAL_QUANTITY: 53400, ACHIEVEMENT_RATE: 93.7 },
     
     { YEAR_MONTH: '2025-01', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 56000, ACTUAL_QUANTITY: 54600, ACHIEVEMENT_RATE: 97.5 },
     { YEAR_MONTH: '2025-02', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 63000, ACTUAL_QUANTITY: 61200, ACHIEVEMENT_RATE: 97.1 },
-    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 72000, ACTUAL_QUANTITY: 69500, ACHIEVEMENT_RATE: 96.5 }
+    { YEAR_MONTH: '2025-03', PRODUCT_NAME: '장원영 맥주', PLANNED_QUANTITY: 60000, ACTUAL_QUANTITY: 57000, ACHIEVEMENT_RATE: 95.0 }
   ],
   
   // 불량률 데이터
@@ -82,9 +82,9 @@ const DUMMY_DATA = {
   
   // 생산 효율성 데이터
   efficiency: [
-    { PRODUCT_NAME: '아이유 맥주', TOTAL_QUANTITY: 189050, GOOD_QUANTITY: 179709, QUALITY_RATE: 95.1, AVG_PRODUCTION_TIME_MINUTES: 120, AVG_BATCH_SIZE: 5200 },
-    { PRODUCT_NAME: '카리나 맥주', TOTAL_QUANTITY: 175400, GOOD_QUANTITY: 159614, QUALITY_RATE: 91.0, AVG_PRODUCTION_TIME_MINUTES: 105, AVG_BATCH_SIZE: 4900 },
-    { PRODUCT_NAME: '장원영 맥주', TOTAL_QUANTITY: 185300, GOOD_QUANTITY: 180367, QUALITY_RATE: 97.3, AVG_PRODUCTION_TIME_MINUTES: 110, AVG_BATCH_SIZE: 5100 }
+    { PRODUCT_NAME: '아이유 맥주', TOTAL_QUANTITY: 174950, GOOD_QUANTITY: 166115, QUALITY_RATE: 95.0, AVG_PRODUCTION_TIME_MINUTES: 120, AVG_BATCH_SIZE: 5200 },
+    { PRODUCT_NAME: '카리나 맥주', TOTAL_QUANTITY: 164000, GOOD_QUANTITY: 149240, QUALITY_RATE: 91.0, AVG_PRODUCTION_TIME_MINUTES: 105, AVG_BATCH_SIZE: 4900 },
+    { PRODUCT_NAME: '장원영 맥주', TOTAL_QUANTITY: 172800, GOOD_QUANTITY: 168134, QUALITY_RATE: 97.3, AVG_PRODUCTION_TIME_MINUTES: 110, AVG_BATCH_SIZE: 5100 }
   ]
 };
 
