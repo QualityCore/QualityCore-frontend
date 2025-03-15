@@ -17,7 +17,7 @@ const PackagingAndShipmentControls = () => {
         packagingStatus: "양호",
         shipmentDate: new Date().toISOString().split("T")[0],
         productName: "아이유맥주",
-        shipmentQuantity: 5000, // Double 타입
+        shipmentQuantity: 10000, // Double 타입
         destination: "",
         notes: "", // 메모 필드 추가
     });

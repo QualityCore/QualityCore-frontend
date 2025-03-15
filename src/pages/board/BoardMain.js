@@ -64,7 +64,7 @@ function BoardMain() {
                         <path d="M7 12H17" stroke="#5E4BFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         <path d="M7 17H13" stroke="#5E4BFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    게시판
+                    전사게시판
                 </h2>
             </div>
 

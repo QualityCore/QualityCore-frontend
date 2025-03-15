@@ -59,8 +59,8 @@ const Header = () => {
 
       // 게시판
       
-      '/board': { main: '게시판', sub: '게시판' },
-      '/board-create': { main: '게시판', sub: '게시글작성' },
+      '/board': { main: '전사게시판', sub: '전사게시판' },
+      '/board-create': { main: '전사게시판', sub: '게시글작성' },
 
 
       // 기본 페이지

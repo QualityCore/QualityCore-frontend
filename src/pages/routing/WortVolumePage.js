@@ -133,7 +133,7 @@ const EfficiencyLegend = () => {
                           <th>끓임 후 워트량(L)</th>
                           <th>손실량(L)</th>
                           <th>효율(%)</th>
-                          <th>공정 상태</th>
+                          {/* <th>공정 상태</th> */}
                         </tr>
                       </thead>
                       <tbody>
@@ -151,11 +151,11 @@ const EfficiencyLegend = () => {
               </span>
             ) : '-'}
           </td>
-          <td>
+          {/* <td>
             <span className={`${styles.status} ${styles[item.processStatus || '대기중']}`}>
               {item.processStatus || '대기중'}
             </span>
-                            </td>
+                            </td> */}
                           </tr>
                         ))}
                       </tbody>

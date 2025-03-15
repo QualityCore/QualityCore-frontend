@@ -93,7 +93,7 @@ function Board() {
     return (
         <div className={Boards.boardContainer}>
             <div className={Boards.mainBar}>
-                <h1 className={Boards.pageTitle}>게시판</h1>
+                <h1 className={Boards.pageTitle}>전사게시판</h1>
 
                 {/* 검색 및 글쓰기 버튼 */}
                 <div className={Boards.headerBar}>

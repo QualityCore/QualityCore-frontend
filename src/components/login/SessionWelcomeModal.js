@@ -10,7 +10,7 @@ const SessionWelcomeModal = () => {
   useEffect(() => {
     const showTimeout = setTimeout(() => {
       setVisible(true);
-    }, 5000); // 여기서 5000은 5초입니다. 원하는 시간으로 변경하세요
+    }, 1000); // 여기서 5000은 5초입니다. 원하는 시간으로 변경하세요
     
     return () => clearTimeout(showTimeout);
   }, []);
