@@ -154,7 +154,7 @@ const MaturationControls = () => {
             });
 
             setShowSuccessModal(true);
-            setButtonLabel("다음 공정으로 이동");
+            setButtonLabel("다음 공정 이동");
             setIsNextProcessEnabled(true);
         } catch (error) {
             console.error("공정 완료 처리 실패:", error);
@@ -169,7 +169,7 @@ const MaturationControls = () => {
     const handleCloseCompleteModal = () => {
         setShowCompleteModal(false);
         setIsNextProcessEnabled(true);
-        setButtonLabel("다음 공정으로 이동");
+        setButtonLabel("다음 공정 이동");
     };
 
     return (
@@ -261,11 +261,12 @@ const MaturationControls = () => {
 
                 <div className={styles.gridItem}>
                     <label>메모</label>
-                    <textarea
+                    <input
+                        type="text"
                         name="notes"
                         value={maturationData.notes}
                         onChange={handleChange}
-                    ></textarea>
+                    />
                 </div>
 
                 {/* 타이머 표시 - 당화/냉각/발효 공정과 동일한 스타일 */}
@@ -292,7 +293,7 @@ const MaturationControls = () => {
                         onClick={() => {
                             if (buttonLabel === "등록하기" && !confirmModalShown) {
                                 setShowConfirmModal(true);
-                            } else if (buttonLabel === "다음 공정으로 이동") {
+                            } else if (buttonLabel === "다음 공정 이동") {
                                 handleNextProcess();
                             } else if (buttonLabel === "공정 진행 중" && !isTimerRunning) {
                                 handleCompleteProcess();
@@ -304,7 +305,7 @@ const MaturationControls = () => {
                             ? "등록하기"
                             : buttonLabel === "공정 진행 중"
                                 ? `공정 진행 중`
-                                : "다음 공정으로 이동"}
+                                : "다음 공정 이동"}
                     </button>
                 </div>
             </div>

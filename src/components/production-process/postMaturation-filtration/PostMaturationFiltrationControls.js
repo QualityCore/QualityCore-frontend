@@ -44,7 +44,7 @@ const PostMaturationFiltrationControls = () => {
         } else if (timeLeft <= 0 && isTimerRunning) {
             setIsTimerRunning(false);
             setShowCompleteModal(true); // 타이머 종료 시 모달 표시
-            setButtonLabel("다음 공정으로 이동");
+            setButtonLabel("다음 공정 이동");
         }
     }, [isTimerRunning, timeLeft]);
 
@@ -178,13 +178,12 @@ const PostMaturationFiltrationControls = () => {
                 {/* 메모 입력 */}
                 <div className={styles.gridItem}>
                     <label className={styles.label}>메모 사항</label>
-                    <textarea
+                    <input
                         className={styles.inputField}
+                        type="text"
                         name="notes"
                         value={filtrationData.notes}
                         onChange={handleChange}
-                        rows="3"
-                        placeholder="여과 상태 기록"
                     />
                 </div>
 
@@ -219,7 +218,7 @@ const PostMaturationFiltrationControls = () => {
                                 onClick={() => {
                                     if (buttonLabel === "등록하기" && !confirmModalShown) {
                                     setShowConfirmModal(true);
-                                    } else if (buttonLabel === "다음 공정으로 이동" && isCompleteModalConfirmed) {
+                                    } else if (buttonLabel === "다음 공정 이동" && isCompleteModalConfirmed) {
                                     handleNextProcess();
                                     } else if (buttonLabel === "공정 진행 중" && !isTimerRunning) {
                                     handleCompleteProcess();
@@ -231,7 +230,7 @@ const PostMaturationFiltrationControls = () => {
                                     ? "등록하기"
                                     : buttonLabel === "공정 진행 중"
                                     ? `공정 진행 중 (${Math.floor(timeLeft / 60)}분 ${timeLeft % 60}초)`
-                                    : "다음 공정으로 이동"}
+                                    : "다음 공정 이동"}
                                 </button>
                             </div>
                             </div>
@@ -242,11 +241,11 @@ const PostMaturationFiltrationControls = () => {
                                 onClick={() => {
                                 if (buttonLabel === "등록하기" && !confirmModalShown) {
                                     setShowConfirmModal(true);
-                                } else if (buttonLabel === "다음 공정으로 이동" && isCompleteModalConfirmed) {
+                                } else if (buttonLabel === "다음 공정 이동" && isCompleteModalConfirmed) {
                                     handleNextProcess();
                                 }
                                 }}
-                                disabled={isProcessing || !isCompleteModalConfirmed && buttonLabel === "다음 공정으로 이동"}
+                                disabled={isProcessing || !isCompleteModalConfirmed && buttonLabel === "다음 공정 이동"}
                             >
                                 {buttonLabel}
                             </button>

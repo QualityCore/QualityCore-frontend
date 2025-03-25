@@ -129,7 +129,7 @@ const CarbonationProcessControls = () => {
 
         setShowCompleteModal(false);
         setIsNextProcessEnabled(true)
-        setButtonLabel("다음 공정으로 이동");
+        setButtonLabel("다음 공정 이동");
     };
 
     return (
@@ -195,11 +195,12 @@ const CarbonationProcessControls = () => {
                 {/* 메모 */}
                 <div className={styles.gridItem}>
                     <label>메모</label>
-                    <textarea
+                    <input
+                        type="text"
                         name="notes"
                         value={carbonationData.notes}
                         onChange={handleChange}
-                    ></textarea>
+                    />
                 </div>
 
              {/* 타이머 표시 */}
@@ -233,7 +234,7 @@ const CarbonationProcessControls = () => {
                             onClick={() => {
                                 if (buttonLabel === "등록하기" && !confirmModalShown) {
                                 setShowConfirmModal(true);
-                                } else if (buttonLabel === "다음 공정으로 이동") {
+                                } else if (buttonLabel === "다음 공정 이동") {
                                 handleNextProcess();
                                 } else if (buttonLabel === "공정 진행 중" && !isTimerRunning) {
                                 handleCompleteProcess();
@@ -245,7 +246,7 @@ const CarbonationProcessControls = () => {
                                 ? "등록하기"
                                 : buttonLabel === "공정 진행 중"
                                 ? `공정 진행 중 (${Math.floor(timeLeft / 60)}분 ${timeLeft % 60}초)`
-                                : "다음 공정으로 이동"}
+                                : "다음 공정 이동"}
                             </button>
                         </div>
                         </div>
@@ -256,7 +257,7 @@ const CarbonationProcessControls = () => {
                             onClick={() => {
                             if (buttonLabel === "등록하기" && !confirmModalShown) {
                                 setShowConfirmModal(true);
-                            } else if (buttonLabel === "다음 공정으로 이동") {
+                            } else if (buttonLabel === "다음 공정 이동") {
                                 handleNextProcess();
                             } else if (buttonLabel === "공정 완료") {
                                 handleCompleteProcess();
