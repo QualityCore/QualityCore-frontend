@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { postMaturationFiltrationApi } from "../../apis/production-process/postMaturation-filtration/PostMaturationApi";
-import PostMaturationFiltrationControls from "../../components/postMaturation-filtration/PostMaturationFiltrationControls";
+import { postMaturationFiltrationApi } from "../../../apis/production-process/postMaturation-filtration/PostMaturationApi";
+import PostMaturationFiltrationControls from "../../../components/production-process/postMaturation-filtration/PostMaturationFiltrationControls";
 
 const PostMaturationFiltrationPage = () => {
     const [workOrderList, setWorkOrderList] = useState([]);

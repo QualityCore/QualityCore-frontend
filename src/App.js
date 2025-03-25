@@ -33,7 +33,7 @@ import { AuthProvider } from "./contexts/AuthContext"; // 강화된 AuthProvider
 import ProtectedRoute from "./components/login/ProtectedRoute";
 import AccessDenied from "./pages/AccessDenied";
 import MaturationPage from "./pages/production-process/maturation-detail/MaturationPage";
-import PostMaturationFiltrationPage from "./pages/postMaturation-filtration/PostMaturationFiltrationPage";
+import PostMaturationFiltrationPage from "./pages/production-process/postMaturation-filtration/PostMaturationFiltrationPage";
 import CarbonationProcessPage from "./pages/production-process/carbonation-process/CarbonationProcessPage";
 import PackagingAndShipmentPage from "./pages/production-process/packaging-and-shipment/PackagingAndShipmentPage";
 import SessionManager from "./components/login/SessionManager"; 

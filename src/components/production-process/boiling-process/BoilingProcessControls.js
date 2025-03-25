@@ -29,7 +29,7 @@ const BoilingProcessControls = ({ workOrder }) => {
     initialWortVolume: "",
     postBoilWortVolume: "",
     boilLossVolume: "",
-    firstHopName: "마그너 홉",
+    firstHopName: "마그넘 홉",
     firstHopAmount: "",
     secondHopName: "",
     secondHopAmount: "",
@@ -78,7 +78,7 @@ const BoilingProcessControls = ({ workOrder }) => {
       // 첫 번째 홉: "마그너 홉" "캐스케이드 홉" 또는 "아마릴로 홉" 중 조회
       const firstHop = materials.find(
         (item) =>
-          item.materialName === "마그너 홉" ||
+          item.materialName === "마그넘 홉" ||
           item.materialName === "캐스케이드 홉" ||
           item.materialName === "아마릴로 홉"
       );
