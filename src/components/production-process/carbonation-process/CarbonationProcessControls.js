@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { carbonationProcessApi } from "../../apis/production-process/carbonation-process/carbonationProcessApi";
-import ConfirmModal from "../standard-information/common/ConfirmModal";
-import SuccessfulModal from "../standard-information/common/SuccessfulModal";
-import ErrorModal from "../standard-information/common/ErrorModal";
-import CompleteModal from "../standard-information/common/CompleteModal";
-import styles from "../../styles/production-process/CarbonationProcess.module.css";
+import { carbonationProcessApi } from "../../../apis/production-process/carbonation-process/carbonationProcessApi";
+import ConfirmModal from "../../standard-information/common/ConfirmModal";
+import SuccessfulModal from "../../standard-information/common/SuccessfulModal";
+import ErrorModal from "../../standard-information/common/ErrorModal";
+import CompleteModal from "../../standard-information/common/CompleteModal";
+import styles from "../../../styles/production-process/CarbonationProcess.module.css";
 
 const CarbonationProcessControls = () => {
     const [carbonationData, setCarbonationData] = useState({

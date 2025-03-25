@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { maturationDetailApi } from "../../apis/production-process/maturation-detail/maturationDetailApi";
-import ConfirmModal from "../standard-information/common/ConfirmModal";
-import SuccessfulModal from "../standard-information/common/SuccessfulModal";
-import ErrorModal from "../standard-information/common/ErrorModal";
-import CompleteModal from "../standard-information/common/CompleteModal";
-import styles from "../../styles/production-process/MaturationCss.module.css";
+import { maturationDetailApi } from "../../../apis/production-process/maturation-detail/maturationDetailApi";
+import ConfirmModal from "../../standard-information/common/ConfirmModal";
+import SuccessfulModal from "../../standard-information/common/SuccessfulModal";
+import ErrorModal from "../../standard-information/common/ErrorModal";
+import CompleteModal from "../../standard-information/common/CompleteModal";
+import styles from "../../../styles/production-process/MaturationCss.module.css";
 
 const MaturationControls = () => {
     const [maturationData, setMaturationData] = useState({

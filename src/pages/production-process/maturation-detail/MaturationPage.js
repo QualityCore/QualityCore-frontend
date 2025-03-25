@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { maturationDetailApi } from "../../../apis/production-process/maturation-detail/maturationDetailApi";
-import MaturationControls from "../../../components/maturation-process/MaturationControls";
+import MaturationControls from "../../../components/production-process/maturation-process/MaturationControls";
 import MaturationCss from "../../../styles/production-process/MaturationCss.module.css";
 
 const MaturationPage = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { carbonationProcessApi } from "../../../apis/production-process/carbonation-process/carbonationProcessApi";
-import CarbonationProcessControls from "../../../components/carbonation-process/CarbonationProcessControls";
+import CarbonationProcessControls from "../../../components/production-process/carbonation-process/CarbonationProcessControls";
 
 const CarbonationProcessPage = () => {
     const [workOrderList, setWorkOrderList] = useState([]);

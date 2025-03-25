@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { packagingAndShipmentApi } from "../../../apis/production-process/packaging-and-shipment/packagingAndShipmentApi";
-import PackagingAndShipmentControls from "../../../components/packaging-and-shipment/PackagingAndShipmentControls";
+import PackagingAndShipmentControls from "../../../components/production-process/packaging-and-shipment/PackagingAndShipmentControls";
 
 const PackagingAndShipmentPage = () => {
   const [workOrderList, setWorkOrderList] = useState([]);
